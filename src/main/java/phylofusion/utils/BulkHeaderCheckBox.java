@@ -94,7 +94,7 @@ public final class BulkHeaderCheckBox<T> {
 
 		detachObserved();
 
-		if (rows == null || rows.isEmpty()) {
+		if (rows == null) {
 			header.setDisable(true);
 			header.setSelected(false);
 			return;

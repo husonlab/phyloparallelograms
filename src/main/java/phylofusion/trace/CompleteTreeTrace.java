@@ -21,9 +21,6 @@
 package phylofusion.trace;
 
 import jloda.graph.DAGTraversals;
-import jloda.graph.Edge;
-import jloda.graph.Node;
-import jloda.phylo.CommentData;
 import jloda.phylo.PhyloTree;
 
 import java.util.BitSet;
@@ -34,7 +31,6 @@ import java.util.BitSet;
  * Daniel Huson, 3.2026
  */
 public class CompleteTreeTrace {
-	public final static String KEY = "IS";
 
 	/**
 	 * extend index set to all edges
@@ -44,12 +40,12 @@ public class CompleteTreeTrace {
 	public static void apply(PhyloTree network) {
 		// ensure network has required initial annotations:
 		for (var v : network.nodes()) {
-			if ((v.isLeaf() || v == network.getRoot()) && getIsSet(v) == null)
+			if ((v.isLeaf() || v == network.getRoot()) && TreeTrace.getTT(v) == null)
 				throw new RuntimeException("Leaves and root don't have valid index set data");
 		}
 		// ensure reticulate edges have required initial annotations:
 		for (var e : network.edges()) {
-			if (e.getTarget().getInDegree() > 1 && getIsSet(e) == null)
+			if (e.getTarget().getInDegree() > 1 && TreeTrace.getTT(e) == null)
 				throw new RuntimeException("Reticulate edges don't have valid index set data");
 		}
 
@@ -58,40 +54,18 @@ public class CompleteTreeTrace {
 				var set = new BitSet();
 				for (var e : v.outEdges()) {
 					if (e.getTarget().getInDegree() < 2) {
-						set.or(getIsSet(e.getTarget()));
+						set.or(TreeTrace.getTT(e.getTarget()));
 					} else {
-						set.or(getIsSet(e));
+						set.or(TreeTrace.getTT(e));
 					}
 				}
-				var vSet = getIsSet(v);
+				var vSet = TreeTrace.getTT(v);
 				if (vSet == null) {
-					setIsSet(v, set);
+					TreeTrace.setTT(v, set);
 				} else {
 					vSet.or(set);
 				}
 			}
 		}, true);
-	}
-
-	public static BitSet getIsSet(Object nodeOrEdge) {
-		if (nodeOrEdge instanceof Node v && v.getData() instanceof CommentData data) {
-			return data.getIntSetValue(KEY).orElse(null);
-		} else if (nodeOrEdge instanceof Edge e && e.getData() instanceof CommentData data) {
-			return data.getIntSetValue(KEY).orElse(null);
-		} else return null;
-	}
-
-	public static void setIsSet(Object nodeOrEdge) {
-		setIsSet(nodeOrEdge, new BitSet());
-	}
-
-	public static void setIsSet(Object nodeOrEdge, BitSet set) {
-		var commentData = new CommentData();
-		commentData.put(CompleteTreeTrace.KEY, set);
-		if (nodeOrEdge instanceof Node v) {
-			v.setData(commentData);
-		} else if (nodeOrEdge instanceof Edge e) {
-			e.setData(commentData);
-		}
 	}
 }

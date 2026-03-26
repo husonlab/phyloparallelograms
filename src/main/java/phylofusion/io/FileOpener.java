@@ -24,6 +24,7 @@ import javafx.application.Platform;
 import jloda.fx.util.RecentFilesManager;
 import jloda.fx.window.MainWindowManager;
 import jloda.fx.window.NotificationManager;
+import jloda.fx.windownotifications.WindowNotifications;
 import jloda.util.FileUtils;
 import phylofusion.window.MainWindow;
 import phylofusion.window.NewWindow;
@@ -50,19 +51,30 @@ public class FileOpener implements Consumer<String> {
 	}
 
 	public void accept(String fileName, MainWindow window) {
-		var firstLine = Objects.requireNonNull(FileUtils.getFirstLineFromFile(new File(fileName))).trim().toLowerCase();
 		try {
-			if (firstLine.startsWith("#nexus")) {
-				NotificationManager.showWarning("Invalid nexus: Can only open nexus files that contain trees");
-			} else if (firstLine.startsWith("<nex:nexml") || firstLine.startsWith("<?xml version="))
-				NotificationManager.showWarning("NEXML: not implemented");
-			else if (firstLine.startsWith("(") || firstLine.contains(")")) {
-				ImportNewick.apply(window, fileName);
-				window.dirtyProperty().set(true);
+			if (SQLiteUtils.isSQLiteWithTreesOrNetworksTable(fileName)) {
+				var parameters = PhyloFusionDB.load(fileName, window.getDocument());
+				if (parameters != null) {
+					if (parameters.confidenceThreshold() >= 0)
+						window.getDocument().confidenceThresholdProperty().set(parameters.confidenceThreshold());
+					if (parameters.outlineWidth() > 0)
+						window.getPresenter().optionOutlineWidthProperty().set(parameters.outlineWidth());
+				}
+			} else {
+				var firstLine = Objects.requireNonNull(FileUtils.getFirstLineFromFile(new File(fileName))).trim().toLowerCase();
+				if (firstLine.startsWith("#nexus")) {
+					NotificationManager.showWarning("Invalid nexus: Can only open nexus files that contain trees");
+				} else if (firstLine.startsWith("<nex:nexml") || firstLine.startsWith("<?xml version="))
+					NotificationManager.showWarning("NEXML: not implemented");
+				else if (firstLine.startsWith("(") || firstLine.contains(")")) {
+					ImportNewick.apply(window, fileName);
+				}
 			}
 			RecentFilesManager.getInstance().insertRecentFile(fileName);
+			window.setFileName(fileName);
+
 		} catch (IOException e) {
-			NotificationManager.showError("Open file failed: " + e.getMessage());
+			WindowNotifications.showError(window.getController().getCenterPane(), "Open file failed: " + e.getMessage());
 		}
 	}
 }

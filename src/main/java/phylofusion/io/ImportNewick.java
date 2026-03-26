@@ -22,6 +22,7 @@ package phylofusion.io;
 
 import javafx.application.Platform;
 import jloda.fx.windownotifications.WindowNotifications;
+import jloda.phylo.CommentData;
 import jloda.phylo.NewickIO;
 import jloda.phylo.PhyloTree;
 import jloda.util.FileUtils;
@@ -45,8 +46,6 @@ public class ImportNewick {
 	 * @throws IOException
 	 */
 	public static void apply(MainWindow window, String fileName) throws IOException {
-		WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Importing from file " + FileUtils.getFileNameWithoutPath(fileName));
-
 		try (var r = new BufferedReader(FileUtils.getReaderPossiblyZIPorGZIP(fileName))) {
 			apply(r, window);
 		}
@@ -62,8 +61,10 @@ public class ImportNewick {
 	 */
 	public static Collection<PhyloTree> apply(BufferedReader r, MainWindow window) throws IOException {
 
-		var trees = new ArrayList<PhyloTree>();
+		var phylogenies = new ArrayList<PhyloTree>();
 		var newickIO = new NewickIO();
+		newickIO.setNewickNodeCommentConsumer(CommentData.createDataNodeConsumer());
+		newickIO.setNewickEdgeCommentConsumer(CommentData.createDataEdgeConsumer());
 
 		while (r.ready()) {
 			var line = r.readLine();
@@ -71,20 +72,24 @@ public class ImportNewick {
 				break;
 			if (!line.isBlank() && line.trim().startsWith("(")) {
 				var tree = new PhyloTree();
-				newickIO.setNewickNodeCommentConsumer((v, c) -> {
-					if (c.startsWith("&&NHX:GN="))
-						tree.setName(c.substring(c.indexOf("=") + 1));
-				});
-
 				newickIO.parseBracketNotation(tree, line, true, false);
-				trees.add(tree);
+				phylogenies.add(tree);
 				if (tree.getName() == null || tree.getName().isBlank())
-					tree.setName("%03d".formatted(trees.size()));
-
+					tree.setName("%03d".formatted(phylogenies.size()));
 			}
+
 		}
-		window.getDocument().getTrees().setAll(trees);
-		Platform.runLater(() -> WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Imported %d phylogenies".formatted(trees.size())));
-		return trees;
+		var areTrees = phylogenies.stream().noneMatch(t -> t.nodeStream().anyMatch(v -> v.getInDegree() > 1));
+		var document = window.getDocument();
+		document.clear();
+		if (areTrees) {
+			document.addTrees(phylogenies);
+			Platform.runLater(() -> WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Imported %d trees".formatted(phylogenies.size())));
+		} else {
+			document.addNetworks(phylogenies);
+			Platform.runLater(() -> WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Imported %d networks".formatted(phylogenies.size())));
+			Platform.runLater(() -> window.getPresenter().updateNetworkDrawing());
+		}
+		return phylogenies;
 	}
 }

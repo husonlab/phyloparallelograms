@@ -20,8 +20,12 @@
 
 package phylofusion.view;
 
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -32,24 +36,29 @@ import jloda.graph.Edge;
 import jloda.graph.Node;
 import jloda.phylo.PhyloTree;
 import jloda.util.BitSetUtils;
+import phylofusion.trace.TreeTrace;
 import phylofusion.utils.HoverShadow;
-import phylofusion.window.TreeRow;
+import phylofusion.window.TreeRecord;
 
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
-import static phylofusion.trace.CompleteTreeTrace.getIsSet;
+import static phylofusion.trace.TreeTrace.getTT;
 
 public class DrawTracedTrees {
 
-	public static Group apply(PhyloTree network, List<TreeRow> treeRow, BitSet trees, double outlineWidth, Function<Node, Point2D> nodePointFunction, Function<Edge, Path> edgePathFunction, VBox legend) {
-		if (!legend.getChildren().isEmpty())
-			legend.getChildren().setAll(legend.getChildren().get(0));
+	public static Group apply(PhyloTree network, List<TreeRecord> treeRecords, BitSet trees, double outlineWidth, Function<Node, Point2D> nodePointFunction, Function<Edge, Path> edgePathFunction, VBox legend) {
+		legend.getChildren().setAll(legend.getChildren().get(0));
 		var group = new Group();
 
 		var colorScheme = ColorSchemeManager.getInstance().getColorScheme("Retro29");
+
+		var idRecordMap = new HashMap<Integer, TreeRecord>();
+		for (var record : treeRecords) {
+			idRecordMap.put(record.getId(), record);
+		}
 
 		var treeColorMap = new HashMap<Integer, Color>();
 		var treeGroupMap = new HashMap<Integer, Group>();
@@ -60,11 +69,13 @@ public class DrawTracedTrees {
 			treeGroupMap.put(treeId, treeGroup);
 			group.getChildren().add(treeGroup);
 
-			var label = new Text(treeRow.get(treeId - 1).getName());
-			label.setFill(color);
+			var label = new ToggleButton();
+			label.setTextFill(color);
+			label.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+			label.setText(idRecordMap.containsKey(treeId) ? idRecordMap.get(treeId).getName() : "???");
 			legend.getChildren().add(new HBox(new Text(" "), label));
-			addHoverEffect(color, treeGroup, label);
 
+			addHoverEffect(color, label.selectedProperty(), treeGroup, label);
 		}
 
 		var nTrees = trees.cardinality();
@@ -79,25 +90,26 @@ public class DrawTracedTrees {
 				total += d;
 			}
 
-			System.err.println("width: " + outlineWidth);
-			for (var entry : treeOffsetMap.entrySet()) {
-				System.err.println("tree: " + entry.getKey() + " offset: " + entry.getValue() + " color: " + treeColorMap.get(entry.getKey()));
+			if (false) {
+				System.err.println("width: " + outlineWidth);
+				for (var entry : treeOffsetMap.entrySet()) {
+					System.err.println("tree: " + entry.getKey() + " offset: " + entry.getValue() + " color: " + treeColorMap.get(entry.getKey()));
+				}
 			}
-
 
 			for (var e : network.edges()) {
 				var use = BitSetUtils.copy(trees);
-				var sourceSet = getIsSet(e.getSource());
+				var sourceSet = getTT(e.getSource());
 				if (sourceSet != null) {
 					use.and(sourceSet);
 				}
-				var targetSet = getIsSet(e.getTarget());
+				var targetSet = getTT(e.getTarget());
 				if (targetSet != null) {
 					use.and(targetSet);
 				}
-				var edgeSet = getIsSet(e);
+				var edgeSet = getTT(e);
 				if (edgeSet != null) {
-					System.err.println(e + ": " + edgeSet);
+					// System.err.println(e + ": " + edgeSet);
 					use.and(edgeSet);
 				}
 
@@ -105,18 +117,37 @@ public class DrawTracedTrees {
 					var path = PathUtils.copy(edgePathFunction.apply(e));
 					path.setEffect(null);
 					path.setStrokeWidth(1);
-					path.setStroke(treeColorMap.get(treeId));
+					if (e.getTarget().getInDegree() > 1) {
+						var countIncoming = (int) e.getTarget().inEdgesStream(false)
+								.map(TreeTrace::getTT).filter(s -> s != null && s.get(treeId)).count();
+						path.setStroke(adjusted(treeColorMap.get(treeId), countIncoming));
+					} else
+						path.setStroke(treeColorMap.get(treeId));
 					path.setTranslateX(treeOffsetMap.get(treeId));
 					path.setTranslateY(treeOffsetMap.get(treeId));
 					treeGroupMap.get(treeId).getChildren().add(path);
 				}
 			}
 		}
-
 		return group;
 	}
 
-	public static void addHoverEffect(Color color, javafx.scene.Node... nodes) {
+	private static Color adjusted(Color base, int k) {
+		if (k <= 1)
+			return base;
+		else return new Color(
+				base.getRed(),
+				base.getGreen(),
+				base.getBlue(),
+				0.3
+		);
+
+
+		//var t = Math.min(0.8, 1.0 - 1.0 / Math.sqrt(k));
+		//return base.interpolate(Color.WHITE, t);
+	}
+
+	private static void addHoverEffect(Color color, ReadOnlyBooleanProperty override, javafx.scene.Node... nodes) {
 		var hoverEffect = new HoverShadow(color, 2);
 		for (var node : nodes) {
 			node.setOnMouseEntered(e -> {
@@ -126,10 +157,17 @@ public class DrawTracedTrees {
 			});
 			node.setOnMouseExited(e -> {
 				for (var other : nodes) {
-					other.setEffect(null);
+					if (!override.get())
+						other.setEffect(null);
 				}
 			});
 		}
-
+		override.addListener((v, o, n) -> {
+			if (!n) {
+				for (var node : nodes) {
+					node.setEffect(null);
+				}
+			}
+		});
 	}
 }

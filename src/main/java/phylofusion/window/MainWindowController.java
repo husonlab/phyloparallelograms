@@ -29,8 +29,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import jloda.fx.control.ZoomableScrollPane;
 import jloda.fx.icons.MaterialIcons;
+import jloda.fx.util.BasicFX;
+import jloda.fx.util.DraggableUtils;
 import jloda.fx.util.ProgramProperties;
 import phylofusion.utils.BulkHeaderCheckBox;
+
+import java.util.List;
 
 public class MainWindowController {
 	@FXML
@@ -94,6 +98,9 @@ public class MainWindowController {
 	private MenuItem exportNewickMenuItem;
 
 	@FXML
+	private MenuItem exportImageMenuItem;
+
+	@FXML
 	private Menu fileMenu;
 
 	@FXML
@@ -103,22 +110,10 @@ public class MainWindowController {
 	private MenuItem findMenuItem;
 
 	@FXML
-	private MenuItem flipHorizontalMenuItem;
-
-	@FXML
-	private MenuItem flipVerticalMenuItem;
-
-	@FXML
 	private MenuItem fullScreenMenuItem;
 
 	@FXML
 	private MenuItem increaseFontSizeMenuItem;
-
-	@FXML
-	private MenuItem layoutLabelMenuItem;
-
-	@FXML
-	private Menu layoutMenu;
 
 	@FXML
 	private Label memoryUsageLabel;
@@ -151,15 +146,6 @@ public class MainWindowController {
 	private MenuItem redoMenuItem;
 
 	@FXML
-	private CheckMenuItem resizeModeCheckMenuItem;
-
-	@FXML
-	private MenuItem rotateLeftMenuItem;
-
-	@FXML
-	private MenuItem rotateRightMenuItem;
-
-	@FXML
 	private Button runButton;
 
 	@FXML
@@ -175,16 +161,16 @@ public class MainWindowController {
 	private CheckMenuItem showHelpWindow;
 
 	@FXML
-	private TableView<TreeRow> treeTable;
+	private TableView<TreeRecord> treeTable;
 
 	@FXML
-	private TableColumn<TreeRow, String> treeColumn;
+	private TableColumn<TreeRecord, String> treeColumn;
 
 	@FXML
-	private TableColumn<TreeRow, Boolean> runColumn;
+	private TableColumn<TreeRecord, Boolean> runColumn;
 
 	@FXML
-	private TableColumn<TreeRow, Boolean> showColumn;
+	private TableColumn<TreeRecord, Boolean> showColumn;
 
 	@FXML
 	private Menu treesMenu;
@@ -203,6 +189,9 @@ public class MainWindowController {
 
 	@FXML
 	private MenuItem showNoneMenuItem;
+
+	@FXML
+	private MenuItem showSelectedMenuItem;
 
 	@FXML
 	private MenuItem undoMenuItem;
@@ -258,9 +247,13 @@ public class MainWindowController {
 	@FXML
 	private Button zoomOutButton;
 
+	@FXML
+	private AnchorPane innerAnchorPane;
+
 	private ZoomableScrollPane scrollPane;
 
 	private final BooleanProperty disableAllShow = new SimpleBooleanProperty(false);
+	private final BooleanProperty disableAllRun = new SimpleBooleanProperty(false);
 
 	@FXML
 	private void initialize() {
@@ -282,12 +275,8 @@ public class MainWindowController {
 		confidenceTextField.setTextFormatter(new TextFormatter<>(change ->
 				change.getControlNewText().matches("-?\\d*(\\.\\d*)?") ? change : null));
 		confidenceTextField.setText("0.0");
-		TableViewSupport.apply(treeTable, treeColumn, runColumn, showColumn, disableAllShow, this);
 
 		statusLabel.setText("");
-
-		runButton.setOnAction(e -> runMenuItem.fire());
-		runButton.disableProperty().bind(runMenuItem.disableProperty());
 
 		scrollPane = new ZoomableScrollPane(new Pane());
 		scrollPane.setFitToWidth(true);
@@ -298,14 +287,22 @@ public class MainWindowController {
 
 		centerPane.getChildren().add(scrollPane);
 
-		runColumn.setCellValueFactory(cd -> cd.getValue().runProperty());
-		runColumn.setCellFactory(col -> new javafx.scene.control.cell.CheckBoxTableCell<>());
+		TableViewSupport.apply(treeTable, treeColumn, runColumn, showColumn, disableAllRun, disableAllShow, this);
 
-		showColumn.setCellValueFactory(cd -> cd.getValue().showProperty());
-		showColumn.setCellFactory(col -> new javafx.scene.control.cell.CheckBoxTableCell<>());
-
-		runColumn.setGraphic(new BulkHeaderCheckBox<>(treeTable, TreeRow::runProperty).getNode());
-		showColumn.setGraphic(new BulkHeaderCheckBox<>(treeTable, TreeRow::showProperty).getNode());
+		var runBulkHeaderCheckBox = new BulkHeaderCheckBox<>(treeTable, TreeRecord::runProperty).getNode();
+		disableAllRun.addListener((v, o, n) -> {
+			if (n)
+				runColumn.setGraphic(null);
+			else
+				runColumn.setGraphic(runBulkHeaderCheckBox);
+		});
+		var showBulkHeaderCheckBox = new BulkHeaderCheckBox<>(treeTable, TreeRecord::showProperty).getNode();
+		disableAllShow.addListener((v, o, n) -> {
+			if (n)
+				showColumn.setGraphic(null);
+			else
+				showColumn.setGraphic(showBulkHeaderCheckBox);
+		});
 		var tip = new javafx.scene.control.Tooltip("Applies to selected rows; if none selected, applies to all rows.");
 		Tooltip.install(runColumn.getGraphic(), tip);
 		Tooltip.install(showColumn.getGraphic(), tip);
@@ -314,6 +311,20 @@ public class MainWindowController {
 		zoomInButton.disableProperty().bind(zoomInMenuItem.disableProperty());
 		zoomOutButton.setOnAction(e -> zoomOutMenuItem.fire());
 		zoomOutButton.disableProperty().bind(zoomOutMenuItem.disableProperty());
+
+		DraggableUtils.makeDraggableInAnchorPane(legendVBox);
+
+		exportMenuButton.getItems().addAll(BasicFX.copyMenu(List.of(copyImageMenuItem), false));
+
+		runButton.onActionProperty().bindBidirectional(runMenuItem.onActionProperty());
+		runButton.disableProperty().bindBidirectional(runMenuItem.disableProperty());
+
+		showButton.onActionProperty().bindBidirectional(showSelectedMenuItem.onActionProperty());
+		showButton.disableProperty().bind(showSelectedMenuItem.disableProperty());
+	}
+
+	public BooleanProperty disableAllRunProperty() {
+		return disableAllRun;
 	}
 
 	public BooleanProperty disableAllShowProperty() {
@@ -385,6 +396,10 @@ public class MainWindowController {
 		return exportNewickMenuItem;
 	}
 
+	public MenuItem getExportImageMenuItem() {
+		return exportImageMenuItem;
+	}
+
 	public Menu getFileMenu() {
 		return fileMenu;
 	}
@@ -397,28 +412,12 @@ public class MainWindowController {
 		return findMenuItem;
 	}
 
-	public MenuItem getFlipHorizontalMenuItem() {
-		return flipHorizontalMenuItem;
-	}
-
-	public MenuItem getFlipVerticalMenuItem() {
-		return flipVerticalMenuItem;
-	}
-
 	public MenuItem getFullScreenMenuItem() {
 		return fullScreenMenuItem;
 	}
 
 	public MenuItem getIncreaseFontSizeMenuItem() {
 		return increaseFontSizeMenuItem;
-	}
-
-	public MenuItem getLayoutLabelMenuItem() {
-		return layoutLabelMenuItem;
-	}
-
-	public Menu getLayoutMenu() {
-		return layoutMenu;
 	}
 
 	public Label getMemoryUsageLabel() {
@@ -462,22 +461,6 @@ public class MainWindowController {
 		return redoMenuItem;
 	}
 
-	public CheckMenuItem getResizeModeCheckMenuItem() {
-		return resizeModeCheckMenuItem;
-	}
-
-	public MenuItem getRotateLeftMenuItem() {
-		return rotateLeftMenuItem;
-	}
-
-	public MenuItem getRotateRightMenuItem() {
-		return rotateRightMenuItem;
-	}
-
-	public Button getRunButton() {
-		return runButton;
-	}
-
 	public MenuItem getRunMenuItem() {
 		return runMenuItem;
 	}
@@ -494,19 +477,19 @@ public class MainWindowController {
 		return showHelpWindow;
 	}
 
-	public TableView<TreeRow> getTreeTable() {
+	public TableView<TreeRecord> getTreeTable() {
 		return treeTable;
 	}
 
-	public TableColumn<TreeRow, String> getTreeColumn() {
+	public TableColumn<TreeRecord, String> getTreeColumn() {
 		return treeColumn;
 	}
 
-	public TableColumn<TreeRow, Boolean> getRunColumn() {
+	public TableColumn<TreeRecord, Boolean> getRunColumn() {
 		return runColumn;
 	}
 
-	public TableColumn<TreeRow, Boolean> getShowColumn() {
+	public TableColumn<TreeRecord, Boolean> getShowColumn() {
 		return showColumn;
 	}
 
@@ -554,6 +537,10 @@ public class MainWindowController {
 		return showNoneMenuItem;
 	}
 
+	public MenuItem getShowSelectedMenuItem() {
+		return showSelectedMenuItem;
+	}
+
 	public TextField getConfidenceTextField() {
 		return confidenceTextField;
 	}
@@ -590,10 +577,6 @@ public class MainWindowController {
 		return outlineWidthSpinner;
 	}
 
-	public Button getShowButton() {
-		return showButton;
-	}
-
 	public MenuButton getDiagramMenuButton() {
 		return diagramMenuButton;
 	}
@@ -616,5 +599,9 @@ public class MainWindowController {
 
 	public MenuButton getExportMenuButton() {
 		return exportMenuButton;
+	}
+
+	public AnchorPane getInnerAnchorPane() {
+		return innerAnchorPane;
 	}
 }

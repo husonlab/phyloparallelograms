@@ -23,7 +23,7 @@ package phylofusion.io;
 import javafx.stage.FileChooser;
 import jloda.fx.util.ProgramProperties;
 import jloda.fx.util.RecentFilesManager;
-import jloda.phylo.NewickIO;
+import jloda.fx.windownotifications.WindowNotifications;
 import jloda.util.FileUtils;
 import phylofusion.window.MainWindow;
 
@@ -40,13 +40,11 @@ public class Save {
 	 */
 	public static void apply(File file, MainWindow window) {
 		try {
-			try (var w = FileUtils.getOutputWriterPossiblyZIPorGZIP(file.getPath())) {
-				for (var network : window.getDocument().getNetworks()) {
-					w.write(NewickIO.toString(network, true) + ";\n");
-				}
-			}
+			PhyloFusionDB.save(file.getPath(), window.getDocument().getTreeRecords(), window.getDocument().getNetworks(),
+					window.getDocument().getConfidenceThreshold(), window.getPresenter().getOptionOutlineWidth());
+			window.dirtyProperty().set(false);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			WindowNotifications.showError(window.getController().getCenterPane(), "Save failed: " + e.getMessage());
 		}
 	}
 
@@ -59,7 +57,7 @@ public class Save {
 		var fileChooser = new FileChooser();
 		fileChooser.setTitle("Save File - " + ProgramProperties.getProgramVersion());
 		var currentFile = new File(window.getFileName());
-		fileChooser.getExtensionFilters().addAll(ExtensionFilters.newick(), ExtensionFilters.createText());
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PhyloFusion file", "*.pfusion"));
 
 		if (!currentFile.isDirectory()) {
 			fileChooser.setInitialDirectory(currentFile.getParentFile());
@@ -78,7 +76,7 @@ public class Save {
 			ProgramProperties.put("SaveFileDir", selectedFile.getParent());
 			RecentFilesManager.getInstance().insertRecentFile(selectedFile.getPath());
 			window.fileNameProperty().set(selectedFile.getPath());
-			window.dirtyProperty().set(false);
+			RecentFilesManager.getInstance().insertRecentFile(window.getFileName());
 			return true;
 		} else
 			return false;

@@ -8,6 +8,9 @@ module phylofusion {
 	requires jloda_phylogeny;
 	requires splitstreesix;
 	requires java.xml;
+	requires java.sql;
+	requires org.apache.commons.numbers.gamma;
+	requires jdk.compiler;
 
 	exports phylofusion.main;
 	opens phylofusion.window;

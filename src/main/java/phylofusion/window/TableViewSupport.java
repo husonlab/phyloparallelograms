@@ -34,9 +34,9 @@ import java.util.List;
 
 public class TableViewSupport {
 
-	public static void apply(TableView<TreeRow> treeTableView,
-							 TableColumn<TreeRow, String> treeColumn, TableColumn<TreeRow, Boolean> runColumn,
-							 TableColumn<TreeRow, Boolean> showColumn, BooleanProperty disableAllShow,
+	public static void apply(TableView<TreeRecord> treeTableView,
+							 TableColumn<TreeRecord, String> treeColumn, TableColumn<TreeRecord, Boolean> runColumn,
+							 TableColumn<TreeRecord, Boolean> showColumn, BooleanProperty disableAllRun, BooleanProperty disableAllShow,
 							 MainWindowController controller) {
 		treeTableView.setEditable(true);
 		treeTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -44,27 +44,30 @@ public class TableViewSupport {
 		// Tree name
 		treeColumn.setCellValueFactory(cd -> cd.getValue().nameProperty());
 
-		// Use checkbox
+		// Run checkbox
+
 		runColumn.setEditable(true);
 		runColumn.setCellValueFactory(cd -> cd.getValue().runProperty());
 		runColumn.setCellFactory(col -> {
-			var cell = new CheckBoxTableCell<TreeRow, Boolean>();
+			var cell = new CheckBoxTableCell<TreeRecord, Boolean>();
 			cell.setEditable(true);
+			cell.disableProperty().bind(disableAllRun);
 			return cell;
 		});
 
 		// Show checkbox
 		showColumn.setEditable(true);
+
 		showColumn.setCellValueFactory(cd -> cd.getValue().showProperty());
 		showColumn.setCellFactory(col -> {
-			var cell = new CheckBoxTableCell<TreeRow, Boolean>();
+			var cell = new CheckBoxTableCell<TreeRecord, Boolean>();
 			cell.setEditable(true);
 			cell.disableProperty().bind(disableAllShow);
 			return cell;
 		});
 
 		treeTableView.setRowFactory(tv -> {
-			TableRow<TreeRow> row = new TableRow<>();
+			var row = new TableRow<TreeRecord>();
 
 			var menu = new ContextMenu();
 			menu.getItems().addAll(BasicFX.copyMenu(List.of(controller.getUseAllMenuItem(), controller.getUseNoneMenuItem(), new SeparatorMenuItem(), controller.getShowAllMenuItem(), controller.getShowNoneMenuItem()), false));
@@ -79,7 +82,7 @@ public class TableViewSupport {
 			// Ensure right-click selects the row (without nuking multi-selection unless desired)
 			row.addEventFilter(MouseEvent.MOUSE_PRESSED, evt -> {
 				if (evt.getButton() == MouseButton.SECONDARY && !row.isEmpty()) {
-					MultipleSelectionModel<TreeRow> sm = tv.getSelectionModel();
+					MultipleSelectionModel<TreeRecord> sm = tv.getSelectionModel();
 
 					int index = row.getIndex();
 					if (!sm.getSelectedIndices().contains(index)) {

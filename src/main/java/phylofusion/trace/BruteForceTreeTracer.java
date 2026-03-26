@@ -28,14 +28,15 @@ import jloda.phylo.PhyloTree;
 import jloda.util.*;
 import jloda.util.progress.ProgressSilent;
 import phylofusion.algorithm.FilterTrees;
-import phylofusion.window.TreeRow;
+import phylofusion.utils.NexusBlocksUtils;
+import phylofusion.window.TreeRecord;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static phylofusion.trace.CompleteTreeTrace.getIsSet;
+import static phylofusion.trace.TreeTrace.getTT;
 
 /**
  * uses brute force trace of all shown trees in the network
@@ -48,13 +49,13 @@ public class BruteForceTreeTracer {
 	 * determine the reticulate edges that it uses
 	 *
 	 * @param network  the rooted network
-	 * @param treeRows the tree rows
+	 * @param treeRecords the tree rows
 	 */
-	public static void apply(PhyloTree network, List<TreeRow> treeRows, double minConfidence) {
-		var requireComputation = new ArrayList<TreeRow>();
+	public static void apply(PhyloTree network, List<TreeRecord> treeRecords, double minConfidence) {
+		var requireComputation = new ArrayList<TreeRecord>();
 
-		var set = getIsSet(network.getRoot());
-		for (var row : treeRows) {
+		var set = getTT(network.getRoot());
+		for (var row : treeRecords) {
 			if (row.isShow() && (set == null || !set.get(row.getId())))
 				requireComputation.add(row);
 		}
@@ -63,12 +64,12 @@ public class BruteForceTreeTracer {
 			// 1. setup comment data for root, leaves and reticulate edges
 			for (var v : network.nodes()) {
 				if ((v.isLeaf() || v == network.getRoot())) {
-					CompleteTreeTrace.setIsSet(v);
+					TreeTrace.setTT(v);
 				} else v.setData(null);
 			}
 			for (var e : network.edges()) {
 				if (network.isReticulateEdge(e)) {
-					CompleteTreeTrace.setIsSet(e);
+					TreeTrace.setTT(e);
 				} else e.setData(null);
 			}
 		}
@@ -94,20 +95,22 @@ public class BruteForceTreeTracer {
 	 *
 	 * @param network               the network
 	 * @param chosenReticulateEdges one edge per reticulation
-	 * @param treeRows              the tree rows
+	 * @param treeRecords              the tree rows
 	 */
-	private static void traceTrees(PhyloTree network, Set<Edge> chosenReticulateEdges, List<TreeRow> treeRows, double minConfidence) {
+	private static void traceTrees(PhyloTree network, Set<Edge> chosenReticulateEdges, List<TreeRecord> treeRecords, double minConfidence) {
 		//System.err.println("Reticulate edges: "+StringUtils.toString(chosenReticulateEdges,", "));
 		var networkClusters = extractAllClusters(network, chosenReticulateEdges);
 		//System.err.println("Network clusters: "+StringUtils.toString(networkClusters,", "));
 		var networkTaxa = BitSetUtils.union(networkClusters);
-		var rootBitSet = getIsSet(network.getRoot());
+		var rootBitSet = getTT(network.getRoot());
 
-		for (var row : treeRows) {
+		var taxaBlock = NexusBlocksUtils.createTaxaBlock(List.of(network));
+
+		for (var row : treeRecords) {
 			if (row.isShow() && !rootBitSet.get(row.getId())) {
 				PhyloTree tree = row.getTree();
 				if (minConfidence > 0.0) {
-					tree = FilterTrees.apply(List.of(tree), minConfidence, new ProgressSilent()).get(0);
+					tree = FilterTrees.apply(taxaBlock, List.of(tree), minConfidence, new ProgressSilent()).get(0);
 				} else tree = row.getTree();
 				var treeClusters = extractAllClusters(tree, Collections.emptySet());
 				//System.err.println("Tree "+row.getId()+": "+row.getTree().toBracketString(false)+";");
@@ -127,11 +130,11 @@ public class BruteForceTreeTracer {
 				// tree is contained in network using selected reticulate edges
 				for (var v : network.nodes()) {
 					if (v.isLeaf() || v == network.getRoot()) {
-						getIsSet(v).set(row.getId());
+						getTT(v).set(row.getId());
 					}
 				}
 				for (var e : chosenReticulateEdges) {
-					getIsSet(e).set(row.getId());
+					getTT(e).set(row.getId());
 				}
 			}
 		}

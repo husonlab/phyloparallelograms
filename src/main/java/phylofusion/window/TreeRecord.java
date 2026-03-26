@@ -1,5 +1,5 @@
 /*
- * TreeRow.java Copyright (C) 2026 Daniel H. Huson
+ * TreeRecord.java Copyright (C) 2026 Daniel H. Huson
  *
  *  (Some files contain contributions from other authors, who are then mentioned separately.)
  *
@@ -26,14 +26,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jloda.phylo.PhyloTree;
 
-public class TreeRow {
+public class TreeRecord {
 	private final StringProperty name = new SimpleStringProperty();
 	private final int id;
 	private final BooleanProperty run = new SimpleBooleanProperty(false);
 	private final BooleanProperty show = new SimpleBooleanProperty(false);
 	private final PhyloTree tree;
 
-	public TreeRow(String name, int id, boolean run, boolean show, PhyloTree tree) {
+	public TreeRecord(String name, int id, boolean run, boolean show, PhyloTree tree) {
 		setName(name);
 		this.id = id;
 		setRun(run);

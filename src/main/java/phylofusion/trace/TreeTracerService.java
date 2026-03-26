@@ -25,25 +25,27 @@ import jloda.fx.util.AService;
 import jloda.phylo.CommentData;
 import jloda.phylo.NewickIO;
 import jloda.phylo.PhyloTree;
-import phylofusion.window.TreeRow;
+import phylofusion.window.TreeRecord;
 
 import java.util.BitSet;
 import java.util.List;
 
+@Deprecated
 public class TreeTracerService extends AService<Integer> {
 	public TreeTracerService(Pane bottomPane) {
 		super(bottomPane);
 	}
 
-	public void setupCalculation(PhyloTree network, List<TreeRow> treeRows, double minConfidence) {
+	public void setupCalculation(PhyloTree network, List<TreeRecord> treeRecords, double minConfidence) {
 		setCallable(() -> {
-			BruteForceTreeTracer.apply(network, treeRows, minConfidence);
+			BruteForceTreeTracer.apply(network, treeRecords, minConfidence);
+			getProgressListener().setTasks("Tree tracing", "");
 			if (true) {
 				var newickIO = new NewickIO();
 				newickIO.setNewickNodeCommentSupplier(u -> u.getData() == null ? null : u.getData().toString());
 				newickIO.setNewickEdgeCommentSupplier(u -> u.getData() == null ? null : u.getData().toString());
-				System.err.println(newickIO.toBracketString(network, false) + ";");
 				if (false) {
+					System.err.println(newickIO.toBracketString(network, false) + ";");
 					for (var v : network.nodes()) {
 						System.err.println(v + " " + v.getData());
 					}
@@ -52,7 +54,7 @@ public class TreeTracerService extends AService<Integer> {
 					}
 				}
 			}
-			return ((CommentData) network.getRoot().getData()).getIntSetValue(CompleteTreeTrace.KEY).orElse(new BitSet()).cardinality();
+			return ((CommentData) network.getRoot().getData()).getIntSetValue(TreeTrace.KEY).orElse(new BitSet()).cardinality();
 		});
 	}
 }

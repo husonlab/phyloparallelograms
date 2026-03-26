@@ -22,37 +22,188 @@
 
 package phylofusion.model;
 
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import jloda.fx.util.BasicFX;
+import jloda.fx.util.RunAfterAWhile;
 import jloda.phylo.PhyloTree;
+import jloda.util.BitSetUtils;
+import jloda.util.CollectionUtils;
+import jloda.util.StringUtils;
+import phylofusion.trace.TreeTrace;
+import phylofusion.window.TreeRecord;
+
+import java.io.IOException;
+import java.util.*;
 
 public class Document {
-	private final ObservableList<PhyloTree> trees = FXCollections.observableArrayList();
+	private final ObservableList<TreeRecord> treeRecords = FXCollections.observableArrayList();
 	private final ObservableList<PhyloTree> networks = FXCollections.observableArrayList();
 
-	private final BooleanProperty empty = new SimpleBooleanProperty(this, "empty", false);
+	private final BooleanProperty hasTreeRecords = new SimpleBooleanProperty(this, "hasTreesIds", false);
+	private final BooleanProperty hasTrees = new SimpleBooleanProperty(this, "hasTrees", false);
+	private final BooleanProperty hasNetworks = new SimpleBooleanProperty(this, "hasNetworks", false);
+	private final BooleanProperty empty = new SimpleBooleanProperty(this, "emptyProperty", false);
 
+	private final DoubleProperty confidenceThreshold = new SimpleDoubleProperty(this, "confidenceThreshold");
 
 	public Document() {
-		empty.bind(Bindings.isEmpty(trees));
+		hasTreeRecords.bind(Bindings.isNotEmpty(treeRecords));
+		hasNetworks.bind(Bindings.isNotEmpty(networks));
+		empty.bind(hasTreeRecords.not().and(hasNetworks.not()));
+
+		treeRecords.addListener((InvalidationListener) e ->
+				RunAfterAWhile.applyInFXThread(treeRecords,
+						() -> hasTrees.set(treeRecords.stream().allMatch(r -> r.getTree() != null))));
+
+		BasicFX.reportChanges("hasTrees", hasTrees);
 	}
 
-	public boolean isEmpty() {
-		return empty.get();
+	public void clear() {
+		treeRecords.clear();
+		networks.clear();
 	}
 
-	public BooleanProperty emptyProperty() {
-		return empty;
+	public ObservableList<TreeRecord> getTreeRecords() {
+		return treeRecords;
 	}
 
-	public ObservableList<PhyloTree> getTrees() {
-		return trees;
+	public void addTrees(List<PhyloTree> trees) {
+		for (var i = 0; i < trees.size(); i++) {
+			var id = (i + 1);
+			var tree = trees.get(i);
+			var name = tree.getName();
+			if (name == null || name.isBlank()) {
+				name = "tree-" + id;
+				tree.setName(name);
+			}
+			treeRecords.add(new TreeRecord(name, id, true, true, tree));
+		}
+		addTaxa(treeRecords.stream().map(TreeRecord::getTree).toList());
 	}
 
 	public ObservableList<PhyloTree> getNetworks() {
 		return networks;
+	}
+
+	public void addNetworks(Collection<PhyloTree> networks) throws IOException {
+		for (var network : networks) {
+			for (var v : network.nodes()) {
+				if (TreeTrace.getTT(v) == null) {
+					throw new IOException("Network has node without tree trace annotation: " + v);
+				}
+			}
+			for (var e : network.edges()) {
+				if (e.getTarget().getInDegree() > 1 && TreeTrace.getTT(e) == null)
+					throw new IOException("Network has reticulate edge without tree trace annotation: " + e);
+			}
+		}
+
+		var treeIds = new BitSet();
+		for (var network : networks) {
+			for (var v : network.nodes()) {
+				treeIds.or(TreeTrace.getTT(v));
+			}
+			network.nodeStream().map(TreeTrace::getTT).filter(Objects::nonNull).forEach(treeIds::or);
+		}
+		if (treeIds.cardinality() == 0)
+			throw new IOException("Network does not have tree trace annotations");
+		else {
+			System.err.println("Tree trace ids: " + StringUtils.toString(treeIds, " "));
+		}
+
+		for (var id : BitSetUtils.members(treeIds)) {
+			var name = "tree-" + id;
+			treeRecords.add(new TreeRecord(name, id, true, true, null));
+		}
+		addTaxa(networks);
+		this.networks.addAll(networks);
+	}
+
+	public void addTreesAndNetworks(Collection<TreeRecord> treeRecords, Collection<PhyloTree> networks) {
+		clear();
+		this.treeRecords.setAll(treeRecords);
+		this.networks.setAll(networks);
+		addTaxa(CollectionUtils.concatenate(treeRecords.stream().map(TreeRecord::getTree).filter(Objects::nonNull).toList(), networks));
+	}
+
+	public static void addTaxa(Collection<PhyloTree> list) {
+		var labelIdMap = new TreeMap<String, Integer>();
+		for (var tree : list) {
+			for (var v : tree.nodes()) {
+				tree.clearTaxa(v);
+				if (v.isLeaf()) {
+					tree.addTaxon(v, labelIdMap.computeIfAbsent(tree.getLabel(v), k -> labelIdMap.size() + 1));
+				}
+			}
+		}
+		if (false) {
+			for (var entry : labelIdMap.entrySet()) {
+				System.err.println(entry);
+			}
+		}
+	}
+
+	public static void addTaxa(PhyloTree source, Collection<PhyloTree> list) {
+		var labelIdMap = new TreeMap<String, Integer>();
+		for (var v : source.nodes()) {
+			if (v.isLeaf()) {
+				labelIdMap.put(source.getLabel(v), v.getId());
+			}
+		}
+
+		for (var tree : list) {
+			for (var v : tree.nodes()) {
+				tree.clearTaxa(v);
+				if (v.isLeaf()) {
+					tree.addTaxon(v, labelIdMap.computeIfAbsent(tree.getLabel(v), k -> labelIdMap.size() + 1));
+				}
+			}
+		}
+		if (false) {
+			for (var entry : labelIdMap.entrySet()) {
+				System.err.println(entry);
+			}
+		}
+	}
+
+	public ReadOnlyBooleanProperty hasTreeRecordsProperty() {
+		return hasTreeRecords;
+	}
+
+	public ReadOnlyBooleanProperty hasTreesProperty() {
+		return hasTrees;
+	}
+
+	public boolean hasNetworks() {
+		return hasNetworks.get();
+	}
+
+	public ReadOnlyBooleanProperty hasNetworksProperty() {
+		return hasNetworks;
+	}
+
+	public ObservableValue<Boolean> emptyProperty() {
+		return empty;
+	}
+
+	public double getConfidenceThreshold() {
+		return confidenceThreshold.get();
+	}
+
+	public DoubleProperty confidenceThresholdProperty() {
+		return confidenceThreshold;
+	}
+
+	public List<PhyloTree> getRunTrees() {
+		return treeRecords.stream().filter(TreeRecord::isRun).map(TreeRecord::getTree).filter(Objects::nonNull).toList();
+	}
+
+	public BitSet getShowTrees() {
+		return BitSetUtils.asBitSet(treeRecords.stream().filter(TreeRecord::isShow).mapToInt(TreeRecord::getId).filter(Objects::nonNull).toArray());
 	}
 }

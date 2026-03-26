@@ -33,6 +33,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+import jloda.fx.undo.UndoManager;
 import jloda.fx.util.FileOpenManager;
 import jloda.fx.util.MemoryUsage;
 import jloda.fx.util.ProgramProperties;
@@ -54,6 +55,7 @@ public class MainWindow implements IMainWindow {
 	private final Scene scene;
 
 	private final Document document = new Document();
+	private final UndoManager undoManager = new UndoManager();
 	private final MainWindowController controller;
 	private MainWindowPresenter presenter;
 
@@ -106,6 +108,7 @@ public class MainWindow implements IMainWindow {
 		scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("MainWindow.css")).toExternalForm());
 		scene.getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("jloda/resources/css/white_pane.css")).toExternalForm());
 
+		undoManager.undoStackSizeProperty().addListener(e -> dirty.set(true));
 	}
 
 	@Override
@@ -195,10 +198,14 @@ public class MainWindow implements IMainWindow {
 	}
 
 	public boolean isDirty() {
-		return dirty.get();
+		return dirtyProperty().get();
 	}
 
 	public BooleanProperty dirtyProperty() {
 		return dirty;
+	}
+
+	public UndoManager getUndoManager() {
+		return undoManager;
 	}
 }

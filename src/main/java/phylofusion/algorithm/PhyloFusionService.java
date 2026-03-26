@@ -23,14 +23,18 @@ package phylofusion.algorithm;
 
 import javafx.scene.layout.Pane;
 import jloda.fx.util.AService;
+import jloda.phylo.NewickIO;
 import jloda.phylo.PhyloTree;
 import phylofusion.utils.NexusBlocksUtils;
 import splitstree6.algorithms.trees.trees2trees.PhyloFusion;
 import splitstree6.data.TreesBlock;
+import splitstree6.io.writers.trees.NexusWriter;
 
+import java.io.StringWriter;
 import java.util.List;
 
 
+@Deprecated
 public class PhyloFusionService extends AService<List<PhyloTree>> {
 	public PhyloFusionService(Pane progressPane) {
 		super(progressPane);
@@ -46,16 +50,34 @@ public class PhyloFusionService extends AService<List<PhyloTree>> {
 			var blocks = NexusBlocksUtils.setupBlocks(trees);
 			var resultBlock = new TreesBlock();
 			var algorithm = new PhyloFusion();
-			algorithm.compute(getProgressListener(), blocks.taxaBlock(), blocks.treesBlock(), resultBlock);
-			for (var network : resultBlock.getTrees()) {
-				if (network.getRoot().getOutDegree() > 1) {
-					var v = network.getRoot();
-					network.setRoot(network.newNode());
-					var e = network.newEdge(network.getRoot(), v);
-					network.setWeight(e, 0.00001);
+			if (trees.size() == 1) {
+				return List.of(trees.get(0));
+			} else {
+				if (true) {
+					{
+						var newickIO = new NewickIO();
+						for (var tree : blocks.treesBlock().getTrees()) {
+							System.err.println(newickIO.toBracketString(tree, true) + ";");
+						}
+					}
+
+					var nexusWriter = new NexusWriter();
+					var w = new StringWriter();
+					nexusWriter.write(w, blocks.taxaBlock(), blocks.treesBlock());
+					System.err.println(w.toString());
 				}
+				// algorithm.setOptionMutualRefinement(false);
+				algorithm.compute(getProgressListener(), blocks.taxaBlock(), blocks.treesBlock(), resultBlock);
+				for (var network : resultBlock.getTrees()) {
+					if (network.getRoot().getOutDegree() > 1) {
+						var v = network.getRoot();
+						network.setRoot(network.newNode());
+						var e = network.newEdge(network.getRoot(), v);
+						network.setWeight(e, 0.00001);
+					}
+				}
+				return resultBlock.getTrees();
 			}
-			return resultBlock.getTrees();
 		});
 	}
 }

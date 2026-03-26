@@ -89,7 +89,19 @@
                                 <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                                             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <center>
-                                        <StackPane fx:id="centerPane"/>
+                                        <AnchorPane fx:id="innerAnchorPane">
+                                            <children>
+                                                <StackPane fx:id="centerPane" AnchorPane.bottomAnchor="0.0"
+                                                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                                           AnchorPane.topAnchor="0.0"/>
+                                                <VBox fx:id="legendVBox" AnchorPane.leftAnchor="10.0"
+                                                      AnchorPane.topAnchor="10.0">
+                                                    <children>
+                                                        <Label text="Trees"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </AnchorPane>
                                     </center>
                                     <top>
                                         <ToolBar minHeight="30.0" BorderPane.alignment="CENTER">
@@ -106,16 +118,7 @@
                                 </BorderPane>
                                 <MenuButton fx:id="exportMenuButton" mnemonicParsing="false" text="Export"
                                             AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" text="Action 1"/>
-                                        <MenuItem mnemonicParsing="false" text="Action 2"/>
-                                    </items>
                                 </MenuButton>
-                                <VBox fx:id="legendVBox" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="40.0">
-                                    <children>
-                                        <Label text="PhyloFusion"/>
-                                    </children>
-                                </VBox>
                             </children>
                         </AnchorPane>
                     </items>
@@ -145,10 +148,8 @@
 
                                         <SeparatorMenuItem mnemonicParsing="false"/>
                                         <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">
-                                            <items>
-                                                <MenuItem fx:id="exportImageMenuItem" mnemonicParsing="false"
-                                                          text="Image..."/>
-                                            </items>
+                                            <MenuItem fx:id="exportImageMenuItem" mnemonicParsing="false"
+                                                      text="Image..."/>
                                             <MenuItem fx:id="exportNewickMenuItem" mnemonicParsing="false"
                                                       text="Newick..."/>
                                         </Menu>
@@ -251,77 +252,37 @@
                                         <MenuItem fx:id="useAllMenuItem" mnemonicParsing="false" text="Use All Trees"/>
                                         <MenuItem fx:id="useNoneMenuItem" mnemonicParsing="false"
                                                   text="Use None Trees"/>
-                                        <SeparatorMenuItem mnemonicParsing="false"/>
-                                        <MenuItem fx:id="setConfidenceThresholdMenuItem" mnemonicParsing="false"
-                                                  text="Set Confidence Threshold..."/>
-
-                                        <SeparatorMenuItem mnemonicParsing="false"/>
                                         <MenuItem fx:id="runMenuItem" mnemonicParsing="false" text="Run PhyloFusion">
                                             <accelerator>
                                                 <KeyCodeCombination alt="UP" code="R" control="UP" meta="UP" shift="UP"
                                                                     shortcut="DOWN"/>
                                             </accelerator>
                                         </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="showAllMenuItem" mnemonicParsing="false"
+                                                  text="Show All Trees"/>
+                                        <MenuItem fx:id="showNoneMenuItem" mnemonicParsing="false"
+                                                  text="Show None Trees"/>
+                                        <MenuItem fx:id="showSelectedMenuItem" mnemonicParsing="false"
+                                                  text="Show Selected Trees"/>
+
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="setConfidenceThresholdMenuItem" mnemonicParsing="false"
+                                                  text="Set Confidence Threshold..."/>
+
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
                                     </items>
-                                </Menu>
-
-                                <Menu fx:id="layoutMenu" mnemonicParsing="false" text="Layout">
-                                    <MenuItem fx:id="showAllMenuItem" mnemonicParsing="false" text="Show All Trees"/>
-                                    <MenuItem fx:id="showNoneMenuItem" mnemonicParsing="false" text="Show None Trees"/>
-
-                                    <SeparatorMenuItem mnemonicParsing="false"/>
-                                    <MenuItem fx:id="rotateLeftMenuItem" text="Rotate Left">
-                                        <accelerator>
-                                            <KeyCodeCombination alt="UP" code="LEFT" control="UP" meta="UP" shift="UP"
-                                                                shortcut="DOWN"/>
-                                        </accelerator>
-                                    </MenuItem>
-                                    <MenuItem fx:id="rotateRightMenuItem" text="Rotate Right">
-                                        <accelerator>
-                                            <KeyCodeCombination alt="UP" code="RIGHT" control="UP" meta="UP" shift="UP"
-                                                                shortcut="DOWN"/>
-                                        </accelerator>
-                                    </MenuItem>
-                                    <MenuItem fx:id="flipHorizontalMenuItem" text="Flip Horizontal">
-                                        <accelerator>
-                                            <KeyCodeCombination alt="UP" code="LEFT" control="UP" meta="UP" shift="DOWN"
-                                                                shortcut="DOWN"/>
-                                        </accelerator>
-                                    </MenuItem>
-                                    <MenuItem fx:id="flipVerticalMenuItem" text="Flip Vertical">
-                                        <accelerator>
-                                            <KeyCodeCombination alt="UP" code="RIGHT" control="UP" meta="UP"
-                                                                shift="DOWN" shortcut="DOWN"/>
-                                        </accelerator>
-                                    </MenuItem>
-                                    <SeparatorMenuItem mnemonicParsing="false"/>
-                                    <CheckMenuItem fx:id="resizeModeCheckMenuItem" mnemonicParsing="false"
-                                                   text="Resize Mode">
-                                        <accelerator>
-                                            <KeyCodeCombination alt="UP" code="R" control="UP" meta="DOWN" shift="UP"
-                                                                shortcut="UP"/>
-                                        </accelerator>
-                                    </CheckMenuItem>
-                                    <SeparatorMenuItem mnemonicParsing="false"/>
-                                    <MenuItem fx:id="layoutLabelMenuItem" mnemonicParsing="false" text="Layout Labels">
-                                        <accelerator>
-                                            <KeyCodeCombination alt="UP" code="L" control="UP" meta="DOWN" shift="UP"
-                                                                shortcut="UP"/>
-                                        </accelerator>
-                                    </MenuItem>
-                                    <SeparatorMenuItem mnemonicParsing="false"/>
-                                    <Menu mnemonicParsing="false" text="Diagram Type">
-                                        <RadioMenuItem fx:id="rectangularCladogramMenuItem" mnemonicParsing="false"
-                                                       text="Rectangular Cladogram"/>
-                                        <RadioMenuItem fx:id="circularCladogramMenuItem" mnemonicParsing="false"
-                                                       text="Circular Cladogram"/>
-                                        <RadioMenuItem fx:id="radialCladogramMenuItem" mnemonicParsing="false"
-                                                       text="Radial Cladogram"/>
-                                    </Menu>
                                 </Menu>
 
                                 <Menu mnemonicParsing="false" text="View">
                                     <items>
+                                        <MenuItem fx:id="fullScreenMenuItem" mnemonicParsing="false"
+                                                  text="Enter Full Screen">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="DOWN"
+                                                                    shift="UP" shortcut="UP"/>
+                                            </accelerator>
+                                        </MenuItem>
                                         <CheckMenuItem fx:id="useDarkThemeCheckMenuItem" mnemonicParsing="false"
                                                        text="Use Dark Theme"/>
                                         <SeparatorMenuItem mnemonicParsing="false"/>
@@ -357,13 +318,14 @@
                                             </accelerator>
                                         </MenuItem>
                                         <SeparatorMenuItem mnemonicParsing="false"/>
-                                        <MenuItem fx:id="fullScreenMenuItem" mnemonicParsing="false"
-                                                  text="Enter Full Screen">
-                                            <accelerator>
-                                                <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="DOWN"
-                                                                    shift="UP" shortcut="UP"/>
-                                            </accelerator>
-                                        </MenuItem>
+                                        <Menu mnemonicParsing="false" text="Diagram Type">
+                                            <RadioMenuItem fx:id="rectangularCladogramMenuItem" mnemonicParsing="false"
+                                                           text="Rectangular Cladogram"/>
+                                            <RadioMenuItem fx:id="circularCladogramMenuItem" mnemonicParsing="false"
+                                                           text="Circular Cladogram"/>
+                                            <RadioMenuItem fx:id="radialCladogramMenuItem" mnemonicParsing="false"
+                                                           text="Radial Cladogram"/>
+                                        </Menu>
                                     </items>
                                 </Menu>
                                 <Menu fx:id="windowMenu" mnemonicParsing="false" text="Window">

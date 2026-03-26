@@ -22,15 +22,11 @@ package phylofusion.view;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.control.Label;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
@@ -44,15 +40,18 @@ import jloda.graph.Edge;
 import jloda.graph.Node;
 import jloda.phylo.PhyloTree;
 import jloda.phylogeny.layout.Averaging;
-import phylofusion.window.TreeRow;
+import jloda.util.BitSetUtils;
+import phylofusion.window.TreeRecord;
 import splitstree6.data.TaxaBlock;
 import splitstree6.layout.tree.LabeledEdgeShape;
 import splitstree6.layout.tree.LabeledNodeShape;
 import splitstree6.layout.tree.TreeDiagramType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
-
 
 public class NetworkView extends Group {
 	private final NetworkViewService service;
@@ -66,14 +65,18 @@ public class NetworkView extends Group {
 
 	private final ObjectProperty<TreeDiagramType> optionDiagram = new SimpleObjectProperty<>(this, "optionDiagram", TreeDiagramType.RectangularCladogram);
 	private final ObjectProperty<Averaging> optionAveraging = new SimpleObjectProperty<>(this, "optionAveraging", Averaging.ChildAverage);
-	private final DoubleProperty optionOutlineWidth = new SimpleDoubleProperty(this, "optionOutlineWidth", 30.0);
+	private final DoubleProperty optionOutlineWidth;
 
 	private final DoubleProperty targetWidth = new SimpleDoubleProperty(this, "targetWidth", 800.0);
 	private final DoubleProperty targetHeight = new SimpleDoubleProperty(this, "targetHeight", 800.0);
 
-	public NetworkView(Pane bottomPane, VBox legend) {
+	static int countDrawNetworks = 0;
+	static int countDrawTrees = 0;
+
+	public NetworkView(Pane bottomPane, VBox legend, DoubleProperty optionOutlineWidth) {
 		this.service = new NetworkViewService(bottomPane);
 		this.legend = legend;
+		this.optionOutlineWidth = optionOutlineWidth;
 		outlinesGroup.setEffect(new DropShadow(BlurType.THREE_PASS_BOX, MainWindowManager.isUseDarkTheme() ? Color.WHITE : Color.BLACK, 1, 0.5, 0.0, 0.0));
 		MainWindowManager.useDarkThemeProperty().addListener((v, o, n) -> {
 			outlinesGroup.setEffect(new DropShadow(BlurType.THREE_PASS_BOX, n ? Color.WHITE : Color.BLACK, 1, 0.5, 0.0, 0.0));
@@ -89,33 +92,48 @@ public class NetworkView extends Group {
 		networkGroup.getChildren().clear();
 		outlinesGroup.getChildren().clear();
 		tracedTreesGroup.getChildren().clear();
-		legend.getChildren().clear();
+		legend.getChildren().setAll(legend.getChildren().get(0));
 	}
 
-	public void update(PhyloTree network, double scaleFactor) {
-		clear();
+	public void clearTracedTreesDrawing() {
+		tracedTreesGroup.getChildren().clear();
+		legend.getChildren().setAll(legend.getChildren().get(0));
+	}
 
-		var taxaBlock = new TaxaBlock();
-		taxaBlock.addTaxaByNames(network.nodeStream().filter(v -> v.isLeaf() && network.getLabel(v) != null && !network.getLabel(v).isBlank()).map(network::getLabel).toList());
+	public void update(List<TreeRecord> treeRecords, PhyloTree network, double scaleFactor, boolean updateNetworkDrawing, boolean updateTreesDrawing) {
+		if (updateNetworkDrawing) {
+			clear();
+			var taxaBlock = new TaxaBlock();
+			taxaBlock.addTaxaByNames(network.nodeStream().filter(v -> v.isLeaf() && network.getLabel(v) != null && !network.getLabel(v).isBlank()).map(network::getLabel).toList());
 
-		var width = scaleFactor * Math.max(400, getTargetWidth() - 200);
-		var height = scaleFactor * Math.max(400, getTargetHeight() - 50);
-		service.setup(taxaBlock, network, getOptionDiagram(), getOptionAveraging(), width, height);
-		service.setOnSucceeded(a -> {
-			var result = service.getValue();
-			networkGroup.getChildren().setAll(result.getAllAsGroup());
-			networkGroup.getChildren().add(outlinesGroup);
-			nodeLabeledNodeShapeMap.clear();
-			nodeLabeledNodeShapeMap.putAll(service.getNodeLabeledNodeShapeMap());
-			// put space in front and end of labels:
-			nodeLabeledNodeShapeMap.values().stream().map(LabeledNodeShape::getLabel).filter(Objects::nonNull).forEach(label -> label.setText("   %s   ".formatted(label.getText())));
+			var width = scaleFactor * Math.max(400, getTargetWidth() - 200);
+			var height = scaleFactor * Math.max(400, getTargetHeight() - 50);
+			service.setup(taxaBlock, network, getOptionDiagram(), getOptionAveraging(), width, height);
+			service.setOnSucceeded(a -> {
+				System.err.println("Draw Network " + (++countDrawNetworks));
+				var result = service.getValue();
+				networkGroup.getChildren().setAll(result.getAllAsGroup());
+				networkGroup.getChildren().add(outlinesGroup);
+				nodeLabeledNodeShapeMap.clear();
+				nodeLabeledNodeShapeMap.putAll(service.getNodeLabeledNodeShapeMap());
+				// put space in front and end of labels:
+				nodeLabeledNodeShapeMap.values().stream().map(LabeledNodeShape::getLabel).filter(Objects::nonNull).forEach(label -> label.setText("   %s   ".formatted(label.getText())));
 
-			edgeLabeledEdgeShapeHashMap.clear();
-			edgeLabeledEdgeShapeHashMap.putAll(service.getEdgeLabeledEdgeShapeHashMap());
-			drawOutline(getOptionOutlineWidth());
+				edgeLabeledEdgeShapeHashMap.clear();
+				edgeLabeledEdgeShapeHashMap.putAll(service.getEdgeLabeledEdgeShapeHashMap());
+				drawOutline(getOptionOutlineWidth());
 
-			legend.getChildren().add(new Label("PhyloFusion"));
-		});
+				if (updateTreesDrawing) {
+					clearTracedTreesDrawing();
+					System.err.println("Draw Trees " + (++countDrawTrees));
+					drawTracedTrees(network, treeRecords);
+				}
+			});
+		} else if (updateTreesDrawing) {
+			clearTracedTreesDrawing();
+			System.err.println("Draw Trees " + (++countDrawTrees));
+			drawTracedTrees(network, treeRecords);
+		}
 	}
 
 	public void drawOutline(double outlineWidth) {
@@ -152,14 +170,14 @@ public class NetworkView extends Group {
 		}
 	}
 
-	public void drawTracedTrees(PhyloTree network, List<TreeRow> treeRows, BitSet trees) {
+	private void drawTracedTrees(PhyloTree network, List<TreeRecord> treeRecords) {
+		var trees = BitSetUtils.asBitSet(treeRecords.stream().filter(TreeRecord::isShow).mapToInt(TreeRecord::getId).toArray());
 		Function<Node, Point2D> nodePointFunction = v -> {
 			var shape = nodeLabeledNodeShapeMap.get(v);
 			return new Point2D(shape.getTranslateX(), shape.getTranslateY());
 		};
 		Function<Edge, Path> edgePathFunction = e -> (Path) edgeLabeledEdgeShapeHashMap.get(e).getShape();
-
-		tracedTreesGroup.getChildren().setAll(DrawTracedTrees.apply(network, treeRows, trees, getOptionOutlineWidth(), nodePointFunction, edgePathFunction, legend));
+		tracedTreesGroup.getChildren().setAll(DrawTracedTrees.apply(network, treeRecords, trees, getOptionOutlineWidth(), nodePointFunction, edgePathFunction, legend));
 	}
 
 	public TreeDiagramType getOptionDiagram() {
@@ -204,6 +222,10 @@ public class NetworkView extends Group {
 
 	public DoubleProperty targetHeightProperty() {
 		return targetHeight;
+	}
+
+	public ReadOnlyBooleanProperty runningProperty() {
+		return service.runningProperty();
 	}
 }
 
