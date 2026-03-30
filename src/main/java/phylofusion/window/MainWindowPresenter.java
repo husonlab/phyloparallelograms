@@ -163,8 +163,8 @@ public class MainWindowPresenter {
 				updateNetworkDrawing();
 		});
 
-		window.getStage().widthProperty().addListener(e -> updateNetworkDrawing());
-		window.getStage().heightProperty().addListener(e -> updateNetworkDrawing());
+		controller.getRootPane().widthProperty().addListener(e -> updateNetworkDrawing());
+		controller.getRootPane().heightProperty().addListener(e -> updateNetworkDrawing());
 
 		var stackPane = new StackPane(networkView);
 		stackPane.setPadding(new Insets(25));
