@@ -113,12 +113,9 @@ public class NetworkView extends Group {
 		legend.getChildren().setAll(legend.getChildren().get(0));
 	}
 
-	public void update(List<TreeRecord> treeRecords, PhyloTree network, double scaleFactor, boolean updateNetworkDrawing, boolean updateTreesDrawing) {
+	public void update(TaxaBlock taxaBlock, List<TreeRecord> treeRecords, PhyloTree network, double scaleFactor, boolean updateNetworkDrawing, boolean updateTreesDrawing) {
 		if (updateNetworkDrawing) {
 			clear();
-			var taxaBlock = new TaxaBlock();
-			taxaBlock.addTaxaByNames(network.nodeStream().filter(v -> v.isLeaf() && network.getLabel(v) != null && !network.getLabel(v).isBlank()).map(network::getLabel).toList());
-
 			var width = scaleFactor * Math.max(400, getTargetWidth() - 200);
 			var height = scaleFactor * Math.max(400, getTargetHeight() - 50);
 			service.setup(taxaBlock, network, getOptionDiagram(), getOptionAveraging(), width, height, optionReticulateEdgesAreSpecial.get());

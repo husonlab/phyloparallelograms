@@ -21,19 +21,13 @@
 package phylofusion.utils;
 
 import jloda.phylo.PhyloTree;
-import jloda.util.BitSetUtils;
 import jloda.util.IteratorUtils;
 import splitstree6.data.TaxaBlock;
 import splitstree6.data.TreesBlock;
 
 import java.util.Collection;
-import java.util.TreeMap;
 
 public class NexusBlocksUtils {
-
-	public static Result setupBlocks(Collection<PhyloTree> trees) {
-		return setupBlocks(createTaxaBlock(trees), trees);
-	}
 
 	public static Result setupBlocks(TaxaBlock taxaBlock, Collection<PhyloTree> phyloTrees) {
 		var treesBlock = new TreesBlock();
@@ -44,32 +38,10 @@ public class NexusBlocksUtils {
 		treesBlock.setPartial(partial);
 		treesBlock.setReticulated(false);
 		treesBlock.getTrees().addAll(phyloTrees);
+
 		return new Result(taxaBlock, treesBlock);
 	}
 
-	public static TaxaBlock createTaxaBlock(Collection<PhyloTree> trees) {
-		var taxaBlock = new TaxaBlock();
-
-		var idLabelMap = new TreeMap<Integer, String>();
-		for (var tree : trees) {
-			for (var v : tree.nodes()) {
-				if (v.isLeaf()) {
-					var id = tree.getTaxon(v);
-					var label = tree.getLabel(v);
-					if (label == null || label.isBlank())
-						throw new RuntimeException("Unlabeled leaf encountered");
-					idLabelMap.put(id, label);
-				}
-			}
-		}
-		var set = BitSetUtils.asBitSet(idLabelMap.keySet());
-		if (set.cardinality() != BitSetUtils.max(set) - BitSetUtils.min(set) + 1)
-			System.err.println("Wrong set");
-		for (var t = 1; t <= idLabelMap.size(); t++) {
-			taxaBlock.addTaxonByName(idLabelMap.get(t));
-		}
-		return taxaBlock;
-	}
 
 	public record Result(TaxaBlock taxaBlock, TreesBlock treesBlock) {
 	}

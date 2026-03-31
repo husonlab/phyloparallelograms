@@ -22,7 +22,6 @@ package phylofusion.algorithm;
 
 import jloda.phylo.PhyloTree;
 import jloda.util.progress.ProgressListener;
-import phylofusion.utils.NexusBlocksUtils;
 import splitstree6.algorithms.trees.trees2trees.TreesEdgesFilter;
 import splitstree6.data.TaxaBlock;
 import splitstree6.data.TreesBlock;
@@ -32,10 +31,6 @@ import java.util.List;
 import static phylofusion.utils.NexusBlocksUtils.setupBlocks;
 
 public class FilterTrees {
-	public static List<PhyloTree> apply(List<PhyloTree> trees, double minConfidence, ProgressListener progress) {
-		return apply(NexusBlocksUtils.createTaxaBlock(trees), trees, minConfidence, progress);
-	}
-
 	public static List<PhyloTree> apply(TaxaBlock taxaBlock, List<PhyloTree> trees, double minConfidence, ProgressListener progress) {
 		if (minConfidence > 0.0) {
 			var blocks = setupBlocks(taxaBlock, trees);

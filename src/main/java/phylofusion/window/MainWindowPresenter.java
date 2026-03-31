@@ -100,7 +100,7 @@ public class MainWindowPresenter {
 				networkView.clear();
 			else {
 				var network = document.getNetworks().get(0);
-				networkView.update(document.getTreeRecords(), network, scaleFactor.get(), true, true);
+				networkView.update(document.getTaxaBlock(), document.getTreeRecords(), network, scaleFactor.get(), true, true);
 			}
 		});
 		document.getNetworks().addListener((InvalidationListener) e -> updateNetworkDrawing());
@@ -110,7 +110,7 @@ public class MainWindowPresenter {
 				networkView.clearTracedTreesDrawing();
 			else {
 				var network = document.getNetworks().get(0);
-				networkView.update(document.getTreeRecords(), network, scaleFactor.get(), false, true);
+				networkView.update(document.getTaxaBlock(), document.getTreeRecords(), network, scaleFactor.get(), false, true);
 			}
 			// todo: need to implement selection of which network to draw
 		});
@@ -324,10 +324,18 @@ public class MainWindowPresenter {
 		{
 			controller.getRectangularCladogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.RectangularCladogram));
 			controller.getRectangularCladogramMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+			controller.getRectangularPhylogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.RectangularPhylogram));
+			controller.getRectangularPhylogramMenuItem().disableProperty().bind(controller.getRectangularCladogramMenuItem().disableProperty().or(document.hasNetworksProperty().not()));
+
 			controller.getCircularCladogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.CircularCladogram));
-			controller.getCircularCladogramMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+			controller.getCircularCladogramMenuItem().disableProperty().bind(controller.getRectangularCladogramMenuItem().disableProperty());
+			controller.getCircularPhylogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.CircularPhylogram));
+			controller.getCircularPhylogramMenuItem().disableProperty().bind(controller.getRectangularPhylogramMenuItem().disableProperty());
+
 			controller.getRadialCladogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.RadialCladogram));
-			controller.getRadialCladogramMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+			controller.getRadialCladogramMenuItem().disableProperty().bind(controller.getRectangularCladogramMenuItem().disableProperty());
+			controller.getRadialPhylogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.RadialPhylogram));
+			controller.getRadialPhylogramMenuItem().disableProperty().bind(controller.getRectangularPhylogramMenuItem().disableProperty());
 
 			var menuButton = controller.getDiagramMenuButton();
 			menuButton.setPrefWidth(50);
@@ -335,7 +343,7 @@ public class MainWindowPresenter {
 			menuButton.setMaxWidth(Pane.USE_PREF_SIZE);
 			menuButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
-			for (var diagramType : List.of(TreeDiagramType.RectangularCladogram, TreeDiagramType.CircularCladogram, TreeDiagramType.RadialCladogram)) {
+			for (var diagramType : List.of(TreeDiagramType.RectangularCladogram, TreeDiagramType.RectangularPhylogram, TreeDiagramType.CircularCladogram, TreeDiagramType.CircularPhylogram, TreeDiagramType.RadialCladogram, TreeDiagramType.RadialPhylogram)) {
 				var radioButton = new RadioMenuItem();
 				radioButton.setGraphic(diagramType.icon());
 				radioButton.setOnAction(e -> networkView.setOptionDiagram(diagramType));

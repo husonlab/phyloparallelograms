@@ -94,7 +94,7 @@
                                                 <StackPane fx:id="centerPane" AnchorPane.bottomAnchor="0.0"
                                                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                                                            AnchorPane.topAnchor="0.0"/>
-                                                <VBox fx:id="legendVBox" AnchorPane.leftAnchor="10.0"
+                                                <VBox fx:id="legendVBox" AnchorPane.rightAnchor="20.0"
                                                       AnchorPane.topAnchor="10.0">
                                                     <children>
                                                         <Label text="Trees"/>
@@ -335,10 +335,16 @@
                                         <Menu mnemonicParsing="false" text="Diagram Type">
                                             <RadioMenuItem fx:id="rectangularCladogramMenuItem" mnemonicParsing="false"
                                                            text="Rectangular Cladogram"/>
+                                            <RadioMenuItem fx:id="rectangularPhylogramMenuItem" mnemonicParsing="false"
+                                                           text="Rectangular Phylogram"/>
                                             <RadioMenuItem fx:id="circularCladogramMenuItem" mnemonicParsing="false"
                                                            text="Circular Cladogram"/>
+                                            <RadioMenuItem fx:id="circularPhylogramMenuItem" mnemonicParsing="false"
+                                                           text="Circular Phylogram"/>
                                             <RadioMenuItem fx:id="radialCladogramMenuItem" mnemonicParsing="false"
                                                            text="Radial Cladogram"/>
+                                            <RadioMenuItem fx:id="radialPhylogramMenuItem" mnemonicParsing="false"
+                                                           text="Radial Phylogram"/>
                                         </Menu>
                                         <CheckMenuItem fx:id="reticulateEdgesAreSpecialCheckMenuItem"
                                                        mnemonicParsing="false" selected="true"

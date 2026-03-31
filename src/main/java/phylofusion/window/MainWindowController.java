@@ -63,10 +63,19 @@ public class MainWindowController {
 	private RadioMenuItem rectangularCladogramMenuItem;
 
 	@FXML
+	private RadioMenuItem rectangularPhylogramMenuItem;
+
+	@FXML
 	private RadioMenuItem circularCladogramMenuItem;
 
 	@FXML
+	private RadioMenuItem circularPhylogramMenuItem;
+
+	@FXML
 	private RadioMenuItem radialCladogramMenuItem;
+
+	@FXML
+	private RadioMenuItem radialPhylogramMenuItem;
 
 	@FXML
 	private MenuItem clearMenuItem;
@@ -615,6 +624,18 @@ public class MainWindowController {
 
 	public RadioMenuItem getRadialCladogramMenuItem() {
 		return radialCladogramMenuItem;
+	}
+
+	public RadioMenuItem getRectangularPhylogramMenuItem() {
+		return rectangularPhylogramMenuItem;
+	}
+
+	public RadioMenuItem getCircularPhylogramMenuItem() {
+		return circularPhylogramMenuItem;
+	}
+
+	public RadioMenuItem getRadialPhylogramMenuItem() {
+		return radialPhylogramMenuItem;
 	}
 
 	public VBox getLegendVBox() {

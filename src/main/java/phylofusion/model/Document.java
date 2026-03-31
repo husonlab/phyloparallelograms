@@ -31,13 +31,16 @@ import jloda.fx.util.BasicFX;
 import jloda.fx.util.RunAfterAWhile;
 import jloda.phylo.PhyloTree;
 import jloda.util.BitSetUtils;
-import jloda.util.CollectionUtils;
 import jloda.util.StringUtils;
 import phylofusion.trace.TreeTrace;
 import phylofusion.window.TreeRecord;
+import splitstree6.data.TaxaBlock;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 public class Document {
 	private final ObservableList<TreeRecord> treeRecords = FXCollections.observableArrayList();
@@ -47,6 +50,10 @@ public class Document {
 	private final BooleanProperty hasTrees = new SimpleBooleanProperty(this, "hasTrees", false);
 	private final BooleanProperty hasNetworks = new SimpleBooleanProperty(this, "hasNetworks", false);
 	private final BooleanProperty empty = new SimpleBooleanProperty(this, "emptyProperty", false);
+
+	private final BooleanProperty networksHaveWeights = new SimpleBooleanProperty(this, "networksHaveWeights", false);
+
+	private final TaxaBlock taxaBlock = new TaxaBlock();
 
 	private final DoubleProperty confidenceThreshold = new SimpleDoubleProperty(this, "confidenceThreshold");
 
@@ -81,7 +88,7 @@ public class Document {
 				nextId++;
 			}
 		}
-		addTaxa(treeRecords.stream().map(TreeRecord::getTree).toList());
+		setTaxa(treeRecords.stream().map(TreeRecord::getTree).toList(), true);
 	}
 
 	public ObservableList<PhyloTree> getNetworks() {
@@ -102,72 +109,70 @@ public class Document {
 			}
 		}
 
-		var treeIds = new BitSet();
-		for (var network : networks) {
-			for (var v : network.nodes()) {
-				treeIds.or(TreeTrace.getTT(v));
+		if (!hasTreeRecords.get()) {
+			var treeIds = new BitSet();
+			for (var network : networks) {
+				for (var v : network.nodes()) {
+					treeIds.or(TreeTrace.getTT(v));
+				}
+				network.nodeStream().map(TreeTrace::getTT).filter(Objects::nonNull).forEach(treeIds::or);
 			}
-			network.nodeStream().map(TreeTrace::getTT).filter(Objects::nonNull).forEach(treeIds::or);
-		}
-		if (treeIds.cardinality() == 0)
-			throw new IOException("Network does not have tree trace annotations");
-		else {
-			System.err.println("Tree trace ids: " + StringUtils.toString(treeIds, " "));
-		}
+			if (treeIds.cardinality() == 0)
+				throw new IOException("Network does not have tree trace annotations");
+			else {
+				System.err.println("Tree trace ids: " + StringUtils.toString(treeIds, " "));
+			}
 
-		for (var id : BitSetUtils.members(treeIds)) {
-			var name = "tree-" + id;
-			treeRecords.add(new TreeRecord(name, id, true, true, null));
+			for (var id : BitSetUtils.members(treeIds)) {
+				var name = "tree-" + id;
+				treeRecords.add(new TreeRecord(name, id, true, true, null));
+			}
+			setTaxa(networks, false);
 		}
-		addTaxa(networks);
+		networksHaveWeights.set(hasNetworks() && getNetwork().hasEdgeWeights());
 		this.networks.addAll(networks);
 	}
 
 	public void addTreesAndNetworks(Collection<TreeRecord> treeRecords, Collection<PhyloTree> networks) {
 		clear();
 		this.treeRecords.setAll(treeRecords);
+		if (hasTrees())
+			setTaxa(treeRecords.stream().map(TreeRecord::getTree).toList(), true);
 		this.networks.setAll(networks);
-		addTaxa(CollectionUtils.concatenate(treeRecords.stream().map(TreeRecord::getTree).filter(Objects::nonNull).toList(), networks));
+		setTaxa(networks, false);
 	}
 
-	public static void addTaxa(Collection<PhyloTree> list) {
-		var labelIdMap = new TreeMap<String, Integer>();
+	public void setTaxa(Collection<PhyloTree> list, boolean clearTaxaBlock) {
+		if (clearTaxaBlock)
+			taxaBlock.clear();
+
+		if (taxaBlock.getNtax() == 0) {
+			for (var tree : list) {
+				for (var v : tree.nodes()) {
+					if (v.isLeaf()) {
+						var label = tree.getLabel(v);
+						var id = taxaBlock.indexOf(label);
+						if (id == -1) {
+							taxaBlock.addTaxonByName(label);
+						}
+					}
+				}
+			}
+		}
 		for (var tree : list) {
 			for (var v : tree.nodes()) {
 				tree.clearTaxa(v);
 				if (v.isLeaf()) {
-					tree.addTaxon(v, labelIdMap.computeIfAbsent(tree.getLabel(v), k -> labelIdMap.size() + 1));
+					var label = tree.getLabel(v);
+					var id = taxaBlock.indexOf(label);
+					tree.addTaxon(v, id);
 				}
-			}
-		}
-		if (false) {
-			for (var entry : labelIdMap.entrySet()) {
-				System.err.println(entry);
 			}
 		}
 	}
 
-	public static void addTaxa(PhyloTree source, Collection<PhyloTree> list) {
-		var labelIdMap = new TreeMap<String, Integer>();
-		for (var v : source.nodes()) {
-			if (v.isLeaf()) {
-				labelIdMap.put(source.getLabel(v), v.getId());
-			}
-		}
-
-		for (var tree : list) {
-			for (var v : tree.nodes()) {
-				tree.clearTaxa(v);
-				if (v.isLeaf()) {
-					tree.addTaxon(v, labelIdMap.computeIfAbsent(tree.getLabel(v), k -> labelIdMap.size() + 1));
-				}
-			}
-		}
-		if (false) {
-			for (var entry : labelIdMap.entrySet()) {
-				System.err.println(entry);
-			}
-		}
+	public TaxaBlock getTaxaBlock() {
+		return taxaBlock;
 	}
 
 	public ReadOnlyBooleanProperty hasTreeRecordsProperty() {
@@ -214,5 +219,13 @@ public class Document {
 		if (networks.isEmpty())
 			return null;
 		else return networks.get(0);
+	}
+
+	public boolean isNetworksHaveWeights() {
+		return networksHaveWeights.get();
+	}
+
+	public ReadOnlyBooleanProperty networksHaveWeightsProperty() {
+		return networksHaveWeights;
 	}
 }

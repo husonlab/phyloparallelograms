@@ -29,8 +29,8 @@ import jloda.util.*;
 import jloda.util.progress.ProgressListener;
 import jloda.util.progress.ProgressSilent;
 import phylofusion.algorithm.FilterTrees;
-import phylofusion.utils.NexusBlocksUtils;
 import phylofusion.window.TreeRecord;
+import splitstree6.data.TaxaBlock;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -52,7 +52,7 @@ public class BruteForceTreeTracer {
 	 * @param network  the rooted network
 	 * @param treeRecords the tree rows
 	 */
-	public static void apply(PhyloTree network, List<TreeRecord> treeRecords, double minConfidence, ProgressListener progress) {
+	public static void apply(TaxaBlock taxaBlock, PhyloTree network, List<TreeRecord> treeRecords, double minConfidence, ProgressListener progress) {
 		var requireComputation = new ArrayList<TreeRecord>();
 
 		var set = getTT(network.getRoot());
@@ -82,7 +82,7 @@ public class BruteForceTreeTracer {
 
 			try {
 				ExecuteInParallel.apply(choices, choice -> {
-					traceTrees(network, choice, requireComputation, minConfidence);
+					traceTrees(taxaBlock, network, choice, requireComputation, minConfidence);
 				}, ProgramExecutorService.getNumberOfCoresToUse(), progress);
 				CompleteTreeTrace.apply(network);
 			} catch (InterruptedException ignored) {
@@ -99,14 +99,12 @@ public class BruteForceTreeTracer {
 	 * @param chosenReticulateEdges one edge per reticulation
 	 * @param treeRecords              the tree rows
 	 */
-	private static void traceTrees(PhyloTree network, Set<Edge> chosenReticulateEdges, List<TreeRecord> treeRecords, double minConfidence) {
+	private static void traceTrees(TaxaBlock taxaBlock, PhyloTree network, Set<Edge> chosenReticulateEdges, List<TreeRecord> treeRecords, double minConfidence) {
 		//System.err.println("Reticulate edges: "+StringUtils.toString(chosenReticulateEdges,", "));
 		var networkClusters = extractAllClusters(network, chosenReticulateEdges);
 		//System.err.println("Network clusters: "+StringUtils.toString(networkClusters,", "));
 		var networkTaxa = BitSetUtils.union(networkClusters);
 		var rootBitSet = getTT(network.getRoot());
-
-		var taxaBlock = NexusBlocksUtils.createTaxaBlock(List.of(network));
 
 		for (var row : treeRecords) {
 			if (row.isShow() && !rootBitSet.get(row.getId())) {

@@ -23,6 +23,7 @@ package phylofusion.algorithm;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import jloda.fx.util.AService;
+import jloda.fx.windownotifications.WindowNotifications;
 import jloda.phylo.PhyloTree;
 import phylofusion.trace.BruteForceTreeTracer;
 import phylofusion.utils.NexusBlocksUtils;
@@ -30,6 +31,7 @@ import phylofusion.window.MainWindow;
 import splitstree6.algorithms.trees.trees2trees.PhyloFusion;
 import splitstree6.data.TreesBlock;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,10 +51,10 @@ public class AlgorithmsService extends AService<Boolean> {
 				progress.setTasks("Running", "PhyloFusion");
 				final List<PhyloTree> trees;
 				if (document.getConfidenceThreshold() > 0.0)
-					trees = FilterTrees.apply(document.getRunTrees(), mainWindow.getDocument().getConfidenceThreshold(), getProgressListener());
+					trees = FilterTrees.apply(document.getTaxaBlock(), document.getRunTrees(), mainWindow.getDocument().getConfidenceThreshold(), getProgressListener());
 				else
 					trees = document.getRunTrees();
-				var blocks = NexusBlocksUtils.setupBlocks(trees);
+				var blocks = NexusBlocksUtils.setupBlocks(document.getTaxaBlock(), trees);
 				var resultBlock = new TreesBlock();
 				var algorithm = new PhyloFusion();
 				if (trees.size() == 1) {
@@ -65,7 +67,10 @@ public class AlgorithmsService extends AService<Boolean> {
 							var v = network.getRoot();
 							network.setRoot(network.newNode());
 							var e = network.newEdge(network.getRoot(), v);
-							network.setWeight(e, 0.00001);
+							if (network.hasEdgeWeights()) {
+								network.setWeight(e, 0.00001);
+							}
+
 						}
 					}
 					networks.addAll(resultBlock.getTrees());
@@ -78,10 +83,17 @@ public class AlgorithmsService extends AService<Boolean> {
 			if (runBruteForceTraceTrees && document.hasTreesProperty().get()) {
 				getProgressListener().setTasks("Tree tracing", "");
 				for (var network : networks) {
-					BruteForceTreeTracer.apply(network, document.getTreeRecords(), document.getConfidenceThreshold(), progress);
+					BruteForceTreeTracer.apply(document.getTaxaBlock(), network, document.getTreeRecords(), document.getConfidenceThreshold(), progress);
 				}
 			}
-			Platform.runLater(() -> document.getNetworks().setAll(networks));
+			Platform.runLater(() -> {
+				try {
+					document.getNetworks().clear();
+					document.addNetworks(networks);
+				} catch (IOException e) {
+					WindowNotifications.showError(mainWindow.getController().getCenterPane(), e.getMessage());
+				}
+			});
 			return true;
 		});
 	}
