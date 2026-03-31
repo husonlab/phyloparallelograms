@@ -27,7 +27,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import jloda.fx.util.BasicFX;
 import jloda.fx.util.RunAfterAWhile;
 import jloda.phylo.PhyloTree;
 import jloda.util.BitSetUtils;
@@ -65,8 +64,6 @@ public class Document {
 		treeRecords.addListener((InvalidationListener) e ->
 				RunAfterAWhile.applyInFXThread(treeRecords,
 						() -> hasTrees.set(treeRecords.stream().allMatch(r -> r.getTree() != null))));
-
-		BasicFX.reportChanges("hasTrees", hasTrees);
 	}
 
 	public void clear() {

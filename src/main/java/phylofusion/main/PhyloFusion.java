@@ -71,7 +71,7 @@ public class PhyloFusion extends Application {
                 """);
         SplashScreen.setVersionString(ProgramProperties.getProgramVersion());
         SplashScreen.setImage(Utils.getImage(PhyloFusion.class, "PhyloFusion-Splash.png"));
-        SplashScreen.setLabelAnchor(new Point2D(180, 10));
+        SplashScreen.setLabelAnchor(new Point2D(200, 10));
 
         try {
             parseArguments(args);
