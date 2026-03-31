@@ -61,8 +61,7 @@ public class PhyloFusion extends Application {
         Basic.startCollectionStdErr();
 		ResourceManagerFX.addResourceRoot(SplitsTree6.class, "splitstree6.resources");
 
-        if (false)
-            ProgramProperties.getProgramIconsFX().setAll(Utils.getImage(PhyloFusion.class, "PhyloFusion-512x512.png"));
+        ProgramProperties.getProgramIconsFX().setAll(Utils.getImage(PhyloFusion.class, "PhyloFusion-512x512.png"));
         ProgramProperties.setProgramName(Version.NAME);
         ProgramProperties.setProgramVersion(Version.SHORT_DESCRIPTION);
         ProgramProperties.setProgramLicence("""
@@ -71,7 +70,7 @@ public class PhyloFusion extends Application {
                 Sources available at: https://github.com/husonlab/phylosketch
                 """);
         SplashScreen.setVersionString(ProgramProperties.getProgramVersion());
-        if (false) SplashScreen.setImage(Utils.getImage(PhyloFusion.class, "PhyloFusion-Splash.png"));
+        SplashScreen.setImage(Utils.getImage(PhyloFusion.class, "PhyloFusion-Splash.png"));
         SplashScreen.setLabelAnchor(new Point2D(180, 10));
 
         try {

@@ -22,5 +22,5 @@ package phylofusion.main;
 
 public class Version {
 	static public final String NAME = "PhyloFusion";
-	static public final String SHORT_DESCRIPTION = "PhyloFusion (version 0.0.0, built 14 Jan 2026)";
+	static public final String SHORT_DESCRIPTION = "PhyloFusion (version 0.0.0, built 2026)";
 }

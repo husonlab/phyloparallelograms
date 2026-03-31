@@ -13,6 +13,8 @@ module phylofusion {
 	requires jdk.compiler;
 
 	exports phylofusion.main;
+	opens phylofusion.main;
+
 	opens phylofusion.window;
 	opens phylofusion.algorithm;
 	opens phylofusion.view;
