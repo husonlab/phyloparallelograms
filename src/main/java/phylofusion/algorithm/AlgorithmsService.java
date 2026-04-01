@@ -60,7 +60,7 @@ public class AlgorithmsService extends AService<Boolean> {
 				if (trees.size() == 1) {
 					networks.add(trees.get(0));
 				} else {
-					// algorithm.setOptionMutualRefinement(false);
+					algorithm.setOptionMutualRefinement(true);
 					algorithm.compute(getProgressListener(), blocks.taxaBlock(), blocks.treesBlock(), resultBlock);
 					for (var network : resultBlock.getTrees()) {
 						if (network.getRoot().getOutDegree() > 1) {

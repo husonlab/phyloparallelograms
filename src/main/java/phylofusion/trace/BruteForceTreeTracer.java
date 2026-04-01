@@ -49,7 +49,7 @@ public class BruteForceTreeTracer {
 	 * for each tree row for which 'show' is true and no trace is available,
 	 * determine the reticulate edges that it uses
 	 *
-	 * @param network  the rooted network
+	 * @param network     the rooted network
 	 * @param treeRecords the tree rows
 	 */
 	public static void apply(TaxaBlock taxaBlock, PhyloTree network, List<TreeRecord> treeRecords, double minConfidence, ProgressListener progress) {
@@ -97,7 +97,7 @@ public class BruteForceTreeTracer {
 	 *
 	 * @param network               the network
 	 * @param chosenReticulateEdges one edge per reticulation
-	 * @param treeRecords              the tree rows
+	 * @param treeRecords           the tree rows
 	 */
 	private static void traceTrees(TaxaBlock taxaBlock, PhyloTree network, Set<Edge> chosenReticulateEdges, List<TreeRecord> treeRecords, double minConfidence) {
 		//System.err.println("Reticulate edges: "+StringUtils.toString(chosenReticulateEdges,", "));
@@ -129,7 +129,7 @@ public class BruteForceTreeTracer {
 				}
 				// tree is contained in network using selected reticulate edges
 				for (var v : network.nodes()) {
-					if (v.isLeaf() || v == network.getRoot()) {
+					if (v == network.getRoot() || (v.isLeaf() && treeTaxa.get(network.getTaxon(v)))) {
 						getTT(v).set(row.getId());
 					}
 				}

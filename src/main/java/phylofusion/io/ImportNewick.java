@@ -63,12 +63,14 @@ public class ImportNewick {
 		var areTrees = phylogenies.stream().noneMatch(t -> t.nodeStream().anyMatch(v -> v.getInDegree() > 1));
 		var document = window.getDocument();
 
+		var count = 0;
 		if (areTrees) {
 			if (!document.hasTrees())
 				document.clear();
+
 			for (var tree : phylogenies) {
 				if (tree.getName() == null || tree.getName().isBlank())
-					tree.setName("T%03d".formatted(phylogenies.size()));
+					tree.setName("T%03d".formatted(++count));
 			}
 			document.addTrees(phylogenies);
 			Platform.runLater(() -> WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Imported %d trees".formatted(phylogenies.size())));
@@ -76,7 +78,7 @@ public class ImportNewick {
 			document.clear();
 			for (var tree : phylogenies) {
 				if (tree.getName() == null || tree.getName().isBlank())
-					tree.setName("N%03d".formatted(phylogenies.size()));
+					tree.setName("N%03d".formatted(++count));
 			}
 			document.addNetworks(phylogenies);
 			Platform.runLater(() -> WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Imported %d networks".formatted(phylogenies.size())));
