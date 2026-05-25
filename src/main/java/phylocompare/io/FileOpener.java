@@ -1,0 +1,92 @@
+/*
+ * FileOpener.java Copyright (C) 2026 Daniel H. Huson
+ *
+ *  (Some files contain contributions from other authors, who are then mentioned separately.)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+package phylocompare.io;
+
+import javafx.application.Platform;
+import jloda.fx.util.RecentFilesManager;
+import jloda.fx.window.MainWindowManager;
+import jloda.fx.window.NotificationManager;
+import jloda.fx.windownotifications.WindowNotifications;
+import jloda.phylo.PhyloGraph;
+import jloda.util.FileUtils;
+import phylocompare.window.MainWindow;
+import phylocompare.window.NewWindow;
+import splitstree6.data.TaxaBlock;
+import splitstree6.data.TreesBlock;
+import splitstree6.io.readers.NexusImporter;
+import splitstree6.io.writers.trees.NewickWriter;
+
+import java.io.*;
+import java.util.Objects;
+import java.util.function.Consumer;
+
+/**
+ * opens a file
+ * Daniel Huson, 9.2024
+ */
+public class FileOpener implements Consumer<String> {
+
+	@Override
+	public void accept(String fileName) {
+		var window = (MainWindow) MainWindowManager.getInstance().getLastFocusedMainWindow();
+		if (window == null || !window.isEmpty()) {
+			window = NewWindow.apply();
+		}
+		var fWindow = window;
+		Platform.runLater(() -> accept(fileName, fWindow));
+	}
+
+	public void accept(String fileName, MainWindow window) {
+		try {
+			if (SQLiteUtils.isSQLiteWithTreesOrNetworksTable(fileName)) {
+				var parameters = PhyloCompareDB.load(fileName, window.getDocument());
+				if (parameters != null) {
+					if (parameters.confidenceThreshold() >= 0)
+						window.getDocument().confidenceThresholdProperty().set(parameters.confidenceThreshold());
+					if (parameters.outlineWidth() > 0)
+						window.getPresenter().getNetworkView().optionOutlineWidthProperty().set(parameters.outlineWidth());
+				}
+			} else {
+				var firstLine = Objects.requireNonNull(FileUtils.getFirstLineFromFile(new File(fileName))).trim().toLowerCase();
+				if (firstLine.startsWith("#nexus")) {
+					var taxa = new TaxaBlock();
+					var trees = new TreesBlock();
+					NexusImporter.parse(fileName, taxa, trees);
+
+					var w = new StringWriter();
+					var newickWriter = new NewickWriter();
+					newickWriter.optionEdgeWeightsProperty().set(trees.getTrees().stream().anyMatch(PhyloGraph::hasEdgeWeights));
+					newickWriter.optionEdgeConfidencesProperty().set(trees.getTrees().stream().anyMatch(PhyloGraph::hasEdgeConfidences));
+					newickWriter.write(w, taxa, trees);
+					ImportNewick.apply(new BufferedReader(new StringReader(w.toString())), window);
+				} else if (firstLine.startsWith("<nex:nexml") || firstLine.startsWith("<?xml version="))
+					NotificationManager.showWarning("NEXML: not implemented");
+				else if (firstLine.startsWith("(") || firstLine.contains(")")) {
+					ImportNewick.apply(window, fileName);
+				}
+			}
+			RecentFilesManager.getInstance().insertRecentFile(fileName);
+			window.setFileName(fileName);
+		} catch (IOException e) {
+			WindowNotifications.showError(window.getController().getCenterPane(), "Open file failed: " + e.getMessage());
+		}
+	}
+}

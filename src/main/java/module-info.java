@@ -1,4 +1,4 @@
-module phylofusion {
+module phylocompare {
 	requires javafx.base;
 	requires javafx.controls;
 	requires javafx.fxml;
@@ -13,15 +13,15 @@ module phylofusion {
 	requires jdk.compiler;
 	requires com.install4j.runtime;
 
-	exports phylofusion.main;
-	exports phylofusion.window;
-	exports phylofusion.view;
+	exports phylocompare.main;
+	exports phylocompare.window;
+	exports phylocompare.view;
 
-	opens phylofusion.main;
-	opens phylofusion.window;
-	opens phylofusion.algorithm;
-	opens phylofusion.view;
-	opens phylofusion.utils;
-	opens phylofusion.trace;
-	opens phylofusion.model;
+	opens phylocompare.main;
+	opens phylocompare.window;
+	opens phylocompare.algorithm;
+	opens phylocompare.view;
+	opens phylocompare.utils;
+	opens phylocompare.trace;
+	opens phylocompare.model;
 }

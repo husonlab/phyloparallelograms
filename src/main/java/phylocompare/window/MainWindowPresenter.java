@@ -1,0 +1,607 @@
+/*
+ * MainWindowPresenter.java Copyright (C) 2026 Daniel H. Huson
+ *
+ *  (Some files contain contributions from other authors, who are then mentioned separately.)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+package phylocompare.window;
+
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
+import jloda.fx.control.RichTextLabel;
+import jloda.fx.dialog.ExportImageDialog;
+import jloda.fx.dialog.SetParameterInternalDialog;
+import jloda.fx.icons.MaterialIcons;
+import jloda.fx.util.*;
+import jloda.fx.window.MainWindowManager;
+import jloda.fx.window.SplashScreen;
+import jloda.fx.window.WindowGeometry;
+import jloda.fx.windownotifications.WindowNotifications;
+import jloda.phylo.algorithms.RootedNetworkProperties;
+import jloda.util.FileUtils;
+import jloda.util.NumberUtils;
+import jloda.util.StringUtils;
+import phylocompare.algorithm.AlgorithmsService;
+import phylocompare.io.ExportNewick;
+import phylocompare.io.ImportNewick;
+import phylocompare.io.Save;
+import phylocompare.io.SaveBeforeClosingDialog;
+import phylocompare.main.CheckForUpdate;
+import phylocompare.trace.BruteForceTreeTracer;
+import phylocompare.trace.TreeTrace;
+import phylocompare.utils.DoubleSpinnerBinder;
+import phylocompare.utils.SplitPaneSupport;
+import phylocompare.view.ChooseColorSchemeSetup;
+import phylocompare.view.NetworkView;
+import splitstree6.layout.tree.TreeDiagramType;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.time.Duration;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+public class MainWindowPresenter {
+	private final MainWindow window;
+	private final Runnable updateNetworkDrawing;
+	private final Runnable updateTreesDrawing;
+
+	private final AlgorithmsService algorithmsService;
+	private final NetworkView networkView;
+
+	public MainWindowPresenter(MainWindow window) {
+		this.window = window;
+		var controller = window.getController();
+		var document = window.getDocument();
+		var undoManager = window.getUndoManager();
+
+		var confidenceThreshold = document.confidenceThresholdProperty();
+		ProgramProperties.track(confidenceThreshold, 70.0);
+
+		var scaleFactor = new SimpleDoubleProperty(this, "scaleFactor", 1.0);
+
+		ChooseColorSchemeSetup.apply(window);
+
+		var canRun = document.hasTreesProperty();
+		var canShowNetwork = document.hasNetworksProperty();
+
+		controller.getTreeTable().setItems(document.getTreeRecords());
+
+		controller.getConfidenceTextField().setOnAction(e -> {
+			var text = controller.getConfidenceTextField().getText();
+			if (NumberUtils.isDouble(text)) {
+				var value = Math.max(Double.parseDouble(text), 0.0);
+				confidenceThreshold.set(value);
+			}
+		});
+		controller.getConfidenceTextField().setText(StringUtils.removeTrailingZerosAfterDot(confidenceThreshold.get()));
+		controller.getConfidenceTextField().disableProperty().bind(document.hasTreeConfidencesProperty().not().or(canRun.not()));
+
+		confidenceThreshold.addListener(e -> controller.getRunMenuItem().fire());
+
+		controller.getSetConfidenceThresholdMenuItem().setOnAction(e -> {
+			var dialog = new SetParameterInternalDialog(controller.getCenterAnchorPane(), "Confidence", "Enter min edge confidence", "0.0", s -> {
+				controller.getConfidenceTextField().setText(s);
+			});
+			dialog.show();
+		});
+		controller.getSetConfidenceThresholdMenuItem().disableProperty().bind(controller.getConfidenceTextField().disabledProperty());
+
+		networkView = new NetworkView(controller.getBottomFlowPane(), controller.getLegendVBox());
+
+		updateNetworkDrawing = () -> RunAfterAWhile.applyInFXThread("runUpdateNetworkDrawing", () -> {
+			if (document.getNetworks().isEmpty())
+				networkView.clear();
+			else {
+				var network = document.getNetworks().get(0);
+				networkView.update(document.getTaxaBlock(), document.getTreeRecords(), network, scaleFactor.get(), true, true, document.getColorSchemeName());
+			}
+		});
+		document.getNetworks().addListener((InvalidationListener) e -> runUpdateNetworkDrawing());
+
+		updateTreesDrawing = () -> RunAfterAWhile.applyInFXThread("runUpdateTreesDrawing", () -> {
+			if (document.getNetworks().isEmpty())
+				networkView.clearTracedTreesDrawing();
+			else {
+				var network = document.getNetworks().get(0);
+				networkView.update(document.getTaxaBlock(), document.getTreeRecords(), network, scaleFactor.get(), false, true, document.getColorSchemeName());
+			}
+			// todo: need to implement selection of which network to draw
+		});
+		document.getTreeRecords().addListener((InvalidationListener) e -> runUpdateNetworkDrawing());
+		document.colorSchemeNameProperty().addListener(e -> runUpdateTreesDrawing());
+
+		algorithmsService = new AlgorithmsService(controller.getBottomFlowPane());
+		algorithmsService.setOnSucceeded(e -> {
+			scaleFactor.set(1.0);
+			Platform.runLater(updateNetworkDrawing);
+		});
+
+		controller.getRunMenuItem().setOnAction(e -> {
+			if (!algorithmsService.isRunning()) {
+				this.window.getUndoManager().clear();
+				algorithmsService.setupCalculation(this.window, true);
+				algorithmsService.setOnScheduled(a -> networkView.clear());
+				algorithmsService.setOnSucceeded(a -> {
+					runUpdateNetworkDrawing();
+					window.dirtyProperty().set(true);
+				});
+				algorithmsService.restart();
+			}
+		});
+		controller.getRunMenuItem().disableProperty().bind(algorithmsService.runningProperty().or(document.hasTreesProperty().not()));
+
+		DoubleSpinnerBinder.setupAndBind(controller.getOutlineWidthSpinner(), networkView.optionOutlineWidthProperty(), 0, 100, networkView.getOptionOutlineWidth(), 1);
+		controller.getOutlineWidthSpinner().disableProperty().bind(canShowNetwork.not());
+
+		networkView.optionOutlineWidthProperty().addListener((v, o, n) -> {
+			runUpdateNetworkDrawing();
+			undoManager.add("width", networkView.optionOutlineWidthProperty(), o, n);
+		});
+		networkView.optionAveragingProperty().addListener((v, o, n) -> {
+			runUpdateNetworkDrawing();
+			undoManager.add("averaging", networkView.optionAveragingProperty(), o, n);
+		});
+		networkView.optionDiagramProperty().addListener((v, o, n) -> {
+			runUpdateNetworkDrawing();
+			undoManager.add("diagram", networkView.optionDiagramProperty(), o, n);
+		});
+		networkView.optionShowOutlineProperty().addListener((v, o, n) -> {
+			undoManager.add("outline", networkView.optionShowOutlineProperty(), o, n);
+		});
+		networkView.optionShowOutlineProperty().bindBidirectional(controller.getOutlineToggleButton().selectedProperty());
+		controller.getOutlineToggleButton().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+
+		networkView.optionReticulateEdgesAreSpecialProperty().bindBidirectional(controller.getReticulateEdgesAreSpecialCheckMenuItem().selectedProperty());
+		networkView.optionReticulateEdgesAreSpecialProperty().addListener((v, o, n) -> {
+			if (n)
+				MaterialIcons.setIcon(controller.getReticulateEdgesAreSpecialButton(), MaterialIcons.redo, "-fx-scale-y: -1;", true);
+			else
+				MaterialIcons.setIcon(controller.getReticulateEdgesAreSpecialButton(), MaterialIcons.keyboard_return, "-fx-scale-x: -1;-fx-scale-y: -1;", true);
+			if (document.hasNetworks())
+				runUpdateNetworkDrawing();
+		});
+		controller.getReticulateEdgesAreSpecialCheckMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getReticulateEdgesAreSpecialButton().setOnAction(e -> networkView.optionReticulateEdgesAreSpecialProperty().set(!networkView.optionReticulateEdgesAreSpecialProperty().get()));
+		controller.getReticulateEdgesAreSpecialButton().disableProperty().bind(controller.getReticulateEdgesAreSpecialCheckMenuItem().disableProperty());
+		controller.getRootPane().widthProperty().addListener(e -> runUpdateNetworkDrawing());
+		controller.getRootPane().heightProperty().addListener(e -> runUpdateNetworkDrawing());
+
+		var stackPane = new StackPane(networkView);
+		stackPane.setPadding(new Insets(25));
+
+		networkView.targetWidthProperty().bind(controller.getCenterPane().widthProperty());
+		networkView.targetHeightProperty().bind(controller.getCenterPane().heightProperty());
+		controller.getScrollPane().setContent(stackPane);
+
+		controller.getUseDarkThemeCheckMenuItem().selectedProperty().bindBidirectional(MainWindowManager.useDarkThemeProperty());
+		controller.getUseDarkThemeCheckMenuItem().setSelected(MainWindowManager.isUseDarkTheme());
+		MainWindowManager.useDarkThemeProperty().addListener(e -> updateNetworkDrawing.run());
+		controller.getUseDarkThemeCheckMenuItem().setDisable(false);
+
+		if (this.window.getStage() != null)
+			BasicFX.setupFullScreenMenuSupport(this.window.getStage(), controller.getFullScreenMenuItem());
+
+		controller.getTreeTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+		controller.getAboutMenuItem().setOnAction(e -> SplashScreen.showSplash(Duration.ofSeconds(30)));
+
+		controller.getNewMenuItem().setOnAction(e -> NewWindow.apply());
+		controller.getOpenMenuItem().setOnAction(FileOpenManager.createOpenFileEventHandler(window.getStage()));
+
+		controller.disableAllRunProperty().bind(document.hasTreesProperty().not().or(algorithmsService.runningProperty()));
+		controller.disableAllShowProperty().bind(document.hasTreeRecordsProperty().not().or(algorithmsService.runningProperty()));
+
+		RecentFilesManager.getInstance().setFileOpener(FileOpenManager.getFileOpener());
+		RecentFilesManager.getInstance().setupMenu(controller.getRecentFilesMenu());
+
+		window.getStage().setOnCloseRequest(e -> {
+			controller.getCloseMenuItem().getOnAction().handle(null);
+			e.consume();
+		});
+
+		controller.getShowAllMenuItem().setOnAction(e -> {
+			var showing = document.getShowTrees();
+			undoManager.doAndAdd("show", () -> {
+				for (var record : document.getTreeRecords()) {
+					record.setShow(showing.get(record.getId()));
+				}
+			}, () -> {
+				for (var row : getSelectedRowsOrAll(controller.getTreeTable(), document.getTreeRecords())) {
+					row.setShow(true);
+				}
+			});
+		});
+		controller.getShowAllMenuItem().disableProperty().bind(document.hasTreeRecordsProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getShowNoneMenuItem().setOnAction(e -> {
+			var showing = document.getShowTrees();
+			undoManager.doAndAdd("show", () -> {
+				for (var record : document.getTreeRecords()) {
+					record.setShow(showing.get(record.getId()));
+				}
+			}, () -> {
+				for (var row : getSelectedRowsOrAll(controller.getTreeTable(), document.getTreeRecords())) {
+					row.setShow(false);
+				}
+			});
+		});
+		controller.getShowNoneMenuItem().disableProperty().bind(document.hasTreeRecordsProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getQuitMenuItem().setOnAction((e) -> {
+			while (MainWindowManager.getInstance().size() > 0) {
+				final MainWindow aWindow = (MainWindow) MainWindowManager.getInstance().getMainWindow(MainWindowManager.getInstance().size() - 1);
+				if (SaveBeforeClosingDialog.apply(aWindow) == SaveBeforeClosingDialog.Result.cancel || !MainWindowManager.getInstance().closeMainWindow(aWindow))
+					break;
+			}
+		});
+
+		InvalidationListener updateStatusLine = e -> {
+			RunAfterAWhile.applyInFXThread("status", () -> {
+				var buf = new StringBuilder();
+				if (!document.getTreeRecords().isEmpty()) {
+					var active = document.getTreeRecords().stream().filter(TreeRecord::isRun).count();
+					buf.append("Trees: %,d".formatted(active));
+					if (active != document.getTreeRecords().size())
+						buf.append(" (of %,d)".formatted(document.getTreeRecords().size()));
+				}
+				if (!document.getNetworks().isEmpty()) {
+					var showing = document.getTreeRecords().stream().filter(TreeRecord::isShow).count();
+					if (showing > 0)
+						buf.append(", showing %,d".formatted(showing));
+
+					var network = document.getNetworks().get(0);
+					buf.append(". Network: ").append(RootedNetworkProperties.computeInfoString(network));
+					if (document.getNetworks().size() > 1)
+						buf.append(" (%,d networks)".formatted(document.getNetworks().size()));
+				}
+				controller.getStatusLabel().setText(buf.toString());
+			});
+		};
+		document.getTreeRecords().addListener(updateStatusLine);
+		document.getNetworks().addListener(updateStatusLine);
+		algorithmsService.runningProperty().addListener(updateStatusLine);
+
+		controller.getUseAllMenuItem().setOnAction(e -> {
+			var selected = controller.getTreeTable().getSelectionModel().getSelectedItems();
+			var used = selected.stream().filter(TreeRecord::isRun).count();
+			if (!selected.isEmpty() && used < selected.size())
+				selected.forEach(row -> row.setRun(true));
+			else
+				document.getTreeRecords().forEach(row -> row.setRun(true));
+		});
+		controller.getUseAllMenuItem().disableProperty().bind(algorithmsService.runningProperty().or(document.hasTreeRecordsProperty().not()).or(algorithmsService.runningProperty()));
+
+		controller.getUseNoneMenuItem().setOnAction(e -> {
+			var selected = controller.getTreeTable().getSelectionModel().getSelectedItems();
+			var used = selected.stream().filter(TreeRecord::isRun).count();
+			if (!selected.isEmpty() && used > 0)
+				selected.forEach(row -> row.setRun(false));
+			else
+				document.getTreeRecords().forEach(row -> row.setRun(false));
+		});
+		controller.getUseNoneMenuItem().disableProperty().bind(algorithmsService.runningProperty().or(document.hasTreeRecordsProperty().not()).or(algorithmsService.runningProperty()));
+
+
+		SplitPaneSupport.installKeepLeftSameDuringWindowResize(controller.getRootPane(), controller.getSplitPane());
+
+		controller.getSelectAllTableButton().setOnAction(e -> {
+			controller.getTreeTable().getSelectionModel().selectAll();
+		});
+		controller.getSelectAllTableButton().disableProperty().bind(document.hasTreeRecordsProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getSelectNoneTableButton().setOnAction(e -> {
+			controller.getTreeTable().getSelectionModel().clearSelection();
+		});
+		controller.getSelectNoneTableButton().disableProperty().bind(document.hasTreeRecordsProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getShowSelectedMenuItem().setOnAction(e -> {
+			if (!controller.getTreeTable().getSelectionModel().getSelectedItems().isEmpty()) {
+				var selected = controller.getTreeTable().getSelectionModel().getSelectedItems();
+				for (var record : document.getTreeRecords()) {
+					record.setShow(selected.contains(record));
+				}
+			}
+			runUpdateTreesDrawing();
+			updateStatusLine.invalidated(null);
+			window.dirtyProperty().set(true);
+		});
+		controller.getShowSelectedMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(networkView.runningProperty()).or(algorithmsService.runningProperty()).or(document.hasTreeRecordsProperty().not()));
+
+		controller.getShowButton().setOnAction(e -> {
+			runUpdateTreesDrawing();
+			updateStatusLine.invalidated(null);
+			window.dirtyProperty().set(true);
+		});
+		controller.getShowButton().disableProperty().bind(controller.getShowSelectedMenuItem().disableProperty());
+
+		{
+			controller.getRectangularCladogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.RectangularCladogram));
+			controller.getRectangularCladogramMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+			controller.getRectangularPhylogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.RectangularPhylogram));
+			controller.getRectangularPhylogramMenuItem().disableProperty().bind(controller.getRectangularCladogramMenuItem().disableProperty().or(document.hasNetworksProperty().not()));
+
+			controller.getCircularCladogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.CircularCladogram));
+			controller.getCircularCladogramMenuItem().disableProperty().bind(controller.getRectangularCladogramMenuItem().disableProperty());
+			controller.getCircularPhylogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.CircularPhylogram));
+			controller.getCircularPhylogramMenuItem().disableProperty().bind(controller.getRectangularPhylogramMenuItem().disableProperty());
+
+			controller.getRadialCladogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.RadialCladogram));
+			controller.getRadialCladogramMenuItem().disableProperty().bind(controller.getRectangularCladogramMenuItem().disableProperty());
+			controller.getRadialPhylogramMenuItem().setOnAction(e -> networkView.setOptionDiagram(TreeDiagramType.RadialPhylogram));
+			controller.getRadialPhylogramMenuItem().disableProperty().bind(controller.getRectangularPhylogramMenuItem().disableProperty());
+
+			var menuButton = controller.getDiagramMenuButton();
+			menuButton.setPrefWidth(50);
+			menuButton.setMinWidth(Pane.USE_PREF_SIZE);
+			menuButton.setMaxWidth(Pane.USE_PREF_SIZE);
+			menuButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+
+			for (var diagramType : List.of(TreeDiagramType.RectangularCladogram, TreeDiagramType.RectangularPhylogram, TreeDiagramType.CircularCladogram, TreeDiagramType.CircularPhylogram, TreeDiagramType.RadialCladogram, TreeDiagramType.RadialPhylogram)) {
+				var radioButton = new RadioMenuItem();
+				radioButton.setGraphic(diagramType.icon());
+				radioButton.setOnAction(e -> networkView.setOptionDiagram(diagramType));
+				networkView.optionDiagramProperty().addListener((v, o, n) -> {
+					radioButton.setSelected(n == diagramType);
+				});
+				radioButton.disableProperty().bind(menuButton.disableProperty());
+				menuButton.getItems().add(radioButton);
+			}
+
+			networkView.optionDiagramProperty().addListener((v, o, n) -> {
+				if (n != null)
+					menuButton.setGraphic(n.icon());
+			});
+			if (networkView.getOptionDiagram() != null)
+				menuButton.setGraphic(networkView.getOptionDiagram().icon());
+			menuButton.disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+		}
+
+		controller.getCloseMenuItem().setOnAction(e -> {
+			if (SaveBeforeClosingDialog.apply(window) != SaveBeforeClosingDialog.Result.cancel) {
+				ProgramProperties.put("WindowGeometry", (new WindowGeometry(window.getStage())).toString());
+				MainWindowManager.getInstance().closeMainWindow(window);
+			}
+		});
+
+		controller.getZoomInMenuItem().setOnAction(e -> {
+			scaleFactor.set(1.1 * scaleFactor.get());
+		});
+		controller.getZoomInMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
+		controller.getZoomOutMenuItem().setOnAction(e -> {
+			scaleFactor.set(1 / 1.1 * scaleFactor.get());
+		});
+		controller.getZoomOutMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
+
+		controller.getZoomToFitMenuItem().setOnAction(e -> {
+			scaleFactor.set(1.0);
+		});
+
+		scaleFactor.addListener(e -> updateNetworkDrawing.run());
+
+		controller.getIncreaseFontSizeMenuItem().setOnAction(e -> {
+			for (var label : BasicFX.getAllRecursively(networkView, RichTextLabel.class)) {
+				label.setFontSize(Math.min(128, 1.1 * label.getFontSize()));
+			}
+		});
+		controller.getIncreaseFontSizeMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
+		controller.getDecreaseFontSizeMenuItem().setOnAction(e -> {
+			for (var label : BasicFX.getAllRecursively(networkView, RichTextLabel.class)) {
+				label.setFontSize(Math.max(4, 1 / 1.1 * label.getFontSize()));
+			}
+		});
+		controller.getDecreaseFontSizeMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
+
+		controller.getCopyImageMenuItem().setOnAction(e -> {
+			var hPolicy = controller.getScrollPane().getHbarPolicy();
+			var vPolicy = controller.getScrollPane().getVbarPolicy();
+			try {
+				controller.getScrollPane().setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+				controller.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+				ClipboardUtils.putImage(controller.getInnerAnchorPane());
+			} finally {
+				controller.getScrollPane().setHbarPolicy(hPolicy);
+				controller.getScrollPane().setVbarPolicy(vPolicy);
+			}
+		});
+		controller.getCopyImageMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getExportImageMenuItem().setOnAction(e -> {
+			var hPolicy = controller.getScrollPane().getHbarPolicy();
+			var vPolicy = controller.getScrollPane().getVbarPolicy();
+			try {
+				controller.getScrollPane().setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+				controller.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+				ExportImageDialog.show(window.getFileName(), window.getStage(), controller.getInnerAnchorPane());
+			} finally {
+				controller.getScrollPane().setHbarPolicy(hPolicy);
+				controller.getScrollPane().setVbarPolicy(vPolicy);
+			}
+		});
+		controller.getExportImageMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getExportNewickMenuItem().setOnAction(e -> ExportNewick.apply(window));
+		controller.getExportNewickMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getSaveMenuItem().setOnAction(e -> Save.showSaveDialog(this.window));
+		controller.getSaveMenuItem().disableProperty().bind(document.emptyProperty().or(algorithmsService.runningProperty()));
+
+		controller.getUndoMenuItem().setOnAction(e -> undoManager.undo());
+		controller.getUndoMenuItem().textProperty().bind(undoManager.undoNameProperty());
+		controller.getUndoMenuItem().disableProperty().bind(undoManager.undoableProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getRedoMenuItem().setOnAction(e -> undoManager.redo());
+		controller.getRedoMenuItem().textProperty().bind(undoManager.redoNameProperty());
+		controller.getRedoMenuItem().disableProperty().bind(undoManager.redoableProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getCopyTreesMenuItem().setOnAction(e -> {
+			if (document.hasTrees()) {
+				var trees = getSelectedRowsOrAll(controller.getTreeTable(), document.getTreeRecords()).stream().map(TreeRecord::getTree).filter(Objects::nonNull).toList();
+				if (!trees.isEmpty()) {
+					try {
+						ClipboardUtils.putString(ExportNewick.apply(trees));
+					} catch (IOException ex) {
+						System.err.println(ex.getMessage());
+					}
+				}
+			}
+		});
+		controller.getCopyTreesMenuItem().disableProperty().bind(document.hasTreesProperty().not().or(algorithmsService.runningProperty()));
+
+
+		controller.getCopyNetworkMenuItem().setOnAction(e -> {
+			if (document.hasNetworks()) {
+				try {
+					ClipboardUtils.putString(ExportNewick.apply(document.getNetwork()));
+				} catch (IOException ex) {
+					System.err.println(ex.getMessage());
+				}
+			}
+		});
+		controller.getCopyNetworkMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(algorithmsService.runningProperty()));
+
+		controller.getCopyMenuItem().setOnAction(e -> {
+			if (controller.getScrollPane().isFocused() && document.hasNetworks())
+				controller.getCopyNetworkMenuItem().fire();
+			else if (document.hasTrees()) {
+				controller.getCopyTreesMenuItem().fire();
+			}
+		});
+		controller.getCopyMenuItem().disableProperty().bind(controller.getCopyTreesMenuItem().disableProperty().and(controller.getCopyNetworkMenuItem().disableProperty()));
+
+		controller.getClearMenuItem().setOnAction(e -> {
+			networkView.clear();
+			document.getNetworks().clear();
+		});
+		controller.getClearMenuItem().disableProperty().bind((document.hasTreesProperty().and(document.hasNetworksProperty()).not()));
+
+		var canEditTreesList = new SimpleBooleanProperty(this, "canEditTreesList", false);
+		canEditTreesList.bind(document.hasTreesProperty().and(document.hasNetworksProperty().not()).or(algorithmsService.runningProperty().not()));
+
+		controller.getPasteMenuItem().setOnAction(e -> {
+			if (ClipboardUtils.hasString()) {
+				try {
+					ImportNewick.apply(new BufferedReader(new StringReader(ClipboardUtils.getString())), window);
+				} catch (IOException ex) {
+					WindowNotifications.showWarning(controller.getCenterPane(), "Paste failed: " + ex.getMessage());
+				}
+			}
+		});
+		controller.getPasteMenuItem().disableProperty().bind(canEditTreesList.not().and(document.emptyProperty().not()));
+
+		controller.getDeleteMenuItem().setOnAction(e -> document.getTreeRecords().removeAll(getSelectedRowsOrAll(controller.getTreeTable(), document.getTreeRecords())));
+		controller.getDeleteMenuItem().disableProperty().bind(canEditTreesList.not());
+
+		controller.getImportTreeNamesMenuItem().setOnAction(e -> {
+			var previousFile = new File(jloda.util.ProgramProperties.get("TreeNamesFile", ""));
+
+			var fileChooser = new FileChooser();
+			if (FileUtils.fileExistsAndIsNonEmpty(previousFile)) {
+				fileChooser.setInitialDirectory(previousFile.getParentFile());
+				fileChooser.setInitialFileName(previousFile.getName());
+			}
+			if (jloda.util.ProgramProperties.getProgramVersion() != null)
+				fileChooser.setTitle("Open File - " + jloda.util.ProgramProperties.getProgramVersion());
+			else
+				fileChooser.setTitle("Open File");
+			fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("text", "*.txt"));
+			final File selectedFile = fileChooser.showOpenDialog(window.getStage());
+
+			if (selectedFile != null) {
+				jloda.util.ProgramProperties.put("TreeNamesFile", selectedFile);
+				try {
+					String separator = null;
+					for (var line : FileUtils.getLinesFromFile(selectedFile.getPath())) {
+						if (!line.startsWith("#")) {
+							if (separator == null) {
+								if (line.contains("\t"))
+									separator = "\t";
+								else if (line.contains(";"))
+									separator = ";";
+								else if (line.contains(","))
+									separator = ",";
+								else throw new IOException("File must be tab-, comma- or semi-colon separated");
+							}
+							var tokens = line.split(separator);
+							if (tokens.length == 2 && NumberUtils.isInteger(tokens[0])) {
+								var id = NumberUtils.parseInt(tokens[0]);
+								var name = tokens[1];
+								document.getTreeRecords().stream().filter(r -> r.getId() == id).findFirst().ifPresent(record -> record.setName(name));
+							}
+						}
+					}
+					if (separator != null) {
+						runUpdateTreesDrawing();
+					}
+				} catch (IOException ex) {
+					WindowNotifications.showError(controller.getCenterPane(), ex.getMessage());
+				}
+			}
+		});
+		controller.getImportTreeNamesMenuItem().disableProperty().bind(canEditTreesList.not());
+
+		controller.getCheckForUpdatesMenuItem().setOnAction(e -> CheckForUpdate.apply(window));
+		controller.getCheckForUpdatesMenuItem().disableProperty().bind(MainWindowManager.getInstance().sizeProperty().greaterThan(1).or(window.dirtyProperty()));
+
+		controller.getShowTreesExhaustive().setOnAction(e -> {
+			for (var network : document.getNetworks()) {
+				TreeTrace.clearTT(network);
+			}
+			runUpdateTreesDrawing();
+		});
+
+	}
+
+	public static Collection<TreeRecord> getSelectedRowsOrAll(TableView<TreeRecord> treeTableView, List<TreeRecord> treeRecords) {
+		if (treeTableView.getSelectionModel().getSelectedItems().isEmpty()) {
+			return treeRecords;
+		} else {
+			return treeTableView.getSelectionModel().getSelectedItems();
+		}
+	}
+
+	public void runUpdateNetworkDrawing() {
+		updateNetworkDrawing.run();
+	}
+
+	public void runUpdateTreesDrawing() {
+		updateTreesDrawing.run();
+		if (!algorithmsService.isRunning() && BruteForceTreeTracer.requireTracing(window.getDocument().getNetworks(), window.getDocument().getTreeRecords())) {
+			algorithmsService.setupCalculation(window, false);
+			algorithmsService.setOnSucceeded(a -> {
+				updateTreesDrawing.run();
+				window.dirtyProperty().set(true);
+			});
+			algorithmsService.restart();
+		}
+	}
+
+	public NetworkView getNetworkView() {
+		return networkView;
+	}
+}
