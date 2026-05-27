@@ -11,7 +11,6 @@ module phylocompare {
 	requires java.sql;
 	requires org.apache.commons.numbers.gamma;
 	requires jdk.compiler;
-	requires com.install4j.runtime;
 
 	exports phylocompare.main;
 	exports phylocompare.window;
