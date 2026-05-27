@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class PhyloCompareDB {
-	
+
 	public static void save(String fileName, List<TreeRecord> treeRecords, List<PhyloTree> networks,
 							double minConfidence, double outlineWidth, boolean showOutline, String colorScheme) throws IOException {
 		var url = "jdbc:sqlite:" + fileName;

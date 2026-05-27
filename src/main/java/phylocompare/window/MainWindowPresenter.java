@@ -156,7 +156,7 @@ public class MainWindowPresenter {
 
 		DoubleSpinnerBinder.setupAndBind(controller.getTransferAcceptorPercentSpinner(), networkView.optionAcceptorPercentageProperty(), 50, 100, networkView.getOptionOutlineWidth(), 1);
 
-		controller.getShowTransferMenuItem().selectedProperty().bindBidirectional(networkView.optionShowTransferProperty());
+		controller.getUseTransferMenuItem().selectedProperty().bindBidirectional(networkView.optionShowTransferProperty());
 
 		networkView.optionAcceptorPercentageProperty().addListener((v, o, n) -> {
 			undoManager.add("transfer acceptor percent", networkView.optionAcceptorPercentageProperty(), o, n);

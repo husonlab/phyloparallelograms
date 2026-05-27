@@ -139,10 +139,10 @@
                                                                 <Label text="Curved Reticulate Edges"/>
                                                             </graphic>
                                                         </CheckMenuItem>
-                                                        <CheckMenuItem fx:id="showTransferMenuItem2"
+                                                        <CheckMenuItem fx:id="useTransferMenuItem2"
                                                                        mnemonicParsing="false">
                                                             <graphic>
-                                                                <Label text="Show Transfer Edges"/>
+                                                                <Label text="Use Transfer Edges"/>
                                                             </graphic>
                                                         </CheckMenuItem>
                                                         <MenuItem mnemonicParsing="false">
@@ -403,8 +403,8 @@
                                         </Menu>
                                         <CheckMenuItem fx:id="showOutlineCheckMenuItem" mnemonicParsing="false"
                                                        selected="true" text="Show Outline"/>
-                                        <CheckMenuItem fx:id="showTransferMenuItem" mnemonicParsing="false"
-                                                       text="Show Transfer Edges"/>
+                                        <CheckMenuItem fx:id="useTransferMenuItem" mnemonicParsing="false"
+                                                       text="Use Transfer Edges"/>
                                         <CheckMenuItem fx:id="curvedReticulateEdgesCheckMenuItem"
                                                        mnemonicParsing="false" selected="true"
                                                        text="Curved Reticulate Edges"/>

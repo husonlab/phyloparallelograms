@@ -90,9 +90,9 @@ trees whose *Show* box is checked. Its toolbar contains:
     - *Show Outline* -- show the outline the underlying network.
     - *Spread* spinner -- controls the spread of the trees drawn in the parallelogram.
     - *Curved Reticulate Edges* -- draw reticulation edges as curves rather than rectangular segments.
-    - *Show Transfer Edges* -- display horizontal-transfer-style edges in addition to standard reticulation edges.
-    - *Min Percent* spinner -- minimum percentage of trees that must contain an edge for it to qualify as a transfer
-      acceptor edge.
+  - *Use Transfer Edges* -- use horizontal-transfer-style edges in addition to standard reticulation edges.
+  - *Min Percent* spinner -- minimum percentage of trees that must use an edge for it to qualify as a transfer acceptor
+    edge.
 - **Color scheme** -- drop-down menu of color schemes used to color the trees in the parallelogram.
 - **Zoom In** -- zoom the view in by one step.
 - **Zoom Out** -- zoom the view out by one step.

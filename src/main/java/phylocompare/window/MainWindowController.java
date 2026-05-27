@@ -294,10 +294,10 @@ public class MainWindowController {
 	private MenuButton settingsMenuButton;
 
 	@FXML
-	private CheckMenuItem showTransferMenuItem;
+	private CheckMenuItem useTransferMenuItem;
 
 	@FXML
-	private CheckMenuItem showTransferMenuItem2;
+	private CheckMenuItem useTransferMenuItem2;
 
 
 	private ZoomableScrollPane scrollPane;
@@ -380,8 +380,8 @@ public class MainWindowController {
 		showOutlineCheckMenuItem2.selectedProperty().bindBidirectional(showOutlineCheckMenuItem.selectedProperty());
 		showOutlineCheckMenuItem2.disableProperty().bind(showOutlineCheckMenuItem.disableProperty());
 
-		showTransferMenuItem2.selectedProperty().bindBidirectional(showTransferMenuItem.selectedProperty());
-		showTransferMenuItem2.disableProperty().bind(showTransferMenuItem.disableProperty());
+		useTransferMenuItem2.selectedProperty().bindBidirectional(useTransferMenuItem.selectedProperty());
+		useTransferMenuItem2.disableProperty().bind(useTransferMenuItem.disableProperty());
 
 		MainWindowManager.useDarkThemeProperty().addListener((v, o, n) -> {
 			if (n)
@@ -726,7 +726,7 @@ public class MainWindowController {
 		return showTreesExhaustive;
 	}
 
-	public CheckMenuItem getShowTransferMenuItem() {
-		return showTransferMenuItem;
+	public CheckMenuItem getUseTransferMenuItem() {
+		return useTransferMenuItem;
 	}
 }
