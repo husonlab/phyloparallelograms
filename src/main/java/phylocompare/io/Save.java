@@ -28,7 +28,6 @@ import jloda.util.FileUtils;
 import phylocompare.window.MainWindow;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * save file
@@ -45,7 +44,7 @@ public class Save {
 			PhyloCompareDB.save(file.getPath(), document.getTreeRecords(), document.getNetworks(),
 					document.getApplicableConfidenceThreshold(), networkView.getOptionOutlineWidth(), networkView.isOptionShowOutline(), document.getColorSchemeName());
 			window.dirtyProperty().set(false);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			WindowNotifications.showError(window.getController().getCenterPane(), "Save failed: " + e.getMessage());
 		}
 	}

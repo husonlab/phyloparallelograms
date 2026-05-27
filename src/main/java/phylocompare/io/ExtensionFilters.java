@@ -30,6 +30,7 @@ import java.util.List;
 public class ExtensionFilters {
 	private final static FileChooser.ExtensionFilter newick = new FileChooser.ExtensionFilter("Newick file", "*.nwk", "*.newick", "*.new", "*.tree", "*.tre", "*.trees", "*.treefile");
 	private final static FileChooser.ExtensionFilter nexus = new FileChooser.ExtensionFilter("Nexus file", "*.nex", "*.nxs", "*.nexus");
+	private final static FileChooser.ExtensionFilter phycmp = new FileChooser.ExtensionFilter("PhyloCompare file", "*.phycmp");
 	private final static FileChooser.ExtensionFilter text = new FileChooser.ExtensionFilter("Text file", "*.txt");
 	private final static FileChooser.ExtensionFilter any = new FileChooser.ExtensionFilter("Any file", "*.*");
 	private final static List<FileChooser.ExtensionFilter> allSupported = createAllSupported();
@@ -41,6 +42,10 @@ public class ExtensionFilters {
 
 	public static FileChooser.ExtensionFilter nexus() {
 		return nexus;
+	}
+
+	public static FileChooser.ExtensionFilter phycmp() {
+		return phycmp;
 	}
 
 	public static FileChooser.ExtensionFilter createText() {
@@ -68,6 +73,7 @@ public class ExtensionFilters {
 		var all = new ArrayList<FileChooser.ExtensionFilter>();
 		all.add(newick());
 		all.add(nexus());
+		all.add(phycmp());
 		all.add(createText());
 		all.add(0, createAllSupported(all));
 		all.add(any());

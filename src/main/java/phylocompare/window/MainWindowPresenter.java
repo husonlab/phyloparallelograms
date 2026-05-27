@@ -470,6 +470,21 @@ public class MainWindowPresenter {
 		});
 		controller.getCopyTreesMenuItem().disableProperty().bind(document.hasTreesProperty().not().or(algorithmsService.runningProperty()));
 
+		controller.getPageSetupMenuItem().setOnAction(e -> jloda.fx.print.Print.showPageLayout(window.getStage()));
+		controller.getPrintMenuItem().setOnAction((e) -> {
+			var hPolicy = controller.getScrollPane().getHbarPolicy();
+			var vPolicy = controller.getScrollPane().getVbarPolicy();
+			try {
+				controller.getScrollPane().setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+				controller.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+				jloda.fx.print.Print.print(window.getStage(), controller.getInnerAnchorPane());
+			} finally {
+				controller.getScrollPane().setHbarPolicy(hPolicy);
+				controller.getScrollPane().setVbarPolicy(vPolicy);
+			}
+		});
+		controller.getPrintMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
+		controller.getPageSetupMenuItem().setOnAction(e -> jloda.fx.print.Print.showPageLayout(window.getStage()));
 
 		controller.getCopyNetworkMenuItem().setOnAction(e -> {
 			if (document.hasNetworks()) {
