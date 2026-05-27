@@ -85,6 +85,8 @@ public class FileOpener implements Consumer<String> {
 			}
 			RecentFilesManager.getInstance().insertRecentFile(fileName);
 			window.setFileName(fileName);
+			WindowNotifications.showInfo(window.getController().getCenterPane(), "Loaded file: " + FileUtils.getFileNameWithoutPath(fileName));
+
 		} catch (IOException e) {
 			WindowNotifications.showError(window.getController().getCenterPane(), "Open file failed: " + e.getMessage());
 		}
