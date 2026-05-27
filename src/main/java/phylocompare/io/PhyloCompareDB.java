@@ -31,7 +31,6 @@ import phylocompare.model.Document;
 import phylocompare.window.TreeRecord;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -40,20 +39,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 public class PhyloCompareDB {
-	static {
-		var appPath = System.getProperty("jpackage.app-path");
-		if (appPath != null) {
-			var nativeDir = Path.of(appPath)
-					.getParent()          // Contents/MacOS
-					.getParent()          // Contents
-					.resolve("app")
-					.resolve("sqlite-native");
-
-			System.setProperty("org.sqlite.lib.path", nativeDir.toString());
-			System.setProperty("org.sqlite.lib.name", "libsqlitejdbc.dylib");
-		}
-	}
-
+	
 	public static void save(String fileName, List<TreeRecord> treeRecords, List<PhyloTree> networks,
 							double minConfidence, double outlineWidth, boolean showOutline, String colorScheme) throws IOException {
 		var url = "jdbc:sqlite:" + fileName;
