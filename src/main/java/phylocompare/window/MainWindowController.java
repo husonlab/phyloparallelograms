@@ -174,7 +174,7 @@ public class MainWindowController {
 	private MenuItem setWindowSizeMenuItem;
 
 	@FXML
-	private CheckMenuItem showHelpWindow;
+	private MenuItem openManualInBrowserMenuItem;
 
 	@FXML
 	private TableView<TreeRecord> treeTable;
@@ -545,8 +545,8 @@ public class MainWindowController {
 		return setWindowSizeMenuItem;
 	}
 
-	public CheckMenuItem getShowHelpWindow() {
-		return showHelpWindow;
+	public MenuItem getOpenManualInBrowserMenuItem() {
+		return openManualInBrowserMenuItem;
 	}
 
 	public TableView<TreeRecord> getTreeTable() {

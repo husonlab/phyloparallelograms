@@ -25,6 +25,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -46,6 +47,7 @@ import phylocompare.io.ExportNewick;
 import phylocompare.io.ImportNewick;
 import phylocompare.io.Save;
 import phylocompare.io.SaveBeforeClosingDialog;
+import phylocompare.main.Version;
 import phylocompare.trace.BruteForceTreeTracer;
 import phylocompare.trace.TreeTrace;
 import phylocompare.utils.DoubleSpinnerBinder;
@@ -54,10 +56,12 @@ import phylocompare.view.ChooseColorSchemeSetup;
 import phylocompare.view.NetworkView;
 import splitstree6.layout.tree.TreeDiagramType;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
@@ -577,15 +581,23 @@ public class MainWindowPresenter {
 		});
 		controller.getImportTreeNamesMenuItem().disableProperty().bind(canEditTreesList.not());
 
-		//controller.getCheckForUpdatesMenuItem().setOnAction(e -> CheckForUpdate.apply(window));
-		// controller.getCheckForUpdatesMenuItem().disableProperty().bind(MainWindowManager.getInstance().sizeProperty().greaterThan(1).or(window.dirtyProperty()));
-		controller.getCheckForUpdatesMenuItem().setDisable(true);
+		var updaterService = UpdaterService.get();
+		controller.getCheckForUpdatesMenuItem().setOnAction(e -> updaterService.checkForUpdates(window.getStage()));
+		controller.getCheckForUpdatesMenuItem().disableProperty().bind(updaterService.disabledProperty().or(MainWindowManager.getInstance().sizeProperty().greaterThan(1)).or(window.dirtyProperty()));
 
 		controller.getShowTreesExhaustive().setOnAction(e -> {
 			for (var network : document.getNetworks()) {
 				TreeTrace.clearTT(network);
 			}
 			runUpdateTreesDrawing();
+		});
+
+		controller.getOpenManualInBrowserMenuItem().setOnAction(e -> {
+			try {
+				Desktop.getDesktop().browse(new URI(Version.WEBSITE_URL));
+			} catch (Exception ex) {
+				WindowNotifications.showInfo(controller.getCenterPane(), "Show Help failed: " + ex.getMessage());
+			}
 		});
 
 	}

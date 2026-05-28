@@ -1,4 +1,5 @@
 module phylocompare {
+	uses phylocompare.window.UpdaterService;
 	requires javafx.base;
 	requires javafx.controls;
 	requires javafx.fxml;
@@ -11,6 +12,9 @@ module phylocompare {
 	requires java.sql;
 	requires org.apache.commons.numbers.gamma;
 	requires jdk.compiler;
+	requires java.desktop;
+	requires java.net.http;
+	requires com.fasterxml.jackson.databind;
 
 	exports phylocompare.main;
 	exports phylocompare.window;

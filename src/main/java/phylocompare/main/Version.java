@@ -22,5 +22,33 @@ package phylocompare.main;
 
 public class Version {
 	static public final String NAME = "PhyloCompare";
-	static public final String SHORT_DESCRIPTION = "PhyloCompare (version 0.0.0, built 2026)";
+
+	/**
+	 * Single source of truth: the {@code <version>} element of pom.xml.
+	 * Maven copies it into the built JAR's manifest as
+	 * {@code Implementation-Version} — provided the maven-jar-plugin
+	 * config has {@code <addDefaultImplementationEntries>true} —
+	 * and we read it back here at class-load time.
+	 * <p>
+	 * Falls back to "dev" when running outside a packaged JAR (for
+	 * example from an IDE), so neither tagged releases nor IDE runs
+	 * ever require this file to be edited by hand.
+	 */
+	public static final String VERSION = resolveVersion();
+
+	public static final String SHORT_DESCRIPTION = NAME + " (version " + VERSION + ") - License GPL v3";
+
+	public static final String UPDATE_MANIFEST_URL = "https://github.com/husonlab/phylocompare/releases/latest/download/manifest.json";
+
+	static public final String WEBSITE_URL = "https://husonlab.github.io/phylocompare/manual.html";
+	public static final String GITHUB_PAGE = "https://github.com/husonlab/phylcompare";
+
+	private static String resolveVersion() {
+		var pkg = Version.class.getPackage();
+		var v = (pkg != null) ? pkg.getImplementationVersion() : null;
+		return (v != null && !v.isBlank()) ? v : "dev";
+	}
+
+
+
 }
