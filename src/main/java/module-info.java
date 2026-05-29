@@ -1,5 +1,7 @@
+import phylocompare.main.UpdateService;
+
 module phylocompare {
-	uses phylocompare.window.UpdaterService;
+	uses UpdateService;
 	requires javafx.base;
 	requires javafx.controls;
 	requires javafx.fxml;

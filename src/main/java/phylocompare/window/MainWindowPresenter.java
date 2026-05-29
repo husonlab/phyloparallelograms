@@ -48,6 +48,7 @@ import phylocompare.io.ExportNewick;
 import phylocompare.io.ImportNewick;
 import phylocompare.io.Save;
 import phylocompare.io.SaveBeforeClosingDialog;
+import phylocompare.main.UpdateService;
 import phylocompare.main.Version;
 import phylocompare.trace.BruteForceTreeTracer;
 import phylocompare.trace.TreeTrace;
@@ -582,7 +583,7 @@ public class MainWindowPresenter {
 		});
 		controller.getImportTreeNamesMenuItem().disableProperty().bind(canEditTreesList.not());
 
-		var updaterService = UpdaterService.get();
+		var updaterService = UpdateService.get();
 		controller.getCheckForUpdatesMenuItem().setOnAction(e -> updaterService.checkForUpdates(window.getStage()));
 		controller.getCheckForUpdatesMenuItem().disableProperty().bind(updaterService.disabledProperty().or(MainWindowManager.getInstance().sizeProperty().greaterThan(1)).or(window.dirtyProperty()));
 

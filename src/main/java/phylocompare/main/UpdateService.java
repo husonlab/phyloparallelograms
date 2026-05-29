@@ -1,5 +1,5 @@
 /*
- * UpdaterService.java Copyright (C) 2026 Daniel H. Huson
+ * UpdateService.java Copyright (C) 2026 Daniel H. Huson
  *
  *  (Some files contain contributions from other authors, who are then mentioned separately.)
  *
@@ -18,7 +18,7 @@
  *
  */
 
-package phylocompare.window;
+package phylocompare.main;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,7 +26,7 @@ import javafx.stage.Window;
 
 import java.util.ServiceLoader;
 
-public interface UpdaterService {
+public interface UpdateService {
 	SimpleBooleanProperty DISABLED = new SimpleBooleanProperty(true);
 
 	default void checkForUpdates(Window owner) {
@@ -36,10 +36,10 @@ public interface UpdaterService {
 		return DISABLED;
 	}
 
-	static UpdaterService get() {
-		return ServiceLoader.load(UpdaterService.class)
+	static UpdateService get() {
+		return ServiceLoader.load(UpdateService.class)
 				.findFirst()
-				.orElse(new UpdaterService() {
+				.orElse(new UpdateService() {
 				});
 	}
 }
