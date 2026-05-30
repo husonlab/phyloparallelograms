@@ -22,6 +22,35 @@ all trees and aims at minimizing the number of required reticulations. The paral
 each input tree through this network and drawing the resulting embeddings side-by-side, so that shared edges line up and
 disagreements stand out as divergent branches.
 
+### What is a phylogenetic parallelogram?
+
+A phylogenetic parallelogram can be viewed as a generalization of a tanglegram. Rather than drawing two trees separately
+and connecting corresponding taxa by lines, PhyloCompare first computes a rooted network that contains all input trees
+and then draws each tree as an embedding inside this common structure. This causes topologically identical regions of
+different trees to align automatically, while disagreements appear as visibly diverging branches.
+
+Figure 1 compares a traditional tanglegram with the corresponding phylogenetic parallelogram. The tanglegram (left)
+connects matching taxa by line segments, whereas the parallelogram (right) draws both trees within a common network,
+making topological agreement and disagreement much easier to identify.
+
+### Tanglegram versus phylogenetic parallelogram
+
+![...](images/tanglegram-vs-parallelogram.png)
+**Figure 1.** A traditional tanglegram (left) and the corresponding phylogenetic parallelogram (right). The
+parallelogram is obtained by embedding both trees into a common rooted network and drawing the embeddings in parallel.
+
+Phylogenetic parallelograms become particularly useful when comparing more than two trees. Figure 2 shows a
+parallelogram constructed from fifteen trees derived from different genomic regions. Even though many trees are
+displayed simultaneously, the shared structure remains visually aligned, while regions of disagreement can be identified
+by the divergence of the colored traces.
+
+### Phylogenetic parallelogram for fifteen trees
+
+![...](images/multitree-parallelogram.png)
+**Figure 2.** A phylogenetic parallelogram containing fifteen trees. Each color corresponds to one input tree. Shared
+topology is represented by aligned paths, whereas alternative evolutionary histories appear as diverging traces within
+the underlying network.
+
 Typical use cases:
 
 - **Comparing alternative phylogenies** of the same set of taxa -- for example, gene trees from different loci, or trees
@@ -34,7 +63,7 @@ Typical use cases:
 - **Producing publication-quality figures** of the parallelogram and its underlying network in several diagram styles (
   rectangular, circular, radial; cladogram or phylogram).
 
-**Key features**
+### Key features
 
 - Parallelogram visualization of two or more rooted trees on overlapping taxon sets, with shared structure aligned and
   disagreements made visually explicit.
@@ -48,7 +77,8 @@ Typical use cases:
 
 ## 2. Installation
 
-Installers are available from [https://github.com/husonlab/phylocompare](https://github.com/husonlab/phylocompare).
+Installers are available here:
+`https://github.com/husonlab/phylocompare/releases/`
 
 ## 3. The main window at a glance
 
@@ -202,7 +232,7 @@ Image** (`Shift+Cmd+C`), **Paste** (`Cmd+V`), **Delete** (`Backspace`), **Clear*
     - Radial Cladogram
     - Radial Phylogram
 - **Show Outline** -- render in outline mode.
-- **Show Transfer Edges** -- display transfer-style edges.
+- **Use Transfer Edges** -- Use and display transfer-style edges.
 - **Curved Reticulate Edges** -- draw reticulation edges as curves.
 
 ### 6.5 Window menu
