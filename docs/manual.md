@@ -35,7 +35,7 @@ making topological agreement and disagreement much easier to identify.
 
 ### Tanglegram versus phylogenetic parallelogram
 
-![...](images/tanglegram-vs-parallelogram.png)
+![...](docs/images/tanglegram-vs-parallelogram.png)
 **Figure 1.** A traditional tanglegram (left) and the corresponding phylogenetic parallelogram (right). The
 parallelogram is obtained by embedding both trees into a common rooted network and drawing the embeddings in parallel.
 
@@ -46,7 +46,7 @@ by the divergence of the colored traces.
 
 ### Phylogenetic parallelogram for fifteen trees
 
-![...](images/multitree-parallelogram.png)
+![...](docs/images/multitree-parallelogram.png)
 **Figure 2.** A phylogenetic parallelogram containing fifteen trees. Each color corresponds to one input tree. Shared
 topology is represented by aligned paths, whereas alternative evolutionary histories appear as diverging traces within
 the underlying network.
