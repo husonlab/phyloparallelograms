@@ -1,4 +1,4 @@
-hi# PhyloCompare
+# PhyloCompare
 
 <div style="text-align:center;">
   <img src="docs/images/parallelogram.png" width="600" alt="Example of a parallelogram">
@@ -63,7 +63,7 @@ The portable archive can be unpacked and run without administrator privileges.
 
 The complete user manual is available here:
 
-[User Manual](docs/manual)
+[User Manual](docs/manual.md)
 
 ## Citation
 
