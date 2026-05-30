@@ -57,8 +57,7 @@ The portable archive can be unpacked and run without administrator privileges.
 1. Launch PhyloCompare.
 2. Open a file containing rooted phylogenetic trees.
 3. Select the trees to compare.
-4. Choose Tanglegram or Parallelogram from the workflow.
-5. Explore areas of agreement and disagreement among the trees.
+4. Explore areas of agreement and disagreement among the trees.
 
 ## Documentation
 
