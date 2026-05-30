@@ -17,7 +17,6 @@ Phylogenetic parallelogram
 ## Features
 
 - Compare multiple rooted phylogenetic trees interactively
-- Compute and display tanglegrams
 - Compute and display phylogenetic parallelograms
 - Visualize dozens of trees simultaneously
 - Explore tree disagreement across loci or genomic regions
