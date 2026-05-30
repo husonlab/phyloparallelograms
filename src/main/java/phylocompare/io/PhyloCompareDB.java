@@ -41,7 +41,7 @@ import java.util.TreeMap;
 public class PhyloCompareDB {
 
 	public static void save(String fileName, List<TreeRecord> treeRecords, List<PhyloTree> networks,
-							double minConfidence, double outlineWidth, boolean showOutline, String colorScheme) throws IOException {
+							Parameters parameters) throws IOException {
 		var url = "jdbc:sqlite:" + fileName;
 
 		try (var conn = DriverManager.getConnection(url)) {
@@ -115,28 +115,41 @@ public class PhyloCompareDB {
 				}
 
 				try (var ps = conn.prepareStatement("INSERT INTO parameters (name, type, value) VALUES (?, ?, ?)")) {
+					// todo: auto generate from parameters
 					{
 						ps.setString(1, "min_confidence");
 						ps.setString(2, "double");
-						ps.setString(3, StringUtils.removeTrailingZerosAfterDot(minConfidence));
+						ps.setString(3, StringUtils.trim(parameters.confidenceThreshold()));
 						ps.addBatch();
 					}
 					{
 						ps.setString(1, "outline_width");
 						ps.setString(2, "double");
-						ps.setString(3, StringUtils.removeTrailingZerosAfterDot(outlineWidth));
+						ps.setString(3, StringUtils.trim(parameters.outlineWidth()));
 						ps.addBatch();
 					}
 					{
 						ps.setString(1, "show_outline");
 						ps.setString(2, "boolean");
-						ps.setString(3, showOutline ? "true" : "false");
+						ps.setString(3, parameters.showOutline() ? "true" : "false");
 						ps.addBatch();
 					}
 					{
 						ps.setString(1, "color_scheme");
 						ps.setString(2, "string");
-						ps.setString(3, colorScheme);
+						ps.setString(3, parameters.colorScheme());
+					}
+					{
+						ps.setString(1, "use_transfer");
+						ps.setString(2, "boolean");
+						ps.setString(3, parameters.useTransfer() ? "true" : "false");
+						ps.addBatch();
+					}
+					{
+						ps.setString(1, "acceptor_percentage");
+						ps.setString(2, "double");
+						ps.setString(3, String.valueOf(parameters.acceptorPercentage));
+						ps.addBatch();
 					}
 					ps.executeBatch();
 				}
@@ -220,19 +233,23 @@ public class PhyloCompareDB {
 				var outlineWidth = -1.0;
 				var showOutline = true;
 				var colorScheme = document.getColorSchemeName();
+				var useTransfer = false;
+				var acceptorPercentage = 100.0;
 				while (rs.next()) {
 					var name = rs.getString("name");
 					var type = rs.getString("type");
 					var value = rs.getString("value");
 					if (type.equals("double") && NumberUtils.isDouble(value)) {
-						if (name.equals("confidence_threshold")) {
-							confidenceThreshold = Double.parseDouble(value);
-						} else if (name.equals("outline_width")) {
-							outlineWidth = Double.parseDouble(value);
+						switch (name) {
+							case "confidence_threshold" -> confidenceThreshold = Double.parseDouble(value);
+							case "outline_width" -> outlineWidth = Double.parseDouble(value);
+							case "acceptor_percentage" -> acceptorPercentage = Double.parseDouble(value);
 						}
 					} else if (type.equals("boolean") && NumberUtils.isBoolean(value)) {
 						if (name.equals("show_outline")) {
 							showOutline = NumberUtils.parseBoolean(value);
+						} else if (name.equals("use_transfer")) {
+							useTransfer = NumberUtils.parseBoolean(value);
 						}
 					} else if (type.equals("string")) {
 						if (name.equals("color_scheme")) {
@@ -241,7 +258,7 @@ public class PhyloCompareDB {
 						}
 					}
 				}
-				result = new Parameters(confidenceThreshold, outlineWidth, showOutline, colorScheme);
+				result = new Parameters(confidenceThreshold, outlineWidth, showOutline, colorScheme, useTransfer, acceptorPercentage);
 			}
 			if (!treeRecords.isEmpty())
 				document.addTreesAndNetworks(treeRecords, networks.values());
@@ -265,6 +282,7 @@ public class PhyloCompareDB {
 		}
 	}
 
-	public record Parameters(double confidenceThreshold, double outlineWidth, boolean showOutline, String colorScheme) {
+	public record Parameters(double confidenceThreshold, double outlineWidth, boolean showOutline, String colorScheme,
+							 boolean useTransfer, double acceptorPercentage) {
 	}
 }

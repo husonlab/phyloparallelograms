@@ -41,8 +41,9 @@ public class Save {
 		try {
 			var document = window.getDocument();
 			var networkView = window.getPresenter().getNetworkView();
-			PhyloCompareDB.save(file.getPath(), document.getTreeRecords(), document.getNetworks(),
-					document.getApplicableConfidenceThreshold(), networkView.getOptionOutlineWidth(), networkView.isOptionShowOutline(), document.getColorSchemeName());
+			var parameters = new PhyloCompareDB.Parameters(document.getApplicableConfidenceThreshold(), networkView.getOptionOutlineWidth(), networkView.isOptionShowOutline(),
+					document.getColorSchemeName(), networkView.optionShowTransferProperty().get(), networkView.optionAcceptorPercentageProperty().get());
+			PhyloCompareDB.save(file.getPath(), document.getTreeRecords(), document.getNetworks(), parameters);
 			window.dirtyProperty().set(false);
 		} catch (Exception e) {
 			WindowNotifications.showError(window.getController().getCenterPane(), "Save failed: " + e.getMessage());
