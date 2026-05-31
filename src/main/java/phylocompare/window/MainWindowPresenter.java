@@ -164,6 +164,17 @@ public class MainWindowPresenter {
 
 		controller.getUseTransferMenuItem().selectedProperty().bindBidirectional(networkView.optionShowTransferProperty());
 
+		controller.getAcceptorPercentMenuItem().setOnAction(e -> {
+			var dialog = new SetParameterInternalDialog(controller.getCenterAnchorPane(), "Transfer threshold", "Enter transfer acceptor min percent", "100.0", s -> {
+				if (NumberUtils.isDouble(s)) {
+					var value = Math.max(50, Math.min(100, NumberUtils.parseDouble(s)));
+					networkView.optionAcceptorPercentageProperty().set(value);
+				}
+			});
+			dialog.show();
+		});
+		controller.getAcceptorPercentMenuItem().disableProperty().bind(controller.getUseTransferMenuItem().disableProperty());
+
 		networkView.optionAcceptorPercentageProperty().addListener((v, o, n) -> {
 			undoManager.add("transfer acceptor percent", networkView.optionAcceptorPercentageProperty(), o, n);
 			runUpdateNetworkDrawing();
@@ -197,6 +208,8 @@ public class MainWindowPresenter {
 			if (document.hasNetworks())
 				runUpdateNetworkDrawing();
 		});
+
+		controller.getCurvedReticulateEdgesCheckMenuItem().setSelected(networkView.optionReticulateEdgesAreSpecialProperty().get());
 		controller.getCurvedReticulateEdgesCheckMenuItem().selectedProperty().addListener((v, o, n) ->
 				undoManager.doAndAdd("special edges", networkView.optionReticulateEdgesAreSpecialProperty(), o, n));
 
@@ -616,6 +629,8 @@ public class MainWindowPresenter {
 				}
 			}
 		});
+
+		FindSetup.apply(window);
 	}
 
 	public static Collection<TreeRecord> getSelectedRowsOrAll(TableView<TreeRecord> treeTableView, List<TreeRecord> treeRecords) {

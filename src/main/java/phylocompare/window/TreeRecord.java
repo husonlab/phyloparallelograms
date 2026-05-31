@@ -26,6 +26,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jloda.phylo.PhyloTree;
 
+import java.util.Collection;
+
 public class TreeRecord {
 	private final StringProperty name = new SimpleStringProperty();
 	private final int id;
@@ -87,5 +89,10 @@ public class TreeRecord {
 
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public String toString() {
+		return name.get() + " run:" + isRun() + " show:" + isShow() + " size:" + ((Collection<?>) tree.getTaxa()).size();
 	}
 }

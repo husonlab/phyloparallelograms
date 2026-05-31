@@ -3,10 +3,10 @@
 **Version 1.0.2**
 **Daniel H. Huson, 2026**
 
-> *Keyboard shortcuts:* throughout this manual, `Cmd` denotes the platform shortcut modifier -- Cmd on macOS, Ctrl on
+> *Keyboard shortcuts:* throughout this manual, `Cmd` denotes the platform shortcut modifier - Cmd on macOS, Ctrl on
 > Windows and Linux.
 
----
+--
 
 PhyloCompare author: Daniel H. Huson
 Contributors: Banu Cetinkaya (tree tracing in PhyloFusion) and Louxin Zhang (PhyloFusion algorithm)
@@ -53,8 +53,8 @@ the underlying network.
 
 Typical use cases:
 
-- **Comparing alternative phylogenies** of the same set of taxa -- for example, gene trees from different loci, or trees
-  inferred under different models or methods (ML vs. Bayesian, different partitionings) -- and seeing at a glance where
+- **Comparing alternative phylogenies** of the same set of taxa - for example, gene trees from different loci, or trees
+  inferred under different models or methods (ML vs. Bayesian, different partitionings) - and seeing at a glance where
   they agree and where they disagree.
 - **Locating sources of incongruence**: regions of the parallelogram where the trees split apart pinpoint clades whose
   placement is unstable, and correspond directly to the reticulations in the underlying network.
@@ -84,10 +84,10 @@ Installers are available here:
 
 The main window is split vertically into two panels:
 
-| Panel                            | Purpose                                                                                                                                          |
-|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Left -- Tree table**           | Lists all loaded input trees. Two checkbox columns control which trees are used in the PhyloFusion run and which are drawn in the parallelogram. |
-| **Right -- Visualization panel** | Displays the computed rooted network together with the phylogenetic parallelogram drawn over it.                                                 |
+| Panel                           | Purpose                                                                                                                                          |
+|---------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Left - Tree table**           | Lists all loaded input trees. Two checkbox columns control which trees are used in the PhyloFusion run and which are drawn in the parallelogram. |
+| **Right - Visualization panel** | Displays the computed rooted network together with the phylogenetic parallelogram drawn over it.                                                 |
 
 A status bar at the bottom shows progress messages and a live memory-usage indicator.
 
@@ -95,19 +95,19 @@ A status bar at the bottom shows progress messages and a live memory-usage indic
 
 The table has three columns:
 
-- **Tree** -- the name (and optional metadata) of each input tree.
-- **Run** -- checkbox: include this tree when running PhyloFusion.
-- **Show** -- checkbox: include this tree in the parallelogram drawn on the network.
+- **Tree** - the name (and optional metadata) of each input tree.
+- **Run** - checkbox: include this tree when running PhyloFusion.
+- **Show** - checkbox: include this tree in the parallelogram drawn on the network.
 
 Above the table:
 
-- **Select all** / **Select none** -- toggle the selection state of all rows in the table.
-- **Run** -- run the PhyloFusion algorithm on the trees whose *Run* box is checked.
-- **Show** -- refresh the parallelogram to include exactly the trees whose *Show* box is checked.
+- **Select all** / **Select none** - toggle the selection state of all rows in the table.
+- **Run** - run the PhyloFusion algorithm on the trees whose *Run* box is checked.
+- **Show** - refresh the parallelogram to include exactly the trees whose *Show* box is checked.
 
 Below the table:
 
-- **Min branch confidence** -- a numeric field. Input branches with confidence values below this threshold are pruned
+- **Min branch confidence** - a numeric field. Input branches with confidence values below this threshold are pruned
   from each input tree before PhyloFusion is run. Set to `0` to disable filtering.
 
 ### 3.2 Visualization panel (right panel)
@@ -115,24 +115,24 @@ Below the table:
 The right panel renders the computed rooted network and, on top of it, the phylogenetic parallelogram formed by the
 trees whose *Show* box is checked. Its toolbar contains:
 
-- **Diagram** -- opens a menu for choosing the diagram type (see Section 6.4).
-- **Settings** -- opens a menu with rendering options:
-    - *Show Outline* -- show the outline the underlying network.
-    - *Spread* spinner -- controls the spread of the trees drawn in the parallelogram.
-    - *Curved Reticulate Edges* -- draw reticulation edges as curves rather than rectangular segments.
-  - *Use Transfer Edges* -- use horizontal-transfer-style edges in addition to standard reticulation edges.
-  - *Min Percent* spinner -- minimum percentage of trees that must use an edge for it to qualify as a transfer acceptor
+- **Diagram** - opens a menu for choosing the diagram type (see Section 6.4).
+- **Settings** - opens a menu with rendering options:
+    - *Show Outline* - show the outline the underlying network.
+    - *Spread* spinner - controls the spread of the trees drawn in the parallelogram.
+    - *Curved Reticulate Edges* - draw reticulation edges as curves rather than rectangular segments.
+    - *Use Transfer Edges* - use horizontal-transfer-style edges in addition to standard reticulation edges.
+    - *Min Percent* spinner - minimum percentage of trees that must use an edge for it to qualify as a transfer acceptor
     edge.
-- **Color scheme** -- drop-down menu of color schemes used to color the trees in the parallelogram.
-- **Zoom In** -- zoom the view in by one step.
-- **Zoom Out** -- zoom the view out by one step.
+- **Color scheme** - drop-down menu of color schemes used to color the trees in the parallelogram.
+- **Zoom In** - zoom the view in by one step.
+- **Zoom Out** - zoom the view out by one step.
 
 In the top right of the visualization panel:
 
-- **Export** -- menu button with shortcuts to:
-    - *Copy Trees* -- copy the currently selected input trees to the clipboard (Newick).
-    - *Copy Network* -- copy the underlying network to the clipboard.
-    - *Copy Image* -- copy the computed image to the clipboard.
+- **Export** - menu button with shortcuts to:
+    - *Copy Trees* - copy the currently selected input trees to the clipboard (Newick).
+    - *Copy Network* - copy the underlying network to the clipboard.
+    - *Copy Image* - copy the computed image to the clipboard.
 
 A floating legend (top right) shows the color assigned to each tree in the parallelogram.
 
@@ -140,9 +140,9 @@ A floating legend (top right) shows the color assigned to each tree in the paral
 
 ### 4.1 Supported input formats
 
-- **Newick** -- one rooted tree per line (or one tree per `;`-terminated block). This is the primary input format.
-- **Nexus** -- a file in Nexus format containing a list of trees.
-- **Tree names** -- a plain-text list of tree labels, importable via *File > Import > Tree Names...* (used to label
+- **Newick** - one rooted tree per line (or one tree per `;`-terminated block). This is the primary input format.
+- **Nexus** - a file in Nexus format containing a list of trees.
+- **Tree names** - a plain-text list of tree labels, importable via *File > Import > Tree Names...* (used to label
   trees that were loaded from a source that did not provide names).
 
 (Note on advanced usage: The entries in a Newick or Nexus are expected to be trees. However, if the file contains
@@ -152,18 +152,18 @@ that has embedded trees.)
 
 ### 4.2 Opening files
 
-- **File > New...** (`Cmd+N`) -- open a new, empty PhyloCompare window.
-- **File > Open...** (`Cmd+O`) -- open a file containing one or more rooted trees.
-- **File > Recent** -- re-open a recently used file.
+- **File > New...** (`Cmd+N`) - open a new, empty PhyloCompare window.
+- **File > Open...** (`Cmd+O`) - open a file containing one or more rooted trees.
+- **File > Recent** - re-open a recently used file.
 
 ### 4.3 Saving and exporting
 
-- **File > Save...** (`Cmd+S`) -- save the current session (input trees, run settings, computed network, parallelogram
+- **File > Save...** (`Cmd+S`) - save the current session (input trees, run settings, computed network, parallelogram
   selection) to a PhyloCompare document with file extension `phycmp`.
-- **File > Export > Image...** -- save the current visualization (network plus parallelogram) as an image. Supported
+- **File > Export > Image...** - save the current visualization (network plus parallelogram) as an image. Supported
   image formats: PNG, SVG and PDF.
-- **File > Export > Newick...** -- export the computed network (or the selected trees) in extended Newick format.
-- **File > Page Setup...** / **File > Print...** (`Cmd+P`) -- printing.
+- **File > Export > Newick...** - export the computed network (or the selected trees) in extended Newick format.
+- **File > Page Setup...** / **File > Print...** (`Cmd+P`) - printing.
 
 ## 5. A typical workflow
 
@@ -189,12 +189,12 @@ that has embedded trees.)
 |------------------------|----------|-----------------------------------------------|
 | New...                 | `Cmd+N`  | Open an empty window.                         |
 | Open...                | `Cmd+O`  | Open a file of rooted input trees.            |
-| Recent                 | --       | Recently opened files.                        |
-| Import > Tree Names... | --       | Import a list of tree names.                  |
-| Export > Image...      | --       | Export the current visualization as an image. |
-| Export > Newick...     | --       | Export trees or network in Newick format.     |
+| Recent                 | -        | Recently opened files.                        |
+| Import > Tree Names... | -        | Import a list of tree names.                  |
+| Export > Image...      | -        | Export the current visualization as an image. |
+| Export > Newick...     | -        | Export trees or network in Newick format.     |
 | Save...                | `Cmd+S`  | Save the current session.                     |
-| Page Setup...          | --       | Configure print page settings.                |
+| Page Setup...          | -        | Configure print page settings.                |
 | Print...               | `Cmd+P`  | Print the current view.                       |
 | Close                  | `Cmd+W`  | Close the current window.                     |
 | Quit                   | `Cmd+Q`  | Exit PhyloCompare.                            |
@@ -205,46 +205,54 @@ Standard editing commands: **Undo** (`Cmd+Z`), **Redo** (`Shift+Cmd+Z`), **Cut**
 Image** (`Shift+Cmd+C`), **Paste** (`Cmd+V`), **Delete** (`Backspace`), **Clear**, **Find...** (`Cmd+F`), **Find Again
 ** (`Cmd+G`).
 
+Use Find to search for trees in the input list. The following special search terms can also be used:
+
+run:true, run:false, show:true, show:false and size:integer, where size is the number of taxa in the tree.
+
 ### 6.3 Run menu
 
-| Item                        | Shortcut | Action                                                             |
-|-----------------------------|----------|--------------------------------------------------------------------|
-| Use All Trees               | --       | Check every (selected) tree's *Run* box.                           |
-| Use None Trees              | --       | Uncheck every (selected) tree's *Run* box.                         |
-| Run PhyloFusion             | `Cmd+R`  | Run PhyloFusion on the selected input trees.                       |
-| Show All Trees              | --       | Check every (selected) tree's *Show* box.                          |
-| Show None Trees             | --       | Uncheck every (selected)  tree's *Show* box.                       |
-| Show Selected Trees         | --       | Redraw the parallelogram using only the trees with *Show* checked. |
-| Show Trees Exhaustive       | --       | Use the exhaustive algorithm to locate all trees in the network.   |
-| Set Confidence Threshold... | --       | Open a dialog to set the *Mininum branch confidence* value.        |
+| Item                        | Shortcut | Action                                                                                                                                                                                  |
+|-----------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Use All Trees               | -        | Check every (selected) tree's *Run* box.                                                                                                                                                |
+| Use None Trees              | -        | Uncheck every (selected) tree's *Run* box.                                                                                                                                              |
+| Run PhyloFusion             | `Cmd+R`  | Run PhyloFusion on the selected input trees.                                                                                                                                            |
+| Show All Trees              | -        | Check every (selected) tree's *Show* box.                                                                                                                                               |
+| Show None Trees             | -        | Uncheck every (selected)  tree's *Show* box.                                                                                                                                            |
+| Show Selected Trees         | -        | Redraw the parallelogram using only the trees with *Show* checked.                                                                                                                      |
+| Show Trees Exhaustive       | -        | Use an exhaustive (brute-force) algorithm to locate all trees in the network. The exhaustive algorithm is also used to embed trees that were not used to compute the underlying network |
+| Set Confidence Threshold... | -        | Open a dialog to set the *Mininum branch confidence* value.                                                                                                                             |
 
 ### 6.4 View menu
 
 - **Enter Full Screen** (`Ctrl+Cmd+F`)
-- **Use Dark Theme** -- toggle between light and dark UI themes.
+- **Use Dark Theme** - toggle between light and dark UI themes.
 - **Increase / Decrease Font Size** (`Shift+Cmd+Up` / `Shift+Cmd+Down`)
 - **Zoom In / Out / To Fit** (`Cmd+Up` / `Cmd+Down` / `Cmd+.`)
-- **Diagram Type** -- choose one of:
+- **Diagram Type** - choose one of:
     - Rectangular Cladogram
     - Rectangular Phylogram
     - Circular Cladogram
     - Circular Phylogram
     - Radial Cladogram
     - Radial Phylogram
-- **Show Outline** -- render in outline mode.
-- **Use Transfer Edges** -- Use and display transfer-style edges.
-- **Curved Reticulate Edges** -- draw reticulation edges as curves.
+- **Show Outline** - render in outline mode.
+- **Curved Reticulate Edges** - draw reticulation edges as curves.
+- **Use Transfer Edges** - Use and display transfer-style edges.
+- **Set Acceptor Min Percent...** - Minimum percent of trees that have to use a reticulate edge so that it
+  is declared the transfer acceptor edge - all other edges leading to the target of that edge are then intepreted as
+  transfer edges.
+  (since 1.0.3)
 
 ### 6.5 Window menu
 
-- **Set Window Size...** -- open a dialog to enter exact pixel dimensions for the window. Useful when preparing figures
+- **Set Window Size...** - open a dialog to enter exact pixel dimensions for the window. Useful when preparing figures
   for a specific output size.
 
 ### 6.6 Help menu
 
-- **Check for Updates...** -- query the update server.
-- **About...** -- version and citation information.
-- **Help Window...** -- open this manual in an in-app window.
+- **Check for Updates...** - query the update server.
+- **About...** - version and citation information.
+- **Help Window...** - open this manual in an in-app window.
 
 ## 7. The PhyloFusion algorithm
 
@@ -283,12 +291,12 @@ parallelogram.
 
 If you use PhyloCompare in published work, please cite:
 
-> Huson, D. H., B. Cetinkaya and L. Zhang ..., *Visualizing agreement and conflict among phylogenetic trees with
-PhyloCompare*, manuscript in preparation.
+> Huson, D. H., B. Cetinkaya and L. Zhang. PhyloCompare: visualizing agreement and conflict among trees as phylogenetic
+> parallelograms, manuscript in preparation.
 
 and the underlying PhyloFusion paper:
 
-> L. Zhang, B. Cetinkaya, D. H. Huson, PhyloFusion—Fast and Easy Fusion of Rooted Phylogenetic Trees into Rooted
+> L. Zhang, B. Cetinkaya, D. H. Huson (2026) PhyloFusion—Fast and Easy Fusion of Rooted Phylogenetic Trees into Rooted
 > Phylogenetic Networks, Systematic Biology, 75(1):88-99,
 > 2026 [https://doi.org/10.1093/sysbio/syaf049](https://doi.org/10.1093/sysbio/syaf049)
 
@@ -300,8 +308,8 @@ This is the paper that describes how the layout of the underlying network is com
 ## 10. License
 
 PhyloCompare is released under the **GNU General Public License, version 3 or later** (GPL-3.0-or-later). See
-the `LICENSE` file shipped with the distribution, or <https://www.gnu.org/licenses/>.
+the `LICENSE` file shipped with the distribution, or https://www.gnu.org/licenses/.
 
----
+--
 
 *Manual last updated: May 2026.*

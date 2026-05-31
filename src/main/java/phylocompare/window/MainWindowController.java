@@ -123,7 +123,7 @@ public class MainWindowController {
 	private MenuItem findAgainMenuItem;
 
 	@FXML
-	private MenuItem findMenuItem;
+	private CheckMenuItem findCheckMenuItem;
 
 	@FXML
 	private MenuItem fullScreenMenuItem;
@@ -297,7 +297,13 @@ public class MainWindowController {
 	private CheckMenuItem useTransferMenuItem;
 
 	@FXML
+	private MenuItem acceptorPercentMenuItem;
+
+	@FXML
 	private CheckMenuItem useTransferMenuItem2;
+
+	@FXML
+	private VBox leftVBox;
 
 
 	private ZoomableScrollPane scrollPane;
@@ -480,8 +486,8 @@ public class MainWindowController {
 		return findAgainMenuItem;
 	}
 
-	public MenuItem getFindMenuItem() {
-		return findMenuItem;
+	public CheckMenuItem getFindCheckMenuItem() {
+		return findCheckMenuItem;
 	}
 
 	public MenuItem getFullScreenMenuItem() {
@@ -728,5 +734,13 @@ public class MainWindowController {
 
 	public CheckMenuItem getUseTransferMenuItem() {
 		return useTransferMenuItem;
+	}
+
+	public MenuItem getAcceptorPercentMenuItem() {
+		return acceptorPercentMenuItem;
+	}
+
+	public VBox getLeftVBox() {
+		return leftVBox;
 	}
 }

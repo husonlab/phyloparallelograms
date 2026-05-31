@@ -69,7 +69,8 @@ The complete user manual is available here:
 
 If you use PhyloCompare in your research, please cite:
 
-Daniel H. Huson, Banu Cetinkaya and Louxin Zhang. Visualizing agreement and conflict among phylogenetic trees with PhyloCompare. (Manuscript in preparation).
+Daniel H. Huson, Banu Cetinkaya and Louxin Zhang. PhyloCompare: visualizing agreement and conflict among trees as
+phylogenetic parallelograms. (Manuscript in preparation).
 
 ## License
 
