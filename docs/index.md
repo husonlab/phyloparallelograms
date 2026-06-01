@@ -7,14 +7,14 @@ Open source repository: https://github.com/husonlab/phylocompare
 
 ## Documentation
 
-- User Manual
-- Release Notes
+- [User Manual](doc/manua.md)
+- [Release Notes](release-notes)
 
 ## Downloads
 
 Latest installers are available from:
 
-- GitHub Releases
+- [GitHub Releases](https://github.com/husonlab/phylocompare/releases/latest)
 
 Supported platforms:
 
@@ -26,7 +26,7 @@ Supported platforms:
 
 Source code is hosted at:
 
-- https://github.com/husonlab/phylocompare
+- [https://github.com/husonlab/phylocompare](https://github.com/husonlab/phylocompare)
 
 ## Author
 
