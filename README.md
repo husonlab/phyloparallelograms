@@ -60,7 +60,7 @@ The portable archive can be unpacked and run without administrator privileges.
 
 The complete user manual is available here:
 
-[User Manual](docs/manual.md)
+[User Manual](https://husonlab.github.io/phylocompare/manual.html)
 
 ## Citation
 
