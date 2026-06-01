@@ -7,7 +7,7 @@ Open source repository: https://github.com/husonlab/phylocompare
 
 ## Documentation
 
-- [User Manual](doc/manua.md)
+- [User Manual](doc/manual.md)
 - [Release Notes](release-notes)
 
 ## Downloads
