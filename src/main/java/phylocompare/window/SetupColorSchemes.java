@@ -86,7 +86,7 @@ class SetupColorSchemes {
 
 		ColorSchemeManager.getInstance().setColorScheme("black", blackTheme);
 
-		cbox.getItems().addAll("black", "Retro29", "Glasbey29", "Twenty", "Pairs12", "Fews8", "Caspian8");
+		cbox.getItems().addAll("Retro29", "Glasbey29", "Twenty", "Pairs12", "Fews8", "Caspian8", "black");
 		cbox.setValue(window.getDocument().getColorSchemeName());
 	}
 
