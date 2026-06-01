@@ -28,8 +28,12 @@ Source code is hosted at:
 
 - [https://github.com/husonlab/phylocompare](https://github.com/husonlab/phylocompare)
 
-## Author
+## Main author
 
 Prof. Dr. Daniel H. Huson  
 Institute for Bioinformatics and Medical Informatics  
 University of Tübingen
+
+# Contributors
+Banu Cetinkaya, University of Tübingen
+Louxin Zhang, National University of Singapore
