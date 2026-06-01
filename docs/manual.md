@@ -292,19 +292,19 @@ parallelogram.
 
 If you use PhyloCompare in published work, please cite:
 
-> Huson, D. H., B. Cetinkaya and L. Zhang. PhyloCompare: visualizing agreement and conflict among trees as phylogenetic
-> parallelograms, manuscript in preparation.
+- Huson, D. H., B. Cetinkaya and L. Zhang. PhyloCompare: visualizing agreement and conflict among trees as phylogenetic
+  parallelograms, manuscript in preparation.
 
 and the underlying PhyloFusion paper:
 
-> L. Zhang, B. Cetinkaya, D. H. Huson (2026) PhyloFusion—Fast and Easy Fusion of Rooted Phylogenetic Trees into Rooted
-> Phylogenetic Networks, Systematic Biology, 75(1):88-99,
-> 2026 [https://doi.org/10.1093/sysbio/syaf049](https://doi.org/10.1093/sysbio/syaf049)
+- L. Zhang, B. Cetinkaya, D. H. Huson (2026) PhyloFusion—Fast and Easy Fusion of Rooted Phylogenetic Trees into Rooted
+  Phylogenetic Networks, Systematic Biology, 75(1):88-99,
+  2026 [https://doi.org/10.1093/sysbio/syaf049](https://doi.org/10.1093/sysbio/syaf049)
 
 This is the paper that describes how the layout of the underlying network is computed:
 
-> Huson DH (2025) Sketch, capture and layout phylogenies. PLOS Computational Biology 21(12):
-> e1013805. https://doi.org/10.1371/journal.pcbi.1013805
+- Huson DH (2025) Sketch, capture and layout phylogenies. PLOS Computational Biology 21(12):
+  e1013805. [https://doi.org/10.1371/journal.pcbi.1013805](https://doi.org/10.1371/journal.pcbi.1013805)
 
 ## 10. License
 
