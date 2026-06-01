@@ -30,10 +30,10 @@ Source code is hosted at:
 
 ## Main author
 
-Prof. Dr. Daniel H. Huson  
-Institute for Bioinformatics and Medical Informatics  
-University of Tübingen
+Prof. Daniel H. Huson, University of Tübingen
 
-# Contributors
+## Contributors
+
 Banu Cetinkaya, University of Tübingen
-Louxin Zhang, National University of Singapore
+
+Prof. Louxin Zhang, National University of Singapore
