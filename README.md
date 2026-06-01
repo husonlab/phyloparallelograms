@@ -6,7 +6,7 @@
 
 PhyloCompare is an interactive desktop application for comparing rooted phylogenetic trees.
 It provides a new visualization called a phylogenetic parallelogram, in which
-multiple trees are embedded into a common rooted network and drawn in parallel. This highlights shared evolutionary
+multiple trees are drawn in parallel in the same coordinate space. This highlights shared evolutionary
 structure while making conflicting signals immediately visible.
 
 Phylogenetic parallelogram
