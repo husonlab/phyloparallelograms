@@ -1,7 +1,7 @@
 
 
 /*
- * TableViewSupport.java Copyright (C) 2026 Daniel H. Huson
+ * SetupTableView.java Copyright (C) 2026 Daniel H. Huson
  *
  *  (Some files contain contributions from other authors, who are then mentioned separately.)
  *
@@ -32,7 +32,7 @@ import jloda.fx.util.BasicFX;
 
 import java.util.List;
 
-public class TableViewSupport {
+class SetupTableView {
 
 	public static void apply(TableView<TreeRecord> treeTableView,
 							 TableColumn<TreeRecord, String> treeColumn, TableColumn<TreeRecord, Boolean> runColumn,
@@ -47,7 +47,7 @@ public class TableViewSupport {
 		// Run checkbox
 
 		runColumn.setEditable(true);
-		runColumn.setCellValueFactory(cd -> cd.getValue().runProperty());
+		runColumn.setCellValueFactory(cd -> cd.getValue().runLayoutProperty());
 		runColumn.setCellFactory(col -> {
 			var cell = new CheckBoxTableCell<TreeRecord, Boolean>();
 			cell.setEditable(true);

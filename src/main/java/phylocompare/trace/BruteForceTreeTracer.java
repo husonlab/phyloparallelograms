@@ -56,7 +56,7 @@ public class BruteForceTreeTracer {
 	 * @param network     the rooted network
 	 * @param treeRecords the tree rows
 	 */
-	public static void apply(TaxaBlock taxaBlock, PhyloTree network, List<TreeRecord> treeRecords, double minConfidence, ProgressListener progress) {
+	public static void apply(TaxaBlock taxaBlock, PhyloTree network, List<TreeRecord> treeRecords, double minConfidence, double minConcordance, ProgressListener progress) {
 		var requireComputation = new ArrayList<TreeRecord>();
 
 		var set = getTT(network.getRoot());
@@ -86,7 +86,7 @@ public class BruteForceTreeTracer {
 
 			try {
 				ExecuteInParallel.apply(choices, choice -> {
-					traceTrees(taxaBlock, network, choice, requireComputation, minConfidence, progress);
+					traceTrees(taxaBlock, network, choice, requireComputation, minConfidence, minConcordance, progress);
 				}, ProgramExecutorService.getNumberOfCoresToUse(), progress);
 				CompleteTreeTrace.apply(network);
 			} catch (InterruptedException ignored) {
@@ -103,7 +103,7 @@ public class BruteForceTreeTracer {
 	 * @param chosenReticulateEdges one edge per reticulation
 	 * @param treeRecords           the tree rows
 	 */
-	private static void traceTrees(TaxaBlock taxaBlock, PhyloTree network, Set<Edge> chosenReticulateEdges, List<TreeRecord> treeRecords, double minConfidence, ProgressListener progress) throws CanceledException {
+	private static void traceTrees(TaxaBlock taxaBlock, PhyloTree network, Set<Edge> chosenReticulateEdges, List<TreeRecord> treeRecords, double minConfidence, double minConcordance, ProgressListener progress) throws CanceledException {
 		//System.err.println("Reticulate edges: "+StringUtils.toString(chosenReticulateEdges,", "));
 		var treeInNetworkClusters = extractAllClusters(network, chosenReticulateEdges);
 		//System.err.println("Network clusters: "+StringUtils.toString(treeInNetworkClusters,", "));
@@ -123,8 +123,8 @@ public class BruteForceTreeTracer {
 		for (var record : treeRecords) {
 			if (record.isShow() && !rootBitSet.get(record.getId())) {
 				var tree = record.getTree();
-				if (minConfidence > 0.0) {
-					tree = FilterTrees.apply(taxaBlock, List.of(tree), minConfidence, new ProgressSilent()).get(0);
+				if (minConfidence > 0.0 || minConcordance > 0.0) {
+					tree = FilterTrees.apply(taxaBlock, List.of(tree), minConfidence, minConcordance, new ProgressSilent()).get(0);
 				} else
 					tree = record.getTree();
 

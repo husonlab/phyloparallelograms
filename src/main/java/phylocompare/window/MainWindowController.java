@@ -162,7 +162,7 @@ public class MainWindowController {
 	private MenuItem redoMenuItem;
 
 	@FXML
-	private Button runButton;
+	private Button runLayoutButton;
 
 	@FXML
 	private MenuItem runMenuItem;
@@ -183,7 +183,7 @@ public class MainWindowController {
 	private TableColumn<TreeRecord, String> treeColumn;
 
 	@FXML
-	private TableColumn<TreeRecord, Boolean> runColumn;
+	private TableColumn<TreeRecord, Boolean> layoutColumn;
 
 	@FXML
 	private TableColumn<TreeRecord, Boolean> showColumn;
@@ -199,6 +199,9 @@ public class MainWindowController {
 
 	@FXML
 	private MenuItem setConfidenceThresholdMenuItem;
+
+	@FXML
+	private MenuItem setCondordanceThresholdMenuItem;
 
 	@FXML
 	private MenuItem showAllMenuItem;
@@ -231,16 +234,19 @@ public class MainWindowController {
 	private TextField confidenceTextField;
 
 	@FXML
+	private TextField concordanceTextField;
+
+	@FXML
 	private Label statusLabel;
 
 	@FXML
 	private SplitPane splitPane;
 
 	@FXML
-	private Button selectAllTableButton;
+	private Button selectTableButton;
 
 	@FXML
-	private Button selectNoneTableButton;
+	private Button selectTaxaButton;
 
 	@FXML
 	private MenuButton diagramMenuButton;
@@ -305,6 +311,15 @@ public class MainWindowController {
 	@FXML
 	private VBox leftVBox;
 
+	@FXML
+	private VBox rightVBox;
+
+	@FXML
+	private MenuItem rerootByOutgroupMenuItem;
+
+	@FXML
+	private MenuItem rerootByMidpointMenuItem;
+
 
 	private ZoomableScrollPane scrollPane;
 
@@ -315,10 +330,10 @@ public class MainWindowController {
 	private void initialize() {
 		MaterialIcons.setIcon(settingsMenuButton, MaterialIcons.tune);
 
-		MaterialIcons.setIcon(runButton, MaterialIcons.play_circle, "", false);
+		MaterialIcons.setIcon(runLayoutButton, MaterialIcons.play_circle, "", false);
 		MaterialIcons.setIcon(showButton, MaterialIcons.play_circle, "", false);
-		MaterialIcons.setIcon(selectAllTableButton, MaterialIcons.select_all);
-		MaterialIcons.setIcon(selectNoneTableButton, MaterialIcons.deselect);
+		MaterialIcons.setIcon(selectTableButton, MaterialIcons.select_all);
+		MaterialIcons.setIcon(selectTaxaButton, MaterialIcons.select_all);
 		MaterialIcons.setIcon(exportMenuButton, MaterialIcons.ios_share);
 		MaterialIcons.setIcon(zoomInButton, MaterialIcons.zoom_in);
 		MaterialIcons.setIcon(zoomOutButton, MaterialIcons.zoom_out);
@@ -337,6 +352,10 @@ public class MainWindowController {
 				change.getControlNewText().matches("-?\\d*(\\.\\d*)?") ? change : null));
 		confidenceTextField.setText("0.0");
 
+		concordanceTextField.setTextFormatter(new TextFormatter<>(change ->
+				change.getControlNewText().matches("-?\\d*(\\.\\d*)?") ? change : null));
+		confidenceTextField.setText("0.0");
+
 		statusLabel.setText("");
 
 		scrollPane = new ZoomableScrollPane(new Pane());
@@ -348,14 +367,14 @@ public class MainWindowController {
 
 		centerPane.getChildren().add(scrollPane);
 
-		TableViewSupport.apply(treeTable, treeColumn, runColumn, showColumn, disableAllRun, disableAllShow, this);
+		SetupTableView.apply(treeTable, treeColumn, layoutColumn, showColumn, disableAllRun, disableAllShow, this);
 
-		var runBulkHeaderCheckBox = new BulkHeaderCheckBox<>(treeTable, TreeRecord::runProperty).getNode();
+		var runBulkHeaderCheckBox = new BulkHeaderCheckBox<>(treeTable, TreeRecord::runLayoutProperty).getNode();
 		disableAllRun.addListener((v, o, n) -> {
 			if (n)
-				runColumn.setGraphic(null);
+				layoutColumn.setGraphic(null);
 			else
-				runColumn.setGraphic(runBulkHeaderCheckBox);
+				layoutColumn.setGraphic(runBulkHeaderCheckBox);
 		});
 		var showBulkHeaderCheckBox = new BulkHeaderCheckBox<>(treeTable, TreeRecord::showProperty).getNode();
 		disableAllShow.addListener((v, o, n) -> {
@@ -365,7 +384,7 @@ public class MainWindowController {
 				showColumn.setGraphic(showBulkHeaderCheckBox);
 		});
 		var tip = new javafx.scene.control.Tooltip("Applies to selected rows; if none selected, applies to all rows.");
-		Tooltip.install(runColumn.getGraphic(), tip);
+		Tooltip.install(layoutColumn.getGraphic(), tip);
 		Tooltip.install(showColumn.getGraphic(), tip);
 
 		zoomInButton.setOnAction(e -> zoomInMenuItem.fire());
@@ -377,8 +396,8 @@ public class MainWindowController {
 
 		exportMenuButton.getItems().addAll(BasicFX.copyMenu(List.of(copyImageMenuItem), false));
 
-		runButton.onActionProperty().bindBidirectional(runMenuItem.onActionProperty());
-		runButton.disableProperty().bindBidirectional(runMenuItem.disableProperty());
+		runLayoutButton.onActionProperty().bindBidirectional(runMenuItem.onActionProperty());
+		runLayoutButton.disableProperty().bindBidirectional(runMenuItem.disableProperty());
 
 		curvedReticulateEdgesCheckMenuItem2.selectedProperty().bindBidirectional(curvedReticulateEdgesCheckMenuItem.selectedProperty());
 		curvedReticulateEdgesCheckMenuItem2.disableProperty().bind(curvedReticulateEdgesCheckMenuItem.disableProperty());
@@ -563,8 +582,8 @@ public class MainWindowController {
 		return treeColumn;
 	}
 
-	public TableColumn<TreeRecord, Boolean> getRunColumn() {
-		return runColumn;
+	public TableColumn<TreeRecord, Boolean> getLayoutColumn() {
+		return layoutColumn;
 	}
 
 	public TableColumn<TreeRecord, Boolean> getShowColumn() {
@@ -623,12 +642,20 @@ public class MainWindowController {
 		return confidenceTextField;
 	}
 
+	public TextField getConcordanceTextField() {
+		return concordanceTextField;
+	}
+
 	public Label getStatusLabel() {
 		return statusLabel;
 	}
 
 	public MenuItem getSetConfidenceThresholdMenuItem() {
 		return setConfidenceThresholdMenuItem;
+	}
+
+	public MenuItem getSetCondordanceThresholdMenuItem() {
+		return setCondordanceThresholdMenuItem;
 	}
 
 	public ZoomableScrollPane getScrollPane() {
@@ -643,12 +670,12 @@ public class MainWindowController {
 		return rootPane;
 	}
 
-	public Button getSelectAllTableButton() {
-		return selectAllTableButton;
+	public Button getSelectTableButton() {
+		return selectTableButton;
 	}
 
-	public Button getSelectNoneTableButton() {
-		return selectNoneTableButton;
+	public Button getSelectTaxaButton() {
+		return selectTaxaButton;
 	}
 
 	public Spinner<Double> getOutlineSpreadSpinner() {
@@ -742,5 +769,17 @@ public class MainWindowController {
 
 	public VBox getLeftVBox() {
 		return leftVBox;
+	}
+
+	public VBox getRightVBox() {
+		return rightVBox;
+	}
+
+	public MenuItem getRerootByOutgroupMenuItem() {
+		return rerootByOutgroupMenuItem;
+	}
+
+	public MenuItem getRerootByMidpointMenuItem() {
+		return rerootByMidpointMenuItem;
 	}
 }

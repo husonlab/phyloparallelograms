@@ -41,7 +41,7 @@ public class Save {
 		try {
 			var document = window.getDocument();
 			var networkView = window.getPresenter().getNetworkView();
-			var parameters = new PhyloCompareDB.Parameters(document.getApplicableConfidenceThreshold(), networkView.getOptionOutlineWidth(), networkView.isOptionShowOutline(),
+			var parameters = new PhyloCompareDB.Parameters(document.getApplicableConfidenceThreshold(), document.getConcordanceThreshold(), networkView.getOptionOutlineWidth(), networkView.isOptionShowOutline(),
 					document.getColorSchemeName(), networkView.optionShowTransferProperty().get(), networkView.optionAcceptorPercentageProperty().get());
 			PhyloCompareDB.save(file.getPath(), document.getTreeRecords(), document.getNetworks(), parameters);
 			window.dirtyProperty().set(false);

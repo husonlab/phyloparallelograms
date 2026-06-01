@@ -21,7 +21,6 @@
 package phylocompare.view;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
@@ -32,7 +31,6 @@ import javafx.scene.text.Text;
 import jloda.fx.util.ColorSchemeManager;
 import jloda.fx.util.ColorUtilsFX;
 import jloda.graph.Edge;
-import jloda.graph.Node;
 import jloda.phylo.PhyloTree;
 import jloda.util.BitSetUtils;
 import phylocompare.trace.TreeTrace;
@@ -48,7 +46,7 @@ import static phylocompare.trace.TreeTrace.getTT;
 
 public class DrawTracedTrees {
 
-	public static Group apply(PhyloTree network, String colorSchemeName, List<TreeRecord> treeRecords, BitSet trees, double outlineWidth, Function<Node, Point2D> nodePointFunction, Function<Edge, Path> edgePathFunction, VBox legend) {
+	public static Group apply(PhyloTree network, String colorSchemeName, List<TreeRecord> treeRecords, BitSet trees, double outlineWidth, Function<Edge, Path> edgePathFunction, VBox legend) {
 		legend.getChildren().setAll(legend.getChildren().get(0));
 		var group = new Group();
 
@@ -71,6 +69,7 @@ public class DrawTracedTrees {
 			var label = new ToggleButton();
 			label.setStyle("-fx-text-fill: " + ColorUtilsFX.toStringCSS(color) + "; -fx-background-color: transparent; -fx-border-color: transparent;");
 			label.setText(idRecordMap.containsKey(treeId) ? idRecordMap.get(treeId).getName() : "???");
+			label.setUserData(treeId);
 			if (!getTT(network.getRoot()).get(treeId))
 				label.setText(("[ %s ]").formatted(label.getText()));
 			legend.getChildren().add(new HBox(new Text(" "), label));

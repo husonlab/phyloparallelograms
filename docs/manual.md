@@ -1,6 +1,6 @@
 # PhyloCompare User Manual
 
-**Version 1.0.2**
+**Version 1.0.3**
 **Daniel H. Huson, 2026**
 
 > *Keyboard shortcuts:* throughout this manual, `Cmd` denotes the platform shortcut modifier - Cmd on macOS, Ctrl on
@@ -67,7 +67,7 @@ Typical use cases:
 
 - Parallelogram visualization of two or more rooted trees on overlapping taxon sets, with shared structure aligned and
   disagreements made visually explicit.
-- Interactive tree table for selecting which trees contribute to the underlying network and which are drawn in the
+- Interactive tree table for selecting which trees contribute to the underlying network and which are shown in the
   parallelogram.
 - Color-coded tree overlays with an automatically generated legend.
 - Confidence-based filtering of input tree branches before computation.
@@ -84,10 +84,10 @@ Installers are available here:
 
 The main window is split vertically into two panels:
 
-| Panel                           | Purpose                                                                                                                                          |
-|---------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Left - Tree table**           | Lists all loaded input trees. Two checkbox columns control which trees are used in the PhyloFusion run and which are drawn in the parallelogram. |
-| **Right - Visualization panel** | Displays the computed rooted network together with the phylogenetic parallelogram drawn over it.                                                 |
+| Panel                           | Purpose                                                                                                                                             |
+|---------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Left - Tree table**           | Lists all loaded input trees. Two checkbox columns control which trees are used in the PhyloFusion layout and which are drawn in the parallelogram. |
+| **Right - Visualization panel** | Displays the computed rooted network together with the phylogenetic parallelogram drawn over it.                                                    |
 
 A status bar at the bottom shows progress messages and a live memory-usage indicator.
 
@@ -96,18 +96,21 @@ A status bar at the bottom shows progress messages and a live memory-usage indic
 The table has three columns:
 
 - **Tree** - the name (and optional metadata) of each input tree.
-- **Run** - checkbox: include this tree when running PhyloFusion.
+- **Layout** - checkbox: include this tree when running PhyloFusion layout.
 - **Show** - checkbox: include this tree in the parallelogram drawn on the network.
 
 Above the table:
 
 - **Select all** / **Select none** - toggle the selection state of all rows in the table.
-- **Run** - run the PhyloFusion algorithm on the trees whose *Run* box is checked.
+- **Run Layout** - run the PhyloFusion algorithm on the trees whose *Layout* box is checked.
 - **Show** - refresh the parallelogram to include exactly the trees whose *Show* box is checked.
 
 Below the table:
 
 - **Min branch confidence** - a numeric field. Input branches with confidence values below this threshold are pruned
+  from each input tree before PhyloFusion is run. Set to `0` to disable filtering.
+
+- **Min concordance** - a numeric field. Input branches with concordance values below this threshold are pruned
   from each input tree before PhyloFusion is run. Set to `0` to disable filtering.
 
 ### 3.2 Visualization panel (right panel)
@@ -172,7 +175,7 @@ that has embedded trees.)
    and are displayed together on the right.
 3. (Optional) Set a **Min branch confidence** value to prune low-support branches before running PhyloFusion.
 4. (Optional) Use **Select None** and then check only the trees you want to include in the analysis.
-5. Click **Run** (or **Run > Run PhyloFusion**, `Cmd+R`).
+5. Click **Run Layout** (or **Layout > Run PhyloFusion Layout**, `Cmd+R`).
 6. The computed rooted network appears in the right-hand panel, with the parallelogram of all *Show*-checked trees drawn
    on top.
 7. Adjust which trees appear in the parallelogram using the *Show* checkboxes in the table, then click **Show** (or *
@@ -205,22 +208,26 @@ Standard editing commands: **Undo** (`Cmd+Z`), **Redo** (`Shift+Cmd+Z`), **Cut**
 Image** (`Shift+Cmd+C`), **Paste** (`Cmd+V`), **Delete** (`Backspace`), **Clear**, **Find...** (`Cmd+F`), **Find Again
 ** (`Cmd+G`).
 
-Use Find to search for trees in the input list. The following special search terms can also be used:
+Use Find to search for trees in the input table and taxa in the network. The following special search terms can also be
+used:
 
 run:true, run:false, show:true, show:false and size:integer, where size is the number of taxa in the tree.
 
-### 6.3 Run menu
+### 6.3 Layout menu
 
-| Item                        | Shortcut | Action                                                                                                                                                                                  |
-|-----------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Use All Trees               | -        | Check every (selected) tree's *Run* box.                                                                                                                                                |
-| Use None Trees              | -        | Uncheck every (selected) tree's *Run* box.                                                                                                                                              |
-| Run PhyloFusion             | `Cmd+R`  | Run PhyloFusion on the selected input trees.                                                                                                                                            |
-| Show All Trees              | -        | Check every (selected) tree's *Show* box.                                                                                                                                               |
-| Show None Trees             | -        | Uncheck every (selected)  tree's *Show* box.                                                                                                                                            |
-| Show Selected Trees         | -        | Redraw the parallelogram using only the trees with *Show* checked.                                                                                                                      |
-| Show Trees Exhaustive       | -        | Use an exhaustive (brute-force) algorithm to locate all trees in the network. The exhaustive algorithm is also used to embed trees that were not used to compute the underlying network |
-| Set Confidence Threshold... | -        | Open a dialog to set the *Mininum branch confidence* value.                                                                                                                             |
+| Item                         | Shortcut | Action                                                                                                                                                                                  |
+|------------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Use All Trees                | -        | Check every (selected) tree's *Run* box.                                                                                                                                                |
+| Use None Trees               | -        | Uncheck every (selected) tree's *Run* box.                                                                                                                                              |
+| Run PhyloFusion Layout       | `Cmd+R`  | Run PhyloFusion layot on the selected input trees.                                                                                                                                      |
+| Show All Trees               | -        | Check every (selected) tree's *Show* box.                                                                                                                                               |
+| Show None Trees              | -        | Uncheck every (selected)  tree's *Show* box.                                                                                                                                            |
+| Show Selected Trees          | -        | Redraw the parallelogram using only the trees with *Show* checked.                                                                                                                      |
+| Show Trees Exhaustive        | -        | Use an exhaustive (brute-force) algorithm to locate all trees in the network. The exhaustive algorithm is also used to embed trees that were not used to compute the underlying network |
+| Reroot by Outgroup           | -        | If any taxa in the network are selected, reroot all input trees using the selected taxa as output                                                                                       |
+| Reroot by Midpoint           | -        | Reroot all input trees using midpoint rooting.                                                                                                                                          |
+| Set Confidence Threshold...  | -        | Open a dialog to set the *Minimum branch confidence* value.                                                                                                                             |
+| Set Concordance Threshold... | -        | Open a dialog to set the *Minimum branch concordance* value. This is the minimum percentage of trees that an edge has to be compatible with to be included.                             |
 
 ### 6.4 View menu
 
@@ -252,19 +259,13 @@ run:true, run:false, show:true, show:false and size:integer, where size is the n
 
 - **Check for Updates...** - query the update server.
 - **About...** - version and citation information.
-- **Help Window...** - open this manual in an in-app window.
+- **Open User Manual in Browser...** - open this manual in a webbrowser.
 
 ## 7. The PhyloFusion algorithm
 
 Given a collection of rooted phylogenetic trees that may include multifurcations,
 the PhyloFusion algorithm computes a rooted phylogenetic network N that displays all input trees and attempts to
 minimizes the hybridization number h(N).
-
-See our paper for more details:
-
-L. Zhang, B. Cetinkaya, D. H. Huson, PhyloFusion—Fast and Easy Fusion of Rooted Phylogenetic Trees into Rooted
-Phylogenetic Networks, Systematic Biology, 75(1):88-99,
-2026 [https://doi.org/10.1093/sysbio/syaf049](https://doi.org/10.1093/sysbio/syaf049)
 
 ## 8. The phylogenetic parallelogram
 
@@ -312,4 +313,4 @@ the `LICENSE` file shipped with the distribution, or https://www.gnu.org/license
 
 --
 
-*Manual last updated: May 2026.*
+*Manual last updated: June 2026.*

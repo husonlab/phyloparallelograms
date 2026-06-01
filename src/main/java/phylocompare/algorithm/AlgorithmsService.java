@@ -54,10 +54,11 @@ public class AlgorithmsService extends AService<Boolean> {
 			if (runPhyloFusion && document.hasTreesProperty().get()) {
 				progress.setTasks("Running", "PhyloCompare");
 				final List<PhyloTree> trees;
-				if (document.getApplicableConfidenceThreshold() > 0.0)
-					trees = FilterTrees.apply(document.getTaxaBlock(), document.getRunTrees(), mainWindow.getDocument().getApplicableConfidenceThreshold(), getProgressListener());
-				else
+				if (document.getApplicableConfidenceThreshold() > 0.0 || document.getConcordanceThreshold() > 0.0) {
+					trees = FilterTrees.apply(document.getTaxaBlock(), document.getRunTrees(), document.getApplicableConfidenceThreshold(), document.getConcordanceThreshold(), getProgressListener());
+				} else {
 					trees = document.getRunTrees();
+				}
 
 				var treeRenumberMapping = Workaround.computeTreeRenumberMapping(document.getTreeRecords(), trees);
 				var blocks = NexusBlocksUtils.setupBlocks(document.getTaxaBlock(), trees);
@@ -115,7 +116,7 @@ public class AlgorithmsService extends AService<Boolean> {
 					}
 				}
 				for (var network : networks) {
-					BruteForceTreeTracer.apply(document.getTaxaBlock(), network, document.getTreeRecords(), document.getApplicableConfidenceThreshold(), progress);
+					BruteForceTreeTracer.apply(document.getTaxaBlock(), network, document.getTreeRecords(), document.getApplicableConfidenceThreshold(), document.getConcordanceThreshold(), progress);
 				}
 			}
 			Platform.runLater(() -> {

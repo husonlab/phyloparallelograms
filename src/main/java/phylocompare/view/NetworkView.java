@@ -25,6 +25,7 @@ import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import javafx.collections.SetChangeListener;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.effect.BlurType;
@@ -34,7 +35,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.StrokeLineCap;
+import jloda.fx.selection.SelectionModel;
 import jloda.fx.util.ProgramProperties;
+import jloda.fx.util.SelectionEffectBlue;
 import jloda.fx.window.MainWindowManager;
 import jloda.graph.Edge;
 import jloda.graph.Node;
@@ -43,6 +46,7 @@ import jloda.phylogeny.layout.Averaging;
 import jloda.util.BitSetUtils;
 import phylocompare.window.TreeRecord;
 import splitstree6.data.TaxaBlock;
+import splitstree6.data.parts.Taxon;
 import splitstree6.layout.tree.LabeledEdgeShape;
 import splitstree6.layout.tree.LabeledNodeShape;
 import splitstree6.layout.tree.TreeDiagramType;
@@ -61,6 +65,7 @@ public class NetworkView extends Group {
 	private final Group tracedTreesGroup = new Group();
 	private final ObservableMap<Edge, Path> edgeOutlineMap = FXCollections.observableHashMap();
 	private final Map<Node, LabeledNodeShape> nodeLabeledNodeShapeMap = new HashMap<>();
+	private final Map<Taxon, LabeledNodeShape> taxonLabeledNodeShapeMap = new HashMap<>();
 	private final Map<Edge, LabeledEdgeShape> edgeLabeledEdgeShapeHashMap = new HashMap<>();
 
 	private final ObjectProperty<TreeDiagramType> optionDiagram = new SimpleObjectProperty<>(this, "optionDiagram", TreeDiagramType.RectangularCladogram);
@@ -73,6 +78,7 @@ public class NetworkView extends Group {
 	private final BooleanProperty optionRectangularEdges = new SimpleBooleanProperty(this, "optionRectangularEdges", false);
 	private final BooleanProperty optionReticulateEdgesAreSpecial = new SimpleBooleanProperty(this, "optionReticulateEdgesAreSpecial", true);
 
+	private final SelectionModel<Taxon> taxonSelectionModel;
 	{
 		ProgramProperties.track(optionDiagram, TreeDiagramType::valueOf, TreeDiagramType.RectangularCladogram);
 		ProgramProperties.track(optionAveraging, Averaging::valueOf, Averaging.ChildAverage);
@@ -86,7 +92,8 @@ public class NetworkView extends Group {
 	private final DoubleProperty targetWidth = new SimpleDoubleProperty(this, "targetWidth", 800.0);
 	private final DoubleProperty targetHeight = new SimpleDoubleProperty(this, "targetHeight", 800.0);
 
-	public NetworkView(Pane bottomPane, VBox legend) {
+	public NetworkView(SelectionModel<Taxon> taxonSelectionModel, Pane bottomPane, VBox legend) {
+		this.taxonSelectionModel = taxonSelectionModel;
 		this.service = new NetworkViewService(bottomPane);
 		this.legend = legend;
 
@@ -103,6 +110,21 @@ public class NetworkView extends Group {
 			outlinesGroup.setEffect(isOptionShowOutline() ? (n ? darkEffect : lightEffect) : null);
 		});
 
+		taxonSelectionModel.getSelectedItems().addListener((SetChangeListener<? super Taxon>) e -> {
+			if (e.wasAdded()) {
+				var label = taxonLabeledNodeShapeMap.get(e.getElementAdded()).getLabel();
+				if (label != null) {
+					label.setEffect(SelectionEffectBlue.getInstance());
+				}
+			}
+			if (e.wasRemoved()) {
+				var label = taxonLabeledNodeShapeMap.get(e.getElementRemoved()).getLabel();
+				if (label != null) {
+					label.setEffect(null);
+				}
+			}
+		});
+
 		getChildren().addAll(networkGroup, tracedTreesGroup);
 	}
 
@@ -112,6 +134,7 @@ public class NetworkView extends Group {
 		outlinesGroup.getChildren().clear();
 		tracedTreesGroup.getChildren().clear();
 		legend.getChildren().setAll(legend.getChildren().get(0));
+		taxonSelectionModel.getSelectedItems().clear();
 	}
 
 	public void clearTracedTreesDrawing() {
@@ -135,6 +158,27 @@ public class NetworkView extends Group {
 				networkGroup.getChildren().add(labelsGroup); // want labels on top of outline
 				nodeLabeledNodeShapeMap.clear();
 				nodeLabeledNodeShapeMap.putAll(service.getNodeLabeledNodeShapeMap());
+
+				for (var v : nodeLabeledNodeShapeMap.keySet()) {
+					if (network.hasTaxa(v)) {
+						var taxon = taxaBlock.get(network.getTaxon(v));
+						var shape = nodeLabeledNodeShapeMap.get(v);
+						if (shape != null) {
+							taxonLabeledNodeShapeMap.put(taxon, shape);
+							var label = shape.getLabel();
+							if (label != null) {
+								label.setOnMouseClicked(e -> {
+									if (!e.isShiftDown())
+										taxonSelectionModel.clearSelection();
+									if (taxon != null) {
+										taxonSelectionModel.toggleSelection(taxon);
+									}
+								});
+							}
+						}
+					}
+				}
+
 				// put space in front and end of labels:
 				nodeLabeledNodeShapeMap.values().stream().map(LabeledNodeShape::getLabel).filter(Objects::nonNull).forEach(label -> label.setText("   %s   ".formatted(label.getText())));
 
@@ -194,7 +238,7 @@ public class NetworkView extends Group {
 			return new Point2D(shape.getTranslateX(), shape.getTranslateY());
 		};
 		Function<Edge, Path> edgePathFunction = e -> (Path) edgeLabeledEdgeShapeHashMap.get(e).getShape();
-		tracedTreesGroup.getChildren().setAll(DrawTracedTrees.apply(network, colorSchemeName, treeRecords, trees, getOptionOutlineWidth(), nodePointFunction, edgePathFunction, legend));
+		tracedTreesGroup.getChildren().setAll(DrawTracedTrees.apply(network, colorSchemeName, treeRecords, trees, getOptionOutlineWidth(), edgePathFunction, legend));
 	}
 
 	public TreeDiagramType getOptionDiagram() {
@@ -271,6 +315,10 @@ public class NetworkView extends Group {
 
 	public BooleanProperty optionReticulateEdgesAreSpecialProperty() {
 		return optionReticulateEdgesAreSpecial;
+	}
+
+	public VBox getLegend() {
+		return legend;
 	}
 }
 

@@ -26,23 +26,20 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jloda.phylo.PhyloTree;
 
-import java.util.Collection;
-
 public class TreeRecord {
 	private final StringProperty name = new SimpleStringProperty();
 	private final int id;
-	private final BooleanProperty run = new SimpleBooleanProperty(false);
+	private final BooleanProperty runLayout = new SimpleBooleanProperty(false);
 	private final BooleanProperty show = new SimpleBooleanProperty(false);
 	private final PhyloTree tree;
 
-	public TreeRecord(String name, int id, boolean run, boolean show, PhyloTree tree) {
+	public TreeRecord(String name, int id, boolean runLayout, boolean show, PhyloTree tree) {
 		setName(name);
 		this.id = id;
-		setRun(run);
+		setRunLayout(runLayout);
 		setShow(show);
-		this.runProperty().addListener((v, o, n) -> {
-			if (n)
-				setShow(true);
+		this.runLayoutProperty().addListener((v, o, n) -> {
+			setShow(n);
 		});
 		this.tree = tree;
 	}
@@ -59,16 +56,16 @@ public class TreeRecord {
 		name.set(v);
 	}
 
-	public BooleanProperty runProperty() {
-		return run;
+	public BooleanProperty runLayoutProperty() {
+		return runLayout;
 	}
 
-	public boolean isRun() {
-		return run.get();
+	public boolean getRunLayout() {
+		return runLayout.get();
 	}
 
-	public void setRun(boolean v) {
-		run.set(v);
+	public void setRunLayout(boolean v) {
+		runLayout.set(v);
 	}
 
 	public BooleanProperty showProperty() {
@@ -93,6 +90,6 @@ public class TreeRecord {
 
 	@Override
 	public String toString() {
-		return name.get() + " run:" + isRun() + " show:" + isShow() + " size:" + ((Collection<?>) tree.getTaxa()).size();
+		return name.get() + " run:" + getRunLayout() + " show:" + isShow() + " size:" + tree.getTaxa().size();
 	}
 }

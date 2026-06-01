@@ -33,6 +33,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+import jloda.fx.selection.SelectionModel;
+import jloda.fx.selection.SetSelectionModel;
 import jloda.fx.undo.UndoManager;
 import jloda.fx.util.FileOpenManager;
 import jloda.fx.util.MemoryUsage;
@@ -45,6 +47,7 @@ import jloda.util.FileUtils;
 import phylocompare.io.ExtensionFilters;
 import phylocompare.io.FileOpener;
 import phylocompare.model.Document;
+import splitstree6.data.parts.Taxon;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -55,6 +58,7 @@ public class MainWindow implements IMainWindow {
 	private final Scene scene;
 
 	private final Document document = new Document();
+	private final SelectionModel<Taxon> taxaSelectionModel = new SetSelectionModel<>();
 	private final UndoManager undoManager = new UndoManager();
 	private final MainWindowController controller;
 	private MainWindowPresenter presenter;
@@ -159,6 +163,10 @@ public class MainWindow implements IMainWindow {
 
 	public Document getDocument() {
 		return document;
+	}
+
+	public SelectionModel<Taxon> getTaxaSelectionModel() {
+		return taxaSelectionModel;
 	}
 
 	public MainWindowController getController() {

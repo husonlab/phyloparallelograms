@@ -1,5 +1,5 @@
 /*
- * FindSetup.java Copyright (C) 2026 Daniel H. Huson
+ * SetupFind.java Copyright (C) 2026 Daniel H. Huson
  *
  *  (Some files contain contributions from other authors, who are then mentioned separately.)
  *
@@ -20,18 +20,40 @@
 
 package phylocompare.window;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.control.SelectionMode;
 import jloda.fx.find.FindToolBar;
+import jloda.fx.find.Searcher;
 import jloda.fx.find.TableViewSearcher;
 
-public class FindSetup {
+class SetupFind {
 	public static void apply(MainWindow window) {
 		var controller = window.getController();
 
-		var findToolBar = new FindToolBar(window.getStage(), new TableViewSearcher<>(controller.getTreeTable()));
+		var tableSearcher = new TableViewSearcher<>(controller.getTreeTable());
+		tableSearcher.setName("Trees");
+		var taxonSelectionModel = window.getTaxaSelectionModel();
+
+		var document = window.getDocument();
+		var taxaBlock = document.getTaxaBlock();
+
+		var taxonSearcher = new Searcher<>(taxaBlock.getTaxa(),
+				t -> taxonSelectionModel.isSelected(taxaBlock.get(t + 1)),
+				(t, s) -> taxonSelectionModel.setSelected(taxaBlock.get(t + 1), s),
+				new SimpleObjectProperty<>(SelectionMode.MULTIPLE),
+				t -> taxaBlock.getLabel(t + 1), s -> s, (t, s) -> {
+		}, () -> {
+		}, () -> {
+		});
+		taxonSearcher.setSelectionFindable(false);
+		taxonSearcher.setName("Taxa");
+
+		var findToolBar = new FindToolBar(window.getStage(), tableSearcher, taxonSearcher);
+
 		findToolBar.showFindToolBarProperty().bindBidirectional(controller.getFindCheckMenuItem().selectedProperty());
 		controller.getFindAgainMenuItem().setOnAction(e -> findToolBar.findAgain());
 		controller.getFindAgainMenuItem().disableProperty().bind(findToolBar.canFindAgainProperty().not());
 
-		controller.getLeftVBox().getChildren().add(0, findToolBar);
+		controller.getRightVBox().getChildren().add(0, findToolBar);
 	}
 }

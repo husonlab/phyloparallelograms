@@ -21,6 +21,7 @@ module phylocompare {
 	exports phylocompare.main;
 	exports phylocompare.window;
 	exports phylocompare.view;
+	exports phylocompare.model;
 
 	opens phylocompare.main;
 	opens phylocompare.window;

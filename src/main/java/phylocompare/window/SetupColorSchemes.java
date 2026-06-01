@@ -1,5 +1,5 @@
 /*
- * ChooseColorSchemeSetup.java Copyright (C) 2026 Daniel H. Huson
+ * SetupColorSchemes.java Copyright (C) 2026 Daniel H. Huson
  *
  *  (Some files contain contributions from other authors, who are then mentioned separately.)
  *
@@ -18,12 +18,14 @@
  *
  */
 
-package phylocompare.view;
+package phylocompare.window;
 
+import javafx.collections.FXCollections;
+import javafx.scene.paint.Color;
 import jloda.fx.util.ColorSchemeManager;
-import phylocompare.window.MainWindow;
+import jloda.fx.window.MainWindowManager;
 
-public class ChooseColorSchemeSetup {
+class SetupColorSchemes {
 	public static void apply(MainWindow window) {
 		var cbox = window.getController().getColorSchemeCBox();
 		cbox.setPrefWidth(48);
@@ -77,7 +79,14 @@ public class ChooseColorSchemeSetup {
 			}
 		});
 
-		cbox.getItems().addAll("Caspian8", "Fews8", "Glasbey29", "Pairs12", "Retro29", "Twenty");
+		var blackTheme = FXCollections.observableArrayList(MainWindowManager.isUseDarkTheme() ? Color.WHITE : Color.BLACK);
+		MainWindowManager.useDarkThemeProperty().addListener((v, o, n) -> {
+			blackTheme.setAll(n ? Color.WHITE : Color.BLACK);
+		});
+
+		ColorSchemeManager.getInstance().setColorScheme("black", blackTheme);
+
+		cbox.getItems().addAll("black", "Retro29", "Glasbey29", "Twenty", "Pairs12", "Fews8", "Caspian8");
 		cbox.setValue(window.getDocument().getColorSchemeName());
 	}
 

@@ -22,6 +22,7 @@ package phylocompare.algorithm;
 
 import jloda.phylo.PhyloTree;
 import jloda.util.progress.ProgressListener;
+import splitstree6.algorithms.trees.trees2trees.TreesConcordanceFilter;
 import splitstree6.algorithms.trees.trees2trees.TreesEdgesFilter;
 import splitstree6.data.TaxaBlock;
 import splitstree6.data.TreesBlock;
@@ -31,14 +32,26 @@ import java.util.List;
 import static phylocompare.utils.NexusBlocksUtils.setupBlocks;
 
 public class FilterTrees {
-	public static List<PhyloTree> apply(TaxaBlock taxaBlock, List<PhyloTree> trees, double minConfidence, ProgressListener progress) {
+	public static List<PhyloTree> apply(TaxaBlock taxaBlock, List<PhyloTree> trees, double minConfidence, double minConcordance, ProgressListener progress) {
+
+
 		if (minConfidence > 0.0) {
 			var blocks = setupBlocks(taxaBlock, trees);
 			var workingTrees = new TreesBlock();
 			var algorithm = new TreesEdgesFilter();
 			algorithm.setOptionMinConfidence(minConfidence);
 			algorithm.compute(progress, blocks.taxaBlock(), blocks.treesBlock(), workingTrees);
-			return workingTrees.getTrees();
-		} else return trees;
+			trees = workingTrees.getTrees();
+		}
+		if (minConcordance > 0.0) {
+			var blocks = setupBlocks(taxaBlock, trees);
+			var workingTrees = new TreesBlock();
+			var algorithm = new TreesConcordanceFilter();
+			algorithm.setOptionMinConcordance(minConfidence);
+			algorithm.compute(progress, blocks.taxaBlock(), blocks.treesBlock(), workingTrees);
+			trees = workingTrees.getTrees();
+		}
+
+		return trees;
 	}
 }

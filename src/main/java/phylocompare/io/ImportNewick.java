@@ -80,7 +80,10 @@ public class ImportNewick {
 			document.addTrees(phylogenies);
 			Platform.runLater(() -> {
 				WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Imported %d trees".formatted(phylogenies.size()));
-				RunAfterAWhile.applyInFXThread(names, () -> window.getController().getRunMenuItem().fire());
+				RunAfterAWhile.applyInFXThread(names, () -> {
+					window.getUndoManager().clear();
+					window.getPresenter().runRecomputeNetwork();
+				});
 			});
 		} else {
 			document.clear();

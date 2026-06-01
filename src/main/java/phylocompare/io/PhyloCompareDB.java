@@ -94,7 +94,7 @@ public class PhyloCompareDB {
 					for (var record : treeRecords) {
 						ps.setInt(1, record.getId());
 						ps.setString(2, record.getName());
-						ps.setInt(3, record.isRun() ? 1 : 0);
+						ps.setInt(3, record.getRunLayout() ? 1 : 0);
 						ps.setInt(4, record.isShow() ? 1 : 0);
 						var newick = record.getTree() == null ? "" : newickIO.toBracketString(record.getTree(), true) + ";";
 						ps.setString(5, newick);
@@ -120,6 +120,12 @@ public class PhyloCompareDB {
 						ps.setString(1, "min_confidence");
 						ps.setString(2, "double");
 						ps.setString(3, StringUtils.trim(parameters.confidenceThreshold()));
+						ps.addBatch();
+					}
+					{
+						ps.setString(1, "min_concordance");
+						ps.setString(2, "double");
+						ps.setString(3, StringUtils.trim(parameters.concordanceThreshold()));
 						ps.addBatch();
 					}
 					{
@@ -230,6 +236,7 @@ public class PhyloCompareDB {
 
 			try (var rs = stmt.executeQuery("SELECT name, type, value FROM parameters ORDER BY name")) {
 				var confidenceThreshold = -1.0;
+				var concordanceThreshold = -1.0;
 				var outlineWidth = -1.0;
 				var showOutline = true;
 				var colorScheme = document.getColorSchemeName();
@@ -258,7 +265,7 @@ public class PhyloCompareDB {
 						}
 					}
 				}
-				result = new Parameters(confidenceThreshold, outlineWidth, showOutline, colorScheme, useTransfer, acceptorPercentage);
+				result = new Parameters(confidenceThreshold, concordanceThreshold, outlineWidth, showOutline, colorScheme, useTransfer, acceptorPercentage);
 			}
 			if (!treeRecords.isEmpty())
 				document.addTreesAndNetworks(treeRecords, networks.values());
@@ -282,7 +289,8 @@ public class PhyloCompareDB {
 		}
 	}
 
-	public record Parameters(double confidenceThreshold, double outlineWidth, boolean showOutline, String colorScheme,
+	public record Parameters(double confidenceThreshold, double concordanceThreshold, double outlineWidth,
+							 boolean showOutline, String colorScheme,
 							 boolean useTransfer, double acceptorPercentage) {
 	}
 }
