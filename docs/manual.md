@@ -49,7 +49,7 @@ by the divergence of the colored traces.
 ![...](images/multitree-parallelogram.png)
 **Figure 2.** A phylogenetic parallelogram containing fifteen trees. Each color corresponds to one input tree. Shared
 topology is represented by aligned paths, whereas alternative evolutionary histories appear as diverging traces within
-the underlying network.
+the underlying network. Individual trees can be highlighted as shown.
 
 Typical use cases:
 
