@@ -27,7 +27,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import jloda.fx.util.ProgramProperties;
 import jloda.fx.util.RunAfterAWhile;
 import jloda.phylo.PhyloGraph;
@@ -37,7 +36,6 @@ import jloda.util.StringUtils;
 import phylocompare.trace.TreeTrace;
 import phylocompare.window.TreeRecord;
 import splitstree6.data.TaxaBlock;
-import splitstree6.data.parts.Taxon;
 
 import java.io.IOException;
 import java.util.*;
@@ -52,21 +50,17 @@ public class Document {
 	private final BooleanProperty empty = new SimpleBooleanProperty(this, "emptyProperty", false);
 
 	private final BooleanProperty hasTreeConfidences = new SimpleBooleanProperty(this, "treesHaveConfidenceValues", false);
-
 	private final BooleanProperty networksHaveWeights = new SimpleBooleanProperty(this, "networksHaveWeights", false);
 
-	private final StringProperty colorSchemeName = new SimpleStringProperty(this, "colorSchemeName", "black");
+	private final StringProperty colorSchemeName = new SimpleStringProperty(this, "colorSchemeName");
 
 	private final TaxaBlock taxaBlock = new TaxaBlock();
-
-	private final BooleanProperty partialTrees = new SimpleBooleanProperty(this, "partialTrees", false);
 
 	private final DoubleProperty confidenceThreshold = new SimpleDoubleProperty(this, "confidenceThreshold");
 	private final DoubleProperty concordanceThreshold = new SimpleDoubleProperty(this, "concordanceThreshold");
 
-	private final ObservableSet<Taxon> outGroup = FXCollections.observableSet(new HashSet<>());
-
 	public Document() {
+		ProgramProperties.track(colorSchemeName, "Retro29");
 		ProgramProperties.track(confidenceThreshold, 0.0);
 		ProgramProperties.track(concordanceThreshold, 0.0);
 
@@ -176,7 +170,6 @@ public class Document {
 				}
 			}
 		}
-		partialTrees.set(false);
 		for (var tree : list) {
 			for (var v : tree.nodes()) {
 				tree.clearTaxa(v);
@@ -186,8 +179,6 @@ public class Document {
 					tree.addTaxon(v, id);
 				}
 			}
-			if (partialTrees.get() && tree.getTaxa().size() != taxaBlock.getNtax())
-				partialTrees.set(false);
 		}
 	}
 
@@ -275,17 +266,5 @@ public class Document {
 
 	public void setColorSchemeName(String colorSchemeName) {
 		this.colorSchemeName.set(colorSchemeName);
-	}
-
-	public boolean isPartialTrees() {
-		return partialTrees.get();
-	}
-
-	public BooleanProperty partialTreesProperty() {
-		return partialTrees;
-	}
-
-	public ObservableSet<Taxon> getOutGroup() {
-		return outGroup;
 	}
 }

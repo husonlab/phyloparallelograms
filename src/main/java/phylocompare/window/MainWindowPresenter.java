@@ -114,7 +114,7 @@ public class MainWindowPresenter {
 			}
 		});
 		controller.getConcordanceTextField().setText(StringUtils.trim(concordanceThreshold.get()));
-		controller.getConcordanceTextField().disableProperty().bind(document.partialTreesProperty().or(canRun.not()));
+		controller.getConcordanceTextField().disableProperty().bind(canRun.not());
 		concordanceThreshold.addListener(e -> runRecomputeNetwork());
 
 		controller.getSetConfidenceThresholdMenuItem().setOnAction(e -> {
