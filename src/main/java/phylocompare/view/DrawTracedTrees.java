@@ -61,6 +61,7 @@ public class DrawTracedTrees {
 		var treeGroupMap = new HashMap<Integer, Group>();
 		for (var treeId : BitSetUtils.members(trees)) {
 			var color = colorScheme.get(treeId % colorScheme.size());
+
 			treeColorMap.put(treeId, color);
 			var treeGroup = new Group();
 			treeGroupMap.put(treeId, treeGroup);
@@ -80,6 +81,7 @@ public class DrawTracedTrees {
 		var nTrees = trees.cardinality();
 		if (nTrees > 0) {
 			var treeOffsetMap = new HashMap<Integer, Double>();
+
 
 			var d = outlineWidth / (nTrees + 1);
 			var m = outlineWidth / 2;
@@ -121,6 +123,7 @@ public class DrawTracedTrees {
 						path.setStroke(adjusted(treeColorMap.get(treeId), countIncoming));
 					} else
 						path.setStroke(treeColorMap.get(treeId));
+
 					path.setTranslateX(treeOffsetMap.get(treeId));
 					path.setTranslateY(treeOffsetMap.get(treeId));
 					treeGroupMap.get(treeId).getChildren().add(path);
@@ -133,12 +136,7 @@ public class DrawTracedTrees {
 	private static Color adjusted(Color base, int k) {
 		if (k <= 1)
 			return base;
-		else return new Color(
-				base.getRed(),
-				base.getGreen(),
-				base.getBlue(),
-				0.3
-		);
+		else return new Color(base.getRed(), base.getGreen(), base.getBlue(), 0.3);
 
 
 		//var t = Math.min(0.8, 1.0 - 1.0 / Math.sqrt(k));

@@ -168,7 +168,7 @@ public class MainWindowPresenter {
 		rerootService = new RerootService(controller.getBottomFlowPane());
 		SetupReroot.apply(window, rerootService, serviceRunning);
 
-		serviceRunning.bind(algorithmsService.runningProperty().or(rerootService.runningProperty()));
+		serviceRunning.bind(algorithmsService.runningProperty().or(rerootService.runningProperty()).or(networkView.runningProperty()));
 
 		controller.getRunMenuItem().setOnAction(e -> {
 			if (!algorithmsService.isRunning()) {
@@ -385,7 +385,7 @@ public class MainWindowPresenter {
 			updateStatusLine.invalidated(null);
 			window.dirtyProperty().set(true);
 		});
-		controller.getShowSelectedMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(networkView.runningProperty()).or(serviceRunning).or(document.hasTreeRecordsProperty().not()));
+		controller.getShowSelectedMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(serviceRunning).or(document.hasTreeRecordsProperty().not()));
 
 		controller.getShowButton().setOnAction(e -> {
 			runUpdateTreesDrawing();

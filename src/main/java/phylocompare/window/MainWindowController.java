@@ -279,6 +279,9 @@ public class MainWindowController {
 	private CheckMenuItem showOutlineCheckMenuItem;
 
 	@FXML
+	private CheckMenuItem showLegendCheckMenuItem;
+
+	@FXML
 	private CheckMenuItem showOutlineCheckMenuItem2;
 
 	@FXML
@@ -319,7 +322,6 @@ public class MainWindowController {
 
 	@FXML
 	private MenuItem rerootByMidpointMenuItem;
-
 
 	private ZoomableScrollPane scrollPane;
 
@@ -781,5 +783,9 @@ public class MainWindowController {
 
 	public MenuItem getRerootByMidpointMenuItem() {
 		return rerootByMidpointMenuItem;
+	}
+
+	public CheckMenuItem getShowLegendCheckMenuItem() {
+		return showLegendCheckMenuItem;
 	}
 }

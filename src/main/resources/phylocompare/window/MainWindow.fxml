@@ -24,7 +24,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22"
+<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="phylocompare.window.MainWindowController">
     <children>
         <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
@@ -53,6 +53,7 @@
                                                 <Button fx:id="showButton" mnemonicParsing="false" text="Show"/>
                                             </items>
                                         </ToolBar>
+                                        <Separator prefWidth="200.0"/>
                                         <TableView fx:id="treeTable" editable="true" VBox.vgrow="ALWAYS">
                                             <columns>
                                                 <TableColumn fx:id="treeColumn" maxWidth="400.0" minWidth="70.0"
@@ -227,6 +228,7 @@
                                                         </HBox>
                                                     </children>
                                                 </AnchorPane>
+                                                <Separator prefWidth="200.0"/>
                                             </children>
                                         </VBox>
                                     </top>
@@ -462,6 +464,8 @@
                                         </Menu>
                                         <CheckMenuItem fx:id="showOutlineCheckMenuItem" mnemonicParsing="false"
                                                        selected="true" text="Show Outline"/>
+                                        <CheckMenuItem fx:id="showLegendCheckMenuItem" mnemonicParsing="false"
+                                                       selected="true" text="Show Trees Legend"/>
                                         <SeparatorMenuItem mnemonicParsing="false"/>
                                         <CheckMenuItem fx:id="curvedReticulateEdgesCheckMenuItem"
                                                        mnemonicParsing="false" selected="true"

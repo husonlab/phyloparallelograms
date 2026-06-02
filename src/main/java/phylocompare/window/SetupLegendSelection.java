@@ -51,6 +51,10 @@ public class SetupLegendSelection {
 					}
 				}
 			}
+			networkView.getLegend().setVisible(networkView.getLegend().getChildren().size() < 100);
 		});
+
+		networkView.getLegend().managedProperty().bind(networkView.getLegend().visibleProperty());
+		window.getController().getShowLegendCheckMenuItem().selectedProperty().bindBidirectional(networkView.getLegend().visibleProperty());
 	}
 }

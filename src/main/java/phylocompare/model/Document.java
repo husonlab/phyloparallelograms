@@ -69,7 +69,7 @@ public class Document {
 		empty.bind(hasTreeRecords.not().and(hasNetworks.not()));
 
 		treeRecords.addListener((InvalidationListener) e ->
-				RunAfterAWhile.applyInFXThread(treeRecords,
+				RunAfterAWhile.applyInFXThread("UpdateHasTreesHasConfidences",
 						() -> {
 							hasTrees.set(treeRecords.stream().allMatch(r -> r.getTree() != null));
 							hasTreeConfidences.set(hasTrees() && treeRecords.stream().map(TreeRecord::getTree).filter(Objects::nonNull).allMatch(PhyloGraph::hasEdgeConfidences));

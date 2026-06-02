@@ -32,7 +32,7 @@
 }
 
 .split-pane .split-pane-divider {
-    -fx-background-color: derive(-fx-base, 50%);
+    -fx-background-color: derive(-fx-base, 5%);
     -fx-min-width: 20;
     -fx-min-height: 20;
 }
@@ -74,6 +74,11 @@
 
 .titled-pane > .title > .text {
     -fx-font-size: 13px;
+}
+
+.graph-edge {
+    -fx-stroke: black;
+    -fx-fill: null;
 }
 
 

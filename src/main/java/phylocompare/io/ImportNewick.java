@@ -80,7 +80,7 @@ public class ImportNewick {
 			document.addTrees(phylogenies);
 			Platform.runLater(() -> {
 				WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Imported %d trees".formatted(phylogenies.size()));
-				RunAfterAWhile.applyInFXThread(names, () -> {
+				RunAfterAWhile.applyInFXThread("RunRecomputeNetwork", () -> {
 					window.getUndoManager().clear();
 					window.getPresenter().runRecomputeNetwork();
 				});
