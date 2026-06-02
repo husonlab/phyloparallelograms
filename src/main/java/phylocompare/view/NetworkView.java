@@ -79,6 +79,7 @@ public class NetworkView extends Group {
 	private final BooleanProperty optionReticulateEdgesAreSpecial = new SimpleBooleanProperty(this, "optionReticulateEdgesAreSpecial", true);
 
 	private final SelectionModel<Taxon> taxonSelectionModel;
+
 	{
 		ProgramProperties.track(optionDiagram, TreeDiagramType::valueOf, TreeDiagramType.RectangularCladogram);
 		ProgramProperties.track(optionAveraging, Averaging::valueOf, Averaging.ChildAverage);

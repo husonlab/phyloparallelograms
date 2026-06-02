@@ -140,7 +140,14 @@ public class MainWindowPresenter {
 				networkView.clear();
 			else {
 				var network = document.getNetworks().get(0);
-				networkView.update(document.getTaxaBlock(), document.getTreeRecords(), network, scaleFactor.get(), true, true, document.getColorSchemeName());
+				var legendVisible = networkView.getLegend().isVisible();
+				if (legendVisible)
+					networkView.getLegend().setVisible(false);
+				Platform.runLater(() -> {
+					networkView.update(document.getTaxaBlock(), document.getTreeRecords(), network, scaleFactor.get(), true, true, document.getColorSchemeName());
+					networkView.getLegend().setVisible(legendVisible);
+				});
+
 			}
 		});
 		document.getNetworks().addListener((InvalidationListener) e -> runUpdateNetworkDrawing());

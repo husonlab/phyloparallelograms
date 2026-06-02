@@ -51,7 +51,8 @@ public class SetupLegendSelection {
 					}
 				}
 			}
-			networkView.getLegend().setVisible(networkView.getLegend().getChildren().size() < 100);
+			if (networkView.getLegend().getChildren().size() > 25)
+				networkView.getLegend().setVisible(false);
 		});
 
 		networkView.getLegend().managedProperty().bind(networkView.getLegend().visibleProperty());
