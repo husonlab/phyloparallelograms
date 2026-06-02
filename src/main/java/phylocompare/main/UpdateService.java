@@ -29,7 +29,7 @@ import java.util.ServiceLoader;
 public interface UpdateService {
 	SimpleBooleanProperty DISABLED = new SimpleBooleanProperty(true);
 
-	default void checkForUpdates(Window owner) {
+	default void checkForUpdates(Window owner, String programName, String programVersion) {
 	}
 
 	default ReadOnlyBooleanProperty disabledProperty() {

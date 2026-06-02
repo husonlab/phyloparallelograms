@@ -634,7 +634,7 @@ public class MainWindowPresenter {
 		controller.getImportTreeNamesMenuItem().disableProperty().bind(canEditTreesList.not());
 
 		var updaterService = UpdateService.get();
-		controller.getCheckForUpdatesMenuItem().setOnAction(e -> updaterService.checkForUpdates(window.getStage()));
+		controller.getCheckForUpdatesMenuItem().setOnAction(e -> updaterService.checkForUpdates(window.getStage(), Version.NAME, Version.VERSION));
 		controller.getCheckForUpdatesMenuItem().disableProperty().bind(updaterService.disabledProperty().or(MainWindowManager.getInstance().sizeProperty().greaterThan(1)).or(window.dirtyProperty()));
 
 		controller.getShowTreesExhaustive().setOnAction(e -> {
