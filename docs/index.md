@@ -7,14 +7,14 @@ Open source repository: https://github.com/husonlab/phylocompare
 
 ## Documentation
 
-- User Manual
-- Release Notes
+- [User Manual](../docs/manual.md)
+- [Release Notes](../release-notes)
 
 ## Downloads
 
 Latest installers are available from:
 
-- GitHub Releases
+- [GitHub Releases](https://github.com/husonlab/phylocompare/releases/latest)
 
 Supported platforms:
 
@@ -26,10 +26,14 @@ Supported platforms:
 
 Source code is hosted at:
 
-- https://github.com/husonlab/phylocompare
+- [https://github.com/husonlab/phylocompare](https://github.com/husonlab/phylocompare)
 
-## Author
+## Main author
 
-Prof. Dr. Daniel H. Huson  
-Institute for Bioinformatics and Medical Informatics  
-University of Tübingen
+Prof. Daniel H. Huson, University of Tübingen
+
+## Contributors
+
+Banu Cetinkaya, University of Tübingen
+
+Prof. Louxin Zhang, National University of Singapore
