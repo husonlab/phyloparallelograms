@@ -1,7 +1,6 @@
-import phylocompare.main.UpdateService;
-
 module phylocompare {
-	uses UpdateService;
+	uses jloda.fx.service.UpdateService;
+
 	requires javafx.base;
 	requires javafx.controls;
 	requires javafx.fxml;

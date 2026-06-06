@@ -34,6 +34,7 @@ import jloda.fx.control.RichTextLabel;
 import jloda.fx.dialog.ExportImageDialog;
 import jloda.fx.dialog.SetParameterDialog;
 import jloda.fx.dialog.SetParameterInternalDialog;
+import jloda.fx.service.UpdateService;
 import jloda.fx.util.*;
 import jloda.fx.window.MainWindowManager;
 import jloda.fx.window.SplashScreen;
@@ -49,7 +50,6 @@ import phylocompare.io.ExportNewick;
 import phylocompare.io.ImportNewick;
 import phylocompare.io.Save;
 import phylocompare.io.SaveBeforeClosingDialog;
-import phylocompare.main.UpdateService;
 import phylocompare.main.Version;
 import phylocompare.trace.BruteForceTreeTracer;
 import phylocompare.trace.TreeTrace;
@@ -634,7 +634,7 @@ public class MainWindowPresenter {
 		controller.getImportTreeNamesMenuItem().disableProperty().bind(canEditTreesList.not());
 
 		var updaterService = UpdateService.get();
-		controller.getCheckForUpdatesMenuItem().setOnAction(e -> updaterService.checkForUpdates(window.getStage(), Version.NAME, Version.VERSION));
+		controller.getCheckForUpdatesMenuItem().setOnAction(e -> updaterService.checkForUpdates(window.getStage(), Version.HOME_URL, Version.NAME, Version.VERSION));
 		controller.getCheckForUpdatesMenuItem().disableProperty().bind(updaterService.disabledProperty().or(MainWindowManager.getInstance().sizeProperty().greaterThan(1)).or(window.dirtyProperty()));
 
 		controller.getShowTreesExhaustive().setOnAction(e -> {

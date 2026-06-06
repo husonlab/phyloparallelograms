@@ -25,6 +25,8 @@ public class Version {
 	public static final String VERSION = resolveVersion();
 	public static final String SHORT_DESCRIPTION = NAME + " (version " + VERSION + ") - License GPL v3";
 
+	static public final String HOME_URL = "https://husonlab.github.io/phylocompare/";
+
 	static public final String WEBSITE_URL = "https://husonlab.github.io/phylocompare/manual.html";
 
 	public static String resolveVersion() {
