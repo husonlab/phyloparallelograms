@@ -116,6 +116,8 @@
                                                         <Label text="Trees:"/>
                                                     </children>
                                                 </VBox>
+                                                <TitledPane fx:id="taxonLabelsTitledPane" text="Taxon Labels"
+                                                            AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0"/>
                                             </children>
                                         </AnchorPane>
                                     </center>
@@ -196,7 +198,7 @@
                                                                 </MenuButton>
                                                                 <ComboBox fx:id="colorSchemeCBox" prefWidth="150.0"/>
                                                                 <Button fx:id="zoomInButton" mnemonicParsing="false"
-                                                                        text="Outline"/>
+                                                                        text="Zoom In"/>
                                                                 <Button fx:id="zoomOutButton" layoutX="221.0"
                                                                         layoutY="10.0" mnemonicParsing="false"
                                                                         text="Zoom Out"/>
@@ -212,6 +214,10 @@
                                                                         <Tooltip text="Select all or none taxa"/>
                                                                     </tooltip>
                                                                 </Button>
+                                                                <Button fx:id="findButton" mnemonicParsing="false"
+                                                                        text="Find"/>
+                                                                <ToggleButton fx:id="formatToggleButton"
+                                                                              mnemonicParsing="false" text="Format"/>
                                                                 <MenuButton fx:id="exportMenuButton"
                                                                             mnemonicParsing="false" text="Export">
                                                                     <items>

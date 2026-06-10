@@ -26,11 +26,16 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+import javafx.util.converter.DefaultStringConverter;
 import jloda.fx.util.BasicFX;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class SetupTableView {
 
@@ -41,8 +46,22 @@ class SetupTableView {
 		treeTableView.setEditable(true);
 		treeTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+		var treeNameEditRequested = new AtomicBoolean(false);
+
 		// Tree name
-		treeColumn.setCellValueFactory(cd -> cd.getValue().nameProperty());
+		treeColumn.setEditable(true);
+		treeColumn.setCellValueFactory(data -> data.getValue().nameProperty());
+		treeColumn.setCellFactory(col -> new TextFieldTableCell<TreeRecord, String>(new DefaultStringConverter()) {
+			@Override
+			public void startEdit() {
+				if (treeNameEditRequested.get())
+					super.startEdit();
+			}
+		});
+		treeColumn.setOnEditCommit(e -> {
+			var record = e.getRowValue();
+			record.setName(e.getNewValue());
+		});
 
 		// Run checkbox
 
@@ -66,11 +85,30 @@ class SetupTableView {
 			return cell;
 		});
 
-		treeTableView.setRowFactory(tv -> {
+		installRowDragAndDrop(treeTableView, treeColumn, treeNameEditRequested, controller);
+	}
+
+	private static void installRowDragAndDrop(TableView<TreeRecord> tableView, TableColumn<TreeRecord, String> treeColumn,
+											  AtomicBoolean treeNameEditRequested, MainWindowController controller) {
+		tableView.setRowFactory(tv -> {
 			var row = new TableRow<TreeRecord>();
 
+			var editNameItem = new MenuItem("Edit tree name");
+			editNameItem.setOnAction(e -> {
+				if (!row.isEmpty()) {
+					var index = row.getIndex();
+					tableView.getSelectionModel().clearAndSelect(index);
+					treeNameEditRequested.set(true);
+					tableView.edit(index, treeColumn);
+					treeNameEditRequested.set(false);
+				}
+			});
+
 			var menu = new ContextMenu();
-			menu.getItems().addAll(BasicFX.copyMenu(List.of(controller.getUseAllMenuItem(), controller.getUseNoneMenuItem(), new SeparatorMenuItem(), controller.getShowAllMenuItem(), controller.getShowNoneMenuItem()), false));
+			menu.getItems().add(editNameItem);
+			menu.getItems().add(new SeparatorMenuItem());
+			menu.getItems().addAll(BasicFX.copyMenu(List.of(controller.getUseAllMenuItem(), controller.getUseNoneMenuItem(),
+					new SeparatorMenuItem(), controller.getShowAllMenuItem(), controller.getShowNoneMenuItem()), false));
 
 			// Only show menu for non-empty rows:
 			row.contextMenuProperty().bind(
@@ -93,7 +131,49 @@ class SetupTableView {
 				}
 			});
 
+			row.setOnDragDetected(event -> {
+				if (!row.isEmpty()) {
+					var index = row.getIndex();
+					var dragboard = row.startDragAndDrop(TransferMode.MOVE);
+					var content = new ClipboardContent();
+					content.putString(String.valueOf(index));
+					dragboard.setContent(content);
+					event.consume();
+				}
+			});
+
+			row.setOnDragOver(event -> {
+				var dragboard = event.getDragboard();
+				if (dragboard.hasString()) {
+					var draggedIndex = Integer.parseInt(dragboard.getString());
+					if (row.getIndex() != draggedIndex) {
+						event.acceptTransferModes(TransferMode.MOVE);
+						event.consume();
+					}
+				}
+			});
+
+			row.setOnDragDropped(event -> {
+				var dragboard = event.getDragboard();
+				if (dragboard.hasString()) {
+					var draggedIndex = Integer.parseInt(dragboard.getString());
+					var items = tableView.getItems();
+					var draggedRecord = items.remove(draggedIndex);
+					int dropIndex;
+					if (row.isEmpty()) {
+						dropIndex = items.size();
+					} else {
+						dropIndex = row.getIndex();
+					}
+					items.add(dropIndex, draggedRecord);
+					tableView.getSelectionModel().clearAndSelect(dropIndex);
+					event.setDropCompleted(true);
+					event.consume();
+				}
+			});
+
 			return row;
 		});
 	}
+
 }

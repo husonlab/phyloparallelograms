@@ -25,6 +25,8 @@ import javafx.scene.paint.Color;
 import jloda.fx.util.ColorSchemeManager;
 import jloda.fx.window.MainWindowManager;
 
+import java.util.HashMap;
+
 class SetupColorSchemes {
 	public static void apply(MainWindow window) {
 		var cbox = window.getController().getColorSchemeCBox();
@@ -88,7 +90,25 @@ class SetupColorSchemes {
 
 		cbox.getItems().addAll("Retro29", "Glasbey29", "Twenty", "Pairs12", "Fews8", "Caspian8", "black");
 		cbox.setValue(window.getDocument().getColorSchemeName());
+
+		cbox.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> {
+			if (n != null) {
+				System.err.println(n);
+				var colorScheme = ColorSchemeManager.getInstance().getColorScheme(n);
+				if (colorScheme != null) {
+					var oldColors = new HashMap<TreeRecord, Color>();
+					window.getDocument().getTreeRecords().forEach(r -> oldColors.put(r, r.getColor()));
+					var newColors = new HashMap<TreeRecord, Color>();
+					window.getDocument().getTreeRecords().forEach(r -> newColors.put(r, colorScheme.get(r.getId() % colorScheme.size())));
+					window.getUndoManager().doAndAdd("colors", () -> {
+						oldColors.forEach(TreeRecord::setColor);
+						window.getPresenter().runUpdateTreesDrawing();
+					}, () -> {
+						newColors.forEach(TreeRecord::setColor);
+						window.getPresenter().runUpdateTreesDrawing();
+					});
+				}
+			}
+		});
 	}
-
-
 }

@@ -23,6 +23,8 @@ package phylocompare.view;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.collections.SetChangeListener;
@@ -31,7 +33,6 @@ import javafx.scene.Group;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.StrokeLineCap;
@@ -54,12 +55,11 @@ import splitstree6.layout.tree.TreeDiagramType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 public class NetworkView extends Group {
 	private final NetworkViewService service;
-	private final VBox legend;
+	private final Legend legend;
 	private final Group networkGroup = new Group();
 	private final Group outlinesGroup = new Group();
 	private final Group tracedTreesGroup = new Group();
@@ -90,11 +90,14 @@ public class NetworkView extends Group {
 		ProgramProperties.track(optionReticulateEdgesAreSpecial, true);
 	}
 
+	private final Pane centerPane;
+
 	private final DoubleProperty targetWidth = new SimpleDoubleProperty(this, "targetWidth", 800.0);
 	private final DoubleProperty targetHeight = new SimpleDoubleProperty(this, "targetHeight", 800.0);
 
-	public NetworkView(SelectionModel<Taxon> taxonSelectionModel, Pane bottomPane, VBox legend) {
+	public NetworkView(SelectionModel<Taxon> taxonSelectionModel, Pane centerPane, Pane bottomPane, Legend legend) {
 		this.taxonSelectionModel = taxonSelectionModel;
+		this.centerPane = centerPane;
 		this.service = new NetworkViewService(bottomPane);
 		this.legend = legend;
 
@@ -134,13 +137,13 @@ public class NetworkView extends Group {
 		networkGroup.getChildren().clear();
 		outlinesGroup.getChildren().clear();
 		tracedTreesGroup.getChildren().clear();
-		legend.getChildren().setAll(legend.getChildren().get(0));
+		legend.clear();
 		taxonSelectionModel.getSelectedItems().clear();
 	}
 
 	public void clearTracedTreesDrawing() {
 		tracedTreesGroup.getChildren().clear();
-		legend.getChildren().setAll(legend.getChildren().get(0));
+		legend.clear();
 	}
 
 	public void update(TaxaBlock taxaBlock, List<TreeRecord> treeRecords, PhyloTree network, double scaleFactor, boolean updateNetworkDrawing, boolean updateTreesDrawing, String colorSchemeName) {
@@ -168,20 +171,26 @@ public class NetworkView extends Group {
 							taxonLabeledNodeShapeMap.put(taxon, shape);
 							var label = shape.getLabel();
 							if (label != null) {
+								SetupEditTaxonLabel.apply(label, taxon, labelsGroup);
+
+								ChangeListener<String> changeListener = (d, o, n) -> label.setText(n);
+
+								label.setUserData(changeListener);
+								if (taxon != null) {
+									label.setText(taxon.getDisplayLabelOrName());
+									taxon.displayLabelProperty().addListener(new WeakChangeListener<>(changeListener));
+								}
 								label.setOnMouseClicked(e -> {
 									if (!e.isShiftDown())
 										taxonSelectionModel.clearSelection();
-									if (taxon != null) {
+									if (taxon != null)
 										taxonSelectionModel.toggleSelection(taxon);
-									}
+									e.consume();
 								});
 							}
 						}
 					}
 				}
-
-				// put space in front and end of labels:
-				nodeLabeledNodeShapeMap.values().stream().map(LabeledNodeShape::getLabel).filter(Objects::nonNull).forEach(label -> label.setText("   %s   ".formatted(label.getText())));
 
 				edgeLabeledEdgeShapeHashMap.clear();
 				edgeLabeledEdgeShapeHashMap.putAll(service.getEdgeLabeledEdgeShapeHashMap());
@@ -318,7 +327,7 @@ public class NetworkView extends Group {
 		return optionReticulateEdgesAreSpecial;
 	}
 
-	public VBox getLegend() {
+	public Legend getLegend() {
 		return legend;
 	}
 }

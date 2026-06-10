@@ -55,8 +55,10 @@ import phylocompare.trace.BruteForceTreeTracer;
 import phylocompare.trace.TreeTrace;
 import phylocompare.utils.DoubleSpinnerBinder;
 import phylocompare.utils.SplitPaneSupport;
+import phylocompare.view.Legend;
 import phylocompare.view.NetworkView;
 import splitstree6.layout.tree.TreeDiagramType;
+import splitstree6.view.format.taxlabel.TaxonLabelFormat;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -133,7 +135,7 @@ public class MainWindowPresenter {
 		});
 		controller.getSetCondordanceThresholdMenuItem().disableProperty().bind(controller.getConcordanceTextField().disabledProperty());
 
-		networkView = new NetworkView(window.getTaxaSelectionModel(), controller.getBottomFlowPane(), controller.getLegendVBox());
+		networkView = new NetworkView(window.getTaxaSelectionModel(), (Pane) controller.getScrollPane().getContent(), controller.getBottomFlowPane(), new Legend(window, controller.getLegendVBox()));
 
 		updateNetworkDrawing = () -> RunAfterAWhile.applyInFXThread("runUpdateNetworkDrawing", () -> {
 			if (document.getNetworks().isEmpty())
@@ -144,7 +146,8 @@ public class MainWindowPresenter {
 				if (legendVisible)
 					networkView.getLegend().setVisible(false);
 				Platform.runLater(() -> {
-					networkView.update(document.getTaxaBlock(), document.getTreeRecords(), network, scaleFactor.get(), true, true, document.getColorSchemeName());
+					var treeRecords = controller.getTreeTable().getItems();
+					networkView.update(document.getTaxaBlock(), treeRecords, network, scaleFactor.get(), true, true, document.getColorSchemeName());
 					networkView.getLegend().setVisible(legendVisible);
 				});
 
@@ -157,7 +160,8 @@ public class MainWindowPresenter {
 				networkView.clearTracedTreesDrawing();
 			else {
 				var network = document.getNetworks().get(0);
-				networkView.update(document.getTaxaBlock(), document.getTreeRecords(), network, scaleFactor.get(), false, true, document.getColorSchemeName());
+				var treeRecords = controller.getTreeTable().getItems();
+				networkView.update(document.getTaxaBlock(), treeRecords, network, scaleFactor.get(), false, true, document.getColorSchemeName());
 			}
 			// todo: need to implement selection of which network to draw
 		});
@@ -458,16 +462,26 @@ public class MainWindowPresenter {
 		scaleFactor.addListener(e -> updateNetworkDrawing.run());
 
 		controller.getIncreaseFontSizeMenuItem().setOnAction(e -> {
-			for (var label : BasicFX.getAllRecursively(networkView, RichTextLabel.class)) {
-				label.setFontSize(Math.min(128, 1.1 * label.getFontSize()));
+			for (var taxon : document.getTaxaBlock().getTaxa()) {
+				if (window.getTaxaSelectionModel().size() == 0 || window.getTaxaSelectionModel().isSelected(taxon)) {
+					var displayLabel = taxon.getDisplayLabel();
+					var size = Math.min(128, 1.1 * RichTextLabel.getFontSize(displayLabel));
+					displayLabel = RichTextLabel.setFontSize(displayLabel, size);
+					taxon.setDisplayLabel(displayLabel);
+				}
+			}
+		});
+		controller.getDecreaseFontSizeMenuItem().setOnAction(e -> {
+			for (var taxon : document.getTaxaBlock().getTaxa()) {
+				if (window.getTaxaSelectionModel().size() == 0 || window.getTaxaSelectionModel().isSelected(taxon)) {
+					var displayLabel = taxon.getDisplayLabel();
+					var size = Math.max(4, 1 / 1.1 * RichTextLabel.getFontSize(displayLabel));
+					displayLabel = RichTextLabel.setFontSize(displayLabel, size);
+					taxon.setDisplayLabel(displayLabel);
+				}
 			}
 		});
 		controller.getIncreaseFontSizeMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
-		controller.getDecreaseFontSizeMenuItem().setOnAction(e -> {
-			for (var label : BasicFX.getAllRecursively(networkView, RichTextLabel.class)) {
-				label.setFontSize(Math.max(4, 1 / 1.1 * label.getFontSize()));
-			}
-		});
 		controller.getDecreaseFontSizeMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
 
 		controller.getCopyImageMenuItem().setOnAction(e -> {
@@ -668,7 +682,11 @@ public class MainWindowPresenter {
 		});
 
 		SetupFind.apply(window);
-		SetupLegendSelection.apply(window, networkView);
+
+		var taxonPane = new TaxonLabelFormat(window.getTaxaSelectionModel(), window.dirtyProperty(), window.getUndoManager());
+		controller.getTaxonLabelsTitledPane().setContent(taxonPane.getController().getTitledPane().getContent());
+
+		controller.getScrollPane().getContent().setOnMouseClicked(e -> window.getTaxaSelectionModel().clearSelection());
 	}
 
 	public static Collection<TreeRecord> getSelectedRowsOrAll(TableView<TreeRecord> treeTableView, List<TreeRecord> treeRecords) {

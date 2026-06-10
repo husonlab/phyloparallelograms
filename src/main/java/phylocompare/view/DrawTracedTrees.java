@@ -20,16 +20,10 @@
 
 package phylocompare.view;
 
-import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.scene.Group;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
-import javafx.scene.text.Text;
 import jloda.fx.util.ColorSchemeManager;
-import jloda.fx.util.ColorUtilsFX;
 import jloda.graph.Edge;
 import jloda.phylo.PhyloTree;
 import jloda.util.BitSetUtils;
@@ -46,49 +40,43 @@ import static phylocompare.trace.TreeTrace.getTT;
 
 public class DrawTracedTrees {
 
-	public static Group apply(PhyloTree network, String colorSchemeName, List<TreeRecord> treeRecords, BitSet trees, double outlineWidth, Function<Edge, Path> edgePathFunction, VBox legend) {
-		legend.getChildren().setAll(legend.getChildren().get(0));
+	public static Group apply(PhyloTree network, String colorSchemeName, List<TreeRecord> treeRecords, BitSet trees, double outlineWidth, Function<Edge, Path> edgePathFunction, Legend legend) {
+		legend.clear();
 		var group = new Group();
 
 		var colorScheme = ColorSchemeManager.getInstance().getColorScheme(colorSchemeName);
 
-		var idRecordMap = new HashMap<Integer, TreeRecord>();
-		for (var record : treeRecords) {
-			idRecordMap.put(record.getId(), record);
-		}
-
 		var treeColorMap = new HashMap<Integer, Color>();
 		var treeGroupMap = new HashMap<Integer, Group>();
-		for (var treeId : BitSetUtils.members(trees)) {
-			var color = colorScheme.get(treeId % colorScheme.size());
+		for (var treeRecord : treeRecords) {
+			var treeId = treeRecord.getId();
+			if (trees.get(treeId)) {
+				var color = (treeRecord.getColor() != null ? treeRecord.getColor() : colorScheme.get(treeId % colorScheme.size()));
 
-			treeColorMap.put(treeId, color);
-			var treeGroup = new Group();
-			treeGroupMap.put(treeId, treeGroup);
-			group.getChildren().add(treeGroup);
+				treeColorMap.put(treeId, color);
+				var treeGroup = new Group();
+				treeGroupMap.put(treeId, treeGroup);
+				group.getChildren().add(treeGroup);
 
-			var label = new ToggleButton();
-			label.setStyle("-fx-text-fill: " + ColorUtilsFX.toStringCSS(color) + "; -fx-background-color: transparent; -fx-border-color: transparent;");
-			label.setText(idRecordMap.containsKey(treeId) ? idRecordMap.get(treeId).getName() : "???");
-			label.setUserData(treeId);
-			if (!getTT(network.getRoot()).get(treeId))
-				label.setText(("[ %s ]").formatted(label.getText()));
-			legend.getChildren().add(new HBox(new Text(" "), label));
-
-			addHoverEffect(color, label.selectedProperty(), treeGroup, label);
+				var legendItem = legend.add(treeId, treeRecord, color);
+				addHoverEffect(color, legendItem, treeGroup);
+			}
 		}
 
 		var nTrees = trees.cardinality();
 		if (nTrees > 0) {
 			var treeOffsetMap = new HashMap<Integer, Double>();
 
-
 			var d = outlineWidth / (nTrees + 1);
 			var m = outlineWidth / 2;
 			var total = d;
-			for (var treeId : BitSetUtils.members(trees)) {
-				treeOffsetMap.put(treeId, total - m);
-				total += d;
+
+			for (var treeRecord : treeRecords) {
+				var treeId = treeRecord.getId();
+				if (trees.get(treeId)) {
+					treeOffsetMap.put(treeId, total - m);
+					total += d;
+				}
 			}
 
 			if (false) {
@@ -138,31 +126,24 @@ public class DrawTracedTrees {
 			return base;
 		else return new Color(base.getRed(), base.getGreen(), base.getBlue(), 0.3);
 
-
 		//var t = Math.min(0.8, 1.0 - 1.0 / Math.sqrt(k));
 		//return base.interpolate(Color.WHITE, t);
 	}
 
-	private static void addHoverEffect(Color color, ReadOnlyBooleanProperty override, javafx.scene.Node... nodes) {
+	public static void addHoverEffect(Color color, Legend.LegendItem legendItem, javafx.scene.Node treeGroup) {
 		var hoverEffect = new HoverShadow(color, 2);
-		for (var node : nodes) {
-			node.setOnMouseEntered(e -> {
-				for (var other : nodes) {
-					other.setEffect(hoverEffect);
-				}
-			});
-			node.setOnMouseExited(e -> {
-				for (var other : nodes) {
-					if (!override.get())
-						other.setEffect(null);
-				}
-			});
-		}
-		override.addListener((v, o, n) -> {
-			if (!n) {
-				for (var node : nodes) {
-					node.setEffect(null);
-				}
+
+		legendItem.highlightedProperty().addListener((v, o, n) -> {
+			treeGroup.setEffect(n ? hoverEffect : null);
+		});
+
+		treeGroup.setOnMouseEntered(e -> {
+			legendItem.highlightedProperty().set(true);
+		});
+
+		treeGroup.setOnMouseExited(e -> {
+			if (!legendItem.selectedProperty().get()) {
+				legendItem.highlightedProperty().set(false);
 			}
 		});
 	}

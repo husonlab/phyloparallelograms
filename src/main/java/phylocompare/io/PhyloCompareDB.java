@@ -21,6 +21,7 @@
 package phylocompare.io;
 
 import jloda.fx.util.ColorSchemeManager;
+import jloda.fx.util.ColorUtilsFX;
 import jloda.phylo.CommentData;
 import jloda.phylo.NewickIO;
 import jloda.phylo.PhyloTree;
@@ -29,6 +30,7 @@ import jloda.util.NumberUtils;
 import jloda.util.StringUtils;
 import phylocompare.model.Document;
 import phylocompare.window.TreeRecord;
+import splitstree6.data.TaxaBlock;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -41,7 +43,7 @@ import java.util.TreeMap;
 public class PhyloCompareDB {
 
 	public static void save(String fileName, List<TreeRecord> treeRecords, List<PhyloTree> networks,
-							Parameters parameters) throws IOException {
+							TaxaBlock taxaBlock, Parameters parameters) throws IOException {
 		var url = "jdbc:sqlite:" + fileName;
 
 		try (var conn = DriverManager.getConnection(url)) {
@@ -78,10 +80,19 @@ public class PhyloCompareDB {
 								);
 							""");
 
+					stmt.execute("""
+								CREATE TABLE IF NOT EXISTS taxa (
+									id      INTEGER PRIMARY KEY,
+									name   TEXT NOT NULL,
+									display_label TEXT
+								);
+							""");
+
 					// Clear old contents
 					stmt.executeUpdate("DELETE FROM trees");
 					stmt.executeUpdate("DELETE FROM networks");
 					stmt.executeUpdate("DELETE FROM parameters");
+					stmt.executeUpdate("DELETE FROM taxa");
 				}
 
 				var newickIO = new NewickIO();
@@ -90,14 +101,18 @@ public class PhyloCompareDB {
 
 
 				try (var ps = conn.prepareStatement(
-						"INSERT INTO trees (id, name, run, show, newick) VALUES (?, ?, ?, ?, ?)")) {
+						"INSERT INTO trees (id, name, run, show, color, newick) VALUES (?, ?, ?, ?, ?, ?)")) {
 					for (var record : treeRecords) {
 						ps.setInt(1, record.getId());
 						ps.setString(2, record.getName());
 						ps.setInt(3, record.getRunLayout() ? 1 : 0);
 						ps.setInt(4, record.isShow() ? 1 : 0);
+						if (record.getColor() != null) {
+							ps.setString(5, ColorUtilsFX.toWeb(record.getColor()));
+						} else
+							ps.setString(5, null);
 						var newick = record.getTree() == null ? "" : newickIO.toBracketString(record.getTree(), true) + ";";
-						ps.setString(5, newick);
+						ps.setString(6, newick);
 						ps.addBatch();
 					}
 					ps.executeBatch();
@@ -109,6 +124,17 @@ public class PhyloCompareDB {
 						ps.setInt(1, i);
 						ps.setString(2, network.getName());
 						ps.setString(3, newickIO.toBracketString(network, true) + ";");
+						ps.addBatch();
+					}
+					ps.executeBatch();
+				}
+
+				try (var ps = conn.prepareStatement("INSERT INTO taxa (id, name, display_label) VALUES (?, ?, ?)")) {
+					for (var t = 1; t <= taxaBlock.getNtax(); t++) {
+						var taxon = taxaBlock.get(t);
+						ps.setInt(1, t);
+						ps.setString(2, taxon.getName());
+						ps.setString(3, taxon.getDisplayLabelOrName());
 						ps.addBatch();
 					}
 					ps.executeBatch();
@@ -183,6 +209,7 @@ public class PhyloCompareDB {
 
 		var treeRecords = new ArrayList<TreeRecord>();
 		var networks = new TreeMap<Integer, PhyloTree>();
+		var taxaBlock = new TaxaBlock();
 
 		Parameters result;
 
@@ -214,11 +241,12 @@ public class PhyloCompareDB {
 
 			// trees
 			if (tableExists(conn, "trees")) {
-				try (var rs = stmt.executeQuery("SELECT id, name, run, show, newick FROM trees ORDER BY id")) {
+				try (var rs = stmt.executeQuery("SELECT id, name, run, show, color, newick FROM trees ORDER BY id")) {
 					while (rs.next()) {
 						var id = rs.getInt("id");
 						var name = rs.getString("name");
 						var newick = rs.getString("newick");
+						var colorString = rs.getString("color");
 
 						PhyloTree tree;
 						if (newick != null && !newick.isBlank()) {
@@ -229,7 +257,26 @@ public class PhyloCompareDB {
 							if (tree.getName() == null || tree.getName().isBlank())
 								tree.setName("tree-" + id);
 						} else tree = null;
-						treeRecords.add(new TreeRecord(name, id, rs.getInt("run") != 0, rs.getInt("show") != 0, tree));
+
+						var record = new TreeRecord(name, id, rs.getInt("run") != 0, rs.getInt("show") != 0, tree);
+						if (ColorUtilsFX.isColor(colorString)) {
+							var color = ColorUtilsFX.parseColor(colorString);
+							record.setColor(color);
+						}
+						treeRecords.add(record);
+					}
+				}
+			}
+			// trees
+			if (tableExists(conn, "taxa")) {
+				try (var rs = stmt.executeQuery("SELECT id, name, display_label FROM taxa ORDER BY id")) {
+					while (rs.next()) {
+						var id = rs.getInt("id");
+						var name = rs.getString("name");
+						var displayLabel = rs.getString("display_label");
+						taxaBlock.addTaxonByName(name);
+						var taxon = taxaBlock.get(taxaBlock.size());
+						taxon.setDisplayLabel(displayLabel);
 					}
 				}
 			}
@@ -271,7 +318,10 @@ public class PhyloCompareDB {
 				document.addTreesAndNetworks(treeRecords, networks.values());
 			else if (!networks.isEmpty())
 				document.addNetworks(networks.values());
-
+			if (taxaBlock.size() > 0) {
+				document.getTaxaBlock().clear();
+				taxaBlock.getTaxa().forEach(t -> document.getTaxaBlock().add(t));
+			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

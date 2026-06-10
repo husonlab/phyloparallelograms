@@ -323,6 +323,15 @@ public class MainWindowController {
 	@FXML
 	private MenuItem rerootByMidpointMenuItem;
 
+	@FXML
+	private Button findButton;
+
+	@FXML
+	private TitledPane taxonLabelsTitledPane;
+
+	@FXML
+	private ToggleButton formatToggleButton;
+
 	private ZoomableScrollPane scrollPane;
 
 	private final BooleanProperty disableAllShow = new SimpleBooleanProperty(false);
@@ -330,7 +339,7 @@ public class MainWindowController {
 
 	@FXML
 	private void initialize() {
-		MaterialIcons.setIcon(settingsMenuButton, MaterialIcons.tune);
+		MaterialIcons.setIcon(settingsMenuButton, MaterialIcons.more_vert);
 
 		MaterialIcons.setIcon(runLayoutButton, MaterialIcons.play_circle, "", false);
 		MaterialIcons.setIcon(showButton, MaterialIcons.play_circle, "", false);
@@ -339,6 +348,8 @@ public class MainWindowController {
 		MaterialIcons.setIcon(exportMenuButton, MaterialIcons.ios_share);
 		MaterialIcons.setIcon(zoomInButton, MaterialIcons.zoom_in);
 		MaterialIcons.setIcon(zoomOutButton, MaterialIcons.zoom_out);
+		MaterialIcons.setIcon(findButton, MaterialIcons.search);
+		MaterialIcons.setIcon(formatToggleButton, MaterialIcons.tune);
 
 		diagramMenuButton.setStyle("-fx-background-color: transparent;");
 		colorSchemeCBox.setStyle("-fx-background-color: transparent;");
@@ -420,6 +431,11 @@ public class MainWindowController {
 			scrollPane.setStyle("-fx-background: black;-fx-background-color: black;");
 		else
 			scrollPane.setStyle("-fx-background: white;-fx-background-color: white;");
+
+		findButton.setOnAction(e -> findCheckMenuItem.fire());
+
+		taxonLabelsTitledPane.visibleProperty().bind(formatToggleButton.selectedProperty());
+		taxonLabelsTitledPane.managedProperty().bind(formatToggleButton.selectedProperty());
 	}
 
 	public BooleanProperty disableAllRunProperty() {
@@ -728,7 +744,6 @@ public class MainWindowController {
 		return innerAnchorPane;
 	}
 
-
 	public CheckMenuItem getShowOutlineCheckMenuItem() {
 		return showOutlineCheckMenuItem;
 	}
@@ -787,5 +802,9 @@ public class MainWindowController {
 
 	public CheckMenuItem getShowLegendCheckMenuItem() {
 		return showLegendCheckMenuItem;
+	}
+
+	public TitledPane getTaxonLabelsTitledPane() {
+		return taxonLabelsTitledPane;
 	}
 }

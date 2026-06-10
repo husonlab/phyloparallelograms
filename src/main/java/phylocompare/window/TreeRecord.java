@@ -20,17 +20,16 @@
 
 package phylocompare.window;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.scene.paint.Color;
 import jloda.phylo.PhyloTree;
 
 public class TreeRecord {
 	private final StringProperty name = new SimpleStringProperty();
 	private final int id;
-	private final BooleanProperty runLayout = new SimpleBooleanProperty(false);
-	private final BooleanProperty show = new SimpleBooleanProperty(false);
+	private final BooleanProperty runLayout = new SimpleBooleanProperty(this, "runLayout", false);
+	private final BooleanProperty show = new SimpleBooleanProperty(this, "show", false);
+	private final ObjectProperty<Color> color = new SimpleObjectProperty<>(this, "color");
 	private final PhyloTree tree;
 
 	public TreeRecord(String name, int id, boolean runLayout, boolean show, PhyloTree tree) {
@@ -86,6 +85,18 @@ public class TreeRecord {
 
 	public int getId() {
 		return id;
+	}
+
+	public Color getColor() {
+		return color.get();
+	}
+
+	public void setColor(Color color) {
+		this.color.set(color);
+	}
+
+	public ObjectProperty<Color> colorProperty() {
+		return color;
 	}
 
 	@Override

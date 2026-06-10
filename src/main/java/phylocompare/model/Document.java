@@ -26,7 +26,9 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import jloda.fx.util.ColorSchemeManager;
 import jloda.fx.util.ProgramProperties;
 import jloda.fx.util.RunAfterAWhile;
 import jloda.phylo.PhyloGraph;
@@ -74,6 +76,16 @@ public class Document {
 							hasTrees.set(treeRecords.stream().allMatch(r -> r.getTree() != null));
 							hasTreeConfidences.set(hasTrees() && treeRecords.stream().map(TreeRecord::getTree).filter(Objects::nonNull).allMatch(PhyloGraph::hasEdgeConfidences));
 						}));
+
+		treeRecords.addListener((ListChangeListener<TreeRecord>) c -> {
+			while (c.next()) {
+				var colorScheme = ColorSchemeManager.getInstance().getColorScheme(colorSchemeName.get());
+				for (TreeRecord r : c.getAddedSubList()) {
+					if (r.getColor() == null)
+						r.setColor(colorScheme.get(r.getId() % colorScheme.size()));
+				}
+			}
+		});
 	}
 
 	public void clear() {
