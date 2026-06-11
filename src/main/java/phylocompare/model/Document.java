@@ -22,6 +22,7 @@
 
 package phylocompare.model;
 
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -50,6 +51,7 @@ public class Document {
 	private final BooleanProperty hasTrees = new SimpleBooleanProperty(this, "hasTrees", false);
 	private final BooleanProperty hasNetworks = new SimpleBooleanProperty(this, "hasNetworks", false);
 	private final BooleanProperty empty = new SimpleBooleanProperty(this, "emptyProperty", false);
+	private final IntegerProperty updatedRunTrees = new SimpleIntegerProperty(this, "updatedRunTrees", 0);
 
 	private final BooleanProperty hasTreeConfidences = new SimpleBooleanProperty(this, "treesHaveConfidenceValues", false);
 	private final BooleanProperty networksHaveWeights = new SimpleBooleanProperty(this, "networksHaveWeights", false);
@@ -83,8 +85,10 @@ public class Document {
 				for (TreeRecord r : c.getAddedSubList()) {
 					if (r.getColor() == null)
 						r.setColor(colorScheme.get(r.getId() % colorScheme.size()));
+					r.runLayoutProperty().addListener(e -> updatedRunTrees.set(updatedRunTrees.get() + 1));
 				}
 			}
+			Platform.runLater(() -> updatedRunTrees.set(updatedRunTrees.get() + 1));
 		});
 	}
 
@@ -278,5 +282,9 @@ public class Document {
 
 	public void setColorSchemeName(String colorSchemeName) {
 		this.colorSchemeName.set(colorSchemeName);
+	}
+
+	public IntegerProperty updatedRunTreesProperty() {
+		return updatedRunTrees;
 	}
 }

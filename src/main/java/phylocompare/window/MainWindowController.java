@@ -234,7 +234,12 @@ public class MainWindowController {
 	private TextField confidenceTextField;
 
 	@FXML
+	private Label confidenceLabel;
+	@FXML
 	private TextField concordanceTextField;
+
+	@FXML
+	private Label concordanceLabel;
 
 	@FXML
 	private Label statusLabel;
@@ -436,6 +441,9 @@ public class MainWindowController {
 
 		taxonLabelsTitledPane.visibleProperty().bind(formatToggleButton.selectedProperty());
 		taxonLabelsTitledPane.managedProperty().bind(formatToggleButton.selectedProperty());
+
+		confidenceLabel.disableProperty().bind(confidenceTextField.disabledProperty());
+		concordanceLabel.disableProperty().bind(concordanceTextField.disabledProperty());
 	}
 
 	public BooleanProperty disableAllRunProperty() {

@@ -66,7 +66,8 @@
                                         </TableView>
                                         <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                                             <children>
-                                                <Label minWidth="30.0" text="Min branch confidence:"/>
+                                                <Label fx:id="confidenceLabel" minWidth="30.0"
+                                                       text="Min branch confidence (%):"/>
                                                 <TextField fx:id="confidenceTextField" maxWidth="60.0">
                                                     <tooltip>
                                                         <Tooltip text="Minimum  confidence for input branch filtering"/>
@@ -79,7 +80,8 @@
                                         </HBox>
                                         <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                                             <children>
-                                                <Label minWidth="30.0" text="Min concordance:"/>
+                                                <Label fx:id="concordanceLabel" minWidth="30.0"
+                                                       text="Min branch concordance (%):"/>
                                                 <TextField fx:id="concordanceTextField" maxWidth="60.0">
                                                     <tooltip>
                                                         <Tooltip

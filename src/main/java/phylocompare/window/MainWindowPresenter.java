@@ -22,6 +22,7 @@ package phylocompare.window;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
@@ -108,16 +109,6 @@ public class MainWindowPresenter {
 		controller.getConfidenceTextField().disableProperty().bind(document.hasTreeConfidencesProperty().not().or(canRun.not()));
 		confidenceThreshold.addListener(e -> runRecomputeNetwork());
 
-		controller.getConcordanceTextField().setOnAction(e -> {
-			var text = controller.getConcordanceTextField().getText();
-			if (NumberUtils.isDouble(text)) {
-				var value = Math.max(Double.parseDouble(text), 0.0);
-				concordanceThreshold.set(value);
-			}
-		});
-		controller.getConcordanceTextField().setText(StringUtils.trim(concordanceThreshold.get()));
-		controller.getConcordanceTextField().disableProperty().bind(canRun.not());
-		concordanceThreshold.addListener(e -> runRecomputeNetwork());
 
 		controller.getSetConfidenceThresholdMenuItem().setOnAction(e -> {
 			var dialog = new SetParameterInternalDialog(controller.getCenterAnchorPane(), "Confidence", "Set minimum edge confidence %", "0.0", s -> {
@@ -126,6 +117,17 @@ public class MainWindowPresenter {
 			dialog.show();
 		});
 		controller.getSetConfidenceThresholdMenuItem().disableProperty().bind(controller.getConfidenceTextField().disabledProperty());
+
+		controller.getConcordanceTextField().setOnAction(e -> {
+			var text = controller.getConcordanceTextField().getText();
+			if (NumberUtils.isDouble(text)) {
+				var value = Math.max(Double.parseDouble(text), 0.0);
+				concordanceThreshold.set(value);
+			}
+		});
+		controller.getConcordanceTextField().setText(StringUtils.trim(concordanceThreshold.get()));
+		controller.getConcordanceTextField().disableProperty().bind(canRun.not().or(Bindings.createBooleanBinding(() -> document.getRunTrees().size() < 5, document.updatedRunTreesProperty())));
+		concordanceThreshold.addListener(e -> runRecomputeNetwork());
 
 		controller.getSetCondordanceThresholdMenuItem().setOnAction(e -> {
 			var dialog = new SetParameterInternalDialog(controller.getCenterAnchorPane(), "Confidence", "Set min edge concordance %", "0.0", s -> {
