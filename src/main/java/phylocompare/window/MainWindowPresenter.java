@@ -46,6 +46,7 @@ import jloda.util.FileUtils;
 import jloda.util.NumberUtils;
 import jloda.util.StringUtils;
 import phylocompare.algorithm.AlgorithmsService;
+import phylocompare.algorithm.RemoveTaxaService;
 import phylocompare.algorithm.RerootService;
 import phylocompare.io.ExportNewick;
 import phylocompare.io.ImportNewick;
@@ -58,6 +59,7 @@ import phylocompare.utils.DoubleSpinnerBinder;
 import phylocompare.utils.SplitPaneSupport;
 import phylocompare.view.Legend;
 import phylocompare.view.NetworkView;
+import phylocompare.view.SetupRubberBandSelection;
 import splitstree6.layout.tree.TreeDiagramType;
 import splitstree6.view.format.taxlabel.TaxonLabelFormat;
 
@@ -79,6 +81,7 @@ public class MainWindowPresenter {
 
 	private final AlgorithmsService algorithmsService;
 	private final RerootService rerootService;
+	private final RemoveTaxaService removeTaxaService;
 	private final NetworkView networkView;
 
 	public MainWindowPresenter(MainWindow window) {
@@ -108,7 +111,6 @@ public class MainWindowPresenter {
 		controller.getConfidenceTextField().setText(StringUtils.trim(confidenceThreshold.get()));
 		controller.getConfidenceTextField().disableProperty().bind(document.hasTreeConfidencesProperty().not().or(canRun.not()));
 		confidenceThreshold.addListener(e -> runRecomputeNetwork());
-
 
 		controller.getSetConfidenceThresholdMenuItem().setOnAction(e -> {
 			var dialog = new SetParameterInternalDialog(controller.getCenterAnchorPane(), "Confidence", "Set minimum edge confidence %", "0.0", s -> {
@@ -176,12 +178,13 @@ public class MainWindowPresenter {
 			Platform.runLater(updateNetworkDrawing);
 		});
 
+		removeTaxaService = new RemoveTaxaService(controller.getBottomFlowPane());
 
 		final var serviceRunning = new SimpleBooleanProperty(false);
 		rerootService = new RerootService(controller.getBottomFlowPane());
 		SetupReroot.apply(window, rerootService, serviceRunning);
 
-		serviceRunning.bind(algorithmsService.runningProperty().or(rerootService.runningProperty()).or(networkView.runningProperty()));
+		serviceRunning.bind(algorithmsService.runningProperty().or(rerootService.runningProperty()).or(networkView.runningProperty()).or(removeTaxaService.runningProperty()));
 
 		controller.getRunMenuItem().setOnAction(e -> {
 			if (!algorithmsService.isRunning()) {
@@ -685,10 +688,16 @@ public class MainWindowPresenter {
 
 		SetupFind.apply(window);
 
+		SetupRubberBandSelection.apply(document, networkView, window.getTaxaSelectionModel().getSelectedItems());
+
 		var taxonPane = new TaxonLabelFormat(window.getTaxaSelectionModel(), window.dirtyProperty(), window.getUndoManager());
 		controller.getTaxonLabelsTitledPane().setContent(taxonPane.getController().getTitledPane().getContent());
-
-		controller.getScrollPane().getContent().setOnMouseClicked(e -> window.getTaxaSelectionModel().clearSelection());
+		controller.getRemoveTaxaMenuItem().setOnAction(e -> {
+			removeTaxaService.setupCalculation(window, window.getTaxaSelectionModel().getSelectedItems());
+			removeTaxaService.restart();
+		});
+		controller.getRemoveTaxaMenuItem().disableProperty().bind(serviceRunning.or(window.getTaxaSelectionModel().sizeProperty().isEqualTo(0))
+				.or(window.getTaxaSelectionModel().sizeProperty().greaterThanOrEqualTo(document.numberOfTaxaProperty().subtract(4))));
 	}
 
 	public static Collection<TreeRecord> getSelectedRowsOrAll(TableView<TreeRecord> treeTableView, List<TreeRecord> treeRecords) {

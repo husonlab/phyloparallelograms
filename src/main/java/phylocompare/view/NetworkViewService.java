@@ -28,6 +28,7 @@ import jloda.graph.Edge;
 import jloda.graph.Node;
 import jloda.phylo.PhyloTree;
 import jloda.phylogeny.layout.Averaging;
+import jloda.phylogeny.layout.LayoutRootedPhylogeny;
 import splitstree6.data.TaxaBlock;
 import splitstree6.layout.tree.ComputeTreeLayout;
 import splitstree6.layout.tree.LabeledEdgeShape;
@@ -48,7 +49,7 @@ public class NetworkViewService extends AService<ComputeTreeLayout.Result> {
 	}
 
 	public void setup(TaxaBlock taxaBlock, PhyloTree network, TreeDiagramType diagram,
-					  Averaging averaging, double width, double height, boolean reticulateEdgesAreSpecial, double transferAcceptorPercentage) {
+					  Averaging averaging, LayoutRootedPhylogeny.Scaling scaling, double width, double height, boolean reticulateEdgesAreSpecial, double transferAcceptorPercentage) {
 		setCallable(() -> {
 			getProgressListener().setTasks("Computing", "layout");
 
@@ -68,7 +69,7 @@ public class NetworkViewService extends AService<ComputeTreeLayout.Result> {
 			nodeLabeledNodeShapeMap.clear();
 			edgeLabeledEdgeShapeHashMap.clear();
 
-			return ComputeTreeLayout.apply(network, taxaBlock.getNtax(), taxonLabelMap::get, diagram, averaging, width, height, alignLabels,
+			return ComputeTreeLayout.apply(network, taxaBlock.getNtax(), taxonLabelMap::get, diagram, averaging, scaling, width, height, alignLabels,
 					nodeLabeledNodeShapeMap, edgeLabeledEdgeShapeHashMap, true, reticulateEdgesAreSpecial);
 		});
 		restart();

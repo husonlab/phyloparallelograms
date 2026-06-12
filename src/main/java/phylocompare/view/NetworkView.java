@@ -28,6 +28,7 @@ import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.collections.SetChangeListener;
+import javafx.event.Event;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.effect.BlurType;
@@ -44,6 +45,7 @@ import jloda.graph.Edge;
 import jloda.graph.Node;
 import jloda.phylo.PhyloTree;
 import jloda.phylogeny.layout.Averaging;
+import jloda.phylogeny.layout.LayoutRootedPhylogeny;
 import jloda.util.BitSetUtils;
 import phylocompare.window.TreeRecord;
 import splitstree6.data.TaxaBlock;
@@ -70,6 +72,7 @@ public class NetworkView extends Group {
 
 	private final ObjectProperty<TreeDiagramType> optionDiagram = new SimpleObjectProperty<>(this, "optionDiagram", TreeDiagramType.RectangularCladogram);
 	private final ObjectProperty<Averaging> optionAveraging = new SimpleObjectProperty<>(this, "optionAveraging", Averaging.ChildAverage);
+	private final ObjectProperty<LayoutRootedPhylogeny.Scaling> optionScaling = new SimpleObjectProperty<>(this, "optionScaling", LayoutRootedPhylogeny.Scaling.LateBranching);
 	private final DoubleProperty optionOutlineWidth = new SimpleDoubleProperty(this, "optionOutlineWidth", 30.0);
 	private final BooleanProperty optionShowOutline = new SimpleBooleanProperty(this, "optionShowOutline", false);
 	private final DoubleProperty optionAcceptorPercentage = new SimpleDoubleProperty(this, "optionAcceptorPercentage", 75);
@@ -83,6 +86,7 @@ public class NetworkView extends Group {
 	{
 		ProgramProperties.track(optionDiagram, TreeDiagramType::valueOf, TreeDiagramType.RectangularCladogram);
 		ProgramProperties.track(optionAveraging, Averaging::valueOf, Averaging.ChildAverage);
+		ProgramProperties.track(optionScaling, LayoutRootedPhylogeny.Scaling::valueOf, LayoutRootedPhylogeny.Scaling.LateBranching);
 		ProgramProperties.track(optionOutlineWidth, 30.0);
 		ProgramProperties.track(optionShowOutline, false);
 		ProgramProperties.track(optionAcceptorPercentage, 75.0);
@@ -151,7 +155,7 @@ public class NetworkView extends Group {
 			clear();
 			var width = scaleFactor * Math.max(400, getTargetWidth() - 200);
 			var height = scaleFactor * Math.max(400, getTargetHeight() - 50);
-			service.setup(taxaBlock, network, getOptionDiagram(), getOptionAveraging(), width, height, optionReticulateEdgesAreSpecial.get(), getApplicableAcceptorPercentage());
+			service.setup(taxaBlock, network, getOptionDiagram(), getOptionAveraging(), getOptionScaling(), width, height, optionReticulateEdgesAreSpecial.get(), getApplicableAcceptorPercentage());
 			service.setOnSucceeded(a -> {
 				var result = service.getValue();
 				var labelsGroup = result.taxonLabels();
@@ -180,6 +184,7 @@ public class NetworkView extends Group {
 									label.setText(taxon.getDisplayLabelOrName());
 									taxon.displayLabelProperty().addListener(new WeakChangeListener<>(changeListener));
 								}
+								label.setOnMousePressed(Event::consume);
 								label.setOnMouseClicked(e -> {
 									if (!e.isShiftDown())
 										taxonSelectionModel.clearSelection();
@@ -271,6 +276,14 @@ public class NetworkView extends Group {
 		return optionAveraging;
 	}
 
+	public LayoutRootedPhylogeny.Scaling getOptionScaling() {
+		return optionScaling.get();
+	}
+
+	public ObjectProperty<LayoutRootedPhylogeny.Scaling> optionScalingProperty() {
+		return optionScaling;
+	}
+
 	public double getOptionOutlineWidth() {
 		return optionOutlineWidth.get();
 	}
@@ -329,6 +342,14 @@ public class NetworkView extends Group {
 
 	public Legend getLegend() {
 		return legend;
+	}
+
+	public Pane getCenterPane() {
+		return centerPane;
+	}
+
+	public Map<Node, LabeledNodeShape> getNodeLabeledNodeShapeMap() {
+		return nodeLabeledNodeShapeMap;
 	}
 }
 

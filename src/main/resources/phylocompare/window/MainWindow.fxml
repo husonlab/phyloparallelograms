@@ -361,6 +361,15 @@
                                         <MenuItem fx:id="clearMenuItem" mnemonicParsing="false" text="Clear">
                                         </MenuItem>
                                         <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="rerootByOutgroupMenuItem" mnemonicParsing="false"
+                                                  text="Reroot By Outgroup"/>
+                                        <MenuItem fx:id="rerootByMidpointMenuItem" mnemonicParsing="false"
+                                                  text="Reroot By Midpoint"/>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="removeTaxaMenuItem" mnemonicParsing="false"
+                                                  text="Remove Taxa"/>
+
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
                                         <CheckMenuItem fx:id="findCheckMenuItem" mnemonicParsing="false" text="Find...">
                                             <accelerator>
                                                 <KeyCodeCombination alt="UP" code="F" control="UP" meta="UP" shift="UP"
@@ -398,12 +407,6 @@
                                         <SeparatorMenuItem mnemonicParsing="false"/>
                                         <MenuItem fx:id="showTreesExhaustive" mnemonicParsing="false"
                                                   text="Show Trees Exhaustive"/>
-
-                                        <SeparatorMenuItem mnemonicParsing="false"/>
-                                        <MenuItem fx:id="rerootByOutgroupMenuItem" mnemonicParsing="false"
-                                                  text="Reroot By Outgroup"/>
-                                        <MenuItem fx:id="rerootByMidpointMenuItem" mnemonicParsing="false"
-                                                  text="Reroot By Midpoint"/>
                                         <SeparatorMenuItem mnemonicParsing="false"/>
                                         <MenuItem fx:id="setConfidenceThresholdMenuItem" mnemonicParsing="false"
                                                   text="Set Confidence Threshold..."/>

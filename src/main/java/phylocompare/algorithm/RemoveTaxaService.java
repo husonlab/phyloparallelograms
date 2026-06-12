@@ -1,5 +1,5 @@
 /*
- * RerootService.java Copyright (C) 2026 Daniel H. Huson
+ * RerootService Copyright (C) 2026 Daniel H. Huson
  *
  *  (Some files contain contributions from other authors, who are then mentioned separately.)
  *
@@ -28,53 +28,58 @@ import jloda.util.progress.ProgressSilent;
 import phylocompare.utils.NexusBlocksUtils;
 import phylocompare.window.MainWindow;
 import phylocompare.window.TreeRecord;
-import splitstree6.algorithms.trees.trees2trees.RerootOrReorderTrees;
+import splitstree6.algorithms.trees.trees2trees.TreesTaxaFilter;
+import splitstree6.data.TaxaBlock;
 import splitstree6.data.TreesBlock;
+import splitstree6.data.parts.Taxon;
 
-public class RerootService extends AService<TreePair> {
+import java.util.Collection;
 
-	public RerootService(Pane bottomPane) {
+public class RemoveTaxaService extends AService<TreePair> {
+
+	public RemoveTaxaService(Pane bottomPane) {
 		super(bottomPane);
 	}
 
-	public void setupCalculation(MainWindow window, RerootOrReorderTrees.RootBy rootBy, String[] outgroup) {
+	public void setupCalculation(MainWindow window, Collection<Taxon> toRemove) {
 		var document = window.getDocument();
 		var taxaBlock = document.getTaxaBlock();
 		var blocks = NexusBlocksUtils.setupBlocks(taxaBlock, document.getTreeRecords().stream().map(TreeRecord::getTree).toList());
+		var reducedTaxaBlock = new TaxaBlock();
+		for (var taxon : taxaBlock.getTaxa()) {
+			if (!toRemove.contains(taxon)) {
+				reducedTaxaBlock.add(taxon);
+			}
+		}
 
-		var algorithm = new RerootOrReorderTrees();
-		algorithm.setOptionRootBy(rootBy);
-
-		if (rootBy == RerootOrReorderTrees.RootBy.OutGroup)
-			algorithm.setOptionOutGroupTaxa(outgroup);
+		var algorithm = new TreesTaxaFilter();
 
 		var originalTrees = blocks.treesBlock();
 		originalTrees.getTrees().replaceAll(PhyloTree::new); // need copies for undo
 
 		setCallable(() -> {
-			var rerootedTrees = new TreesBlock();
-			algorithm.compute(new ProgressSilent(), blocks.taxaBlock(), blocks.treesBlock(), rerootedTrees);
-			return new TreePair(originalTrees, rerootedTrees);
+			var modifiedTrees = new TreesBlock();
+			algorithm.filter(new ProgressSilent(), blocks.taxaBlock(), reducedTaxaBlock, blocks.treesBlock(), modifiedTrees);
+			return new TreePair(originalTrees, modifiedTrees);
 		});
 
 		setOnSucceeded(e -> {
 			var originals = getValue().originalTrees();
 			var rerooted = getValue().updatedTrees();
-			window.getUndoManager().doAndAdd(rootBy.name().toLowerCase() + " rooting", () -> {
+			window.getUndoManager().doAndAdd("remove taxa", () -> {
 				for (var record : document.getTreeRecords()) {
 					record.getTree().copy(originals.getTree(record.getId()));
 				}
+				document.setTaxa(originals.getTrees(), true);
 				Platform.runLater(() -> window.getPresenter().runRecomputeNetwork());
 			}, () -> {
 				for (var record : document.getTreeRecords()) {
 					record.getTree().copy(rerooted.getTree(record.getId()));
 				}
+				document.setTaxa(rerooted.getTrees(), true);
 				Platform.runLater(() -> window.getPresenter().runRecomputeNetwork());
 			});
 		});
 	}
-}
-
-record TreePair(TreesBlock originalTrees, TreesBlock updatedTrees) {
 }
 

@@ -213,6 +213,14 @@ used:
 
 run:true, run:false, show:true, show:false and size:integer, where size is the number of taxa in the tree.
 
+Additional edit menu items:
+
+| Item               | Shortcut | Action                                                                                            |
+|--------------------|----------|---------------------------------------------------------------------------------------------------|
+| Reroot by Outgroup | -        | If any taxa in the network are selected, reroot all input trees using the selected taxa as output |
+| Reroot by Midpoint | -        | Reroot all input trees using midpoint rooting.                                                    |
+| Remove taxa        | -        | Remove all selected taxa.                                                                         |
+
 ### 6.3 Layout menu
 
 | Item                         | Shortcut | Action                                                                                                                                                                                  |
@@ -224,8 +232,6 @@ run:true, run:false, show:true, show:false and size:integer, where size is the n
 | Show None Trees              | -        | Uncheck every (selected)  tree's *Show* box.                                                                                                                                            |
 | Show Selected Trees          | -        | Redraw the parallelogram using only the trees with *Show* checked.                                                                                                                      |
 | Show Trees Exhaustive        | -        | Use an exhaustive (brute-force) algorithm to locate all trees in the network. The exhaustive algorithm is also used to embed trees that were not used to compute the underlying network |
-| Reroot by Outgroup           | -        | If any taxa in the network are selected, reroot all input trees using the selected taxa as output                                                                                       |
-| Reroot by Midpoint           | -        | Reroot all input trees using midpoint rooting.                                                                                                                                          |
 | Set Confidence Threshold...  | -        | Open a dialog to set the *Minimum branch confidence* value.                                                                                                                             |
 | Set Concordance Threshold... | -        | Open a dialog to set the *Minimum branch concordance* value. This is the minimum percentage of trees that an edge has to be compatible with to be included.                             |
 

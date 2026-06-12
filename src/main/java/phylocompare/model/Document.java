@@ -41,7 +41,10 @@ import phylocompare.window.TreeRecord;
 import splitstree6.data.TaxaBlock;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 public class Document {
 	private final ObservableList<TreeRecord> treeRecords = FXCollections.observableArrayList();
@@ -59,6 +62,7 @@ public class Document {
 	private final StringProperty colorSchemeName = new SimpleStringProperty(this, "colorSchemeName");
 
 	private final TaxaBlock taxaBlock = new TaxaBlock();
+	private final IntegerProperty numberOfTaxa = new SimpleIntegerProperty(this, "numberOfTaxa", 0);
 
 	private final DoubleProperty confidenceThreshold = new SimpleDoubleProperty(this, "confidenceThreshold");
 	private final DoubleProperty concordanceThreshold = new SimpleDoubleProperty(this, "concordanceThreshold");
@@ -134,11 +138,7 @@ public class Document {
 
 		if (!hasTreeRecords.get()) {
 			var treeIds = new BitSet();
-			var idNameMap = new HashMap<Integer, String>();
-
 			for (var network : networks) {
-
-
 				for (var v : network.nodes()) {
 					treeIds.or(TreeTrace.getTT(v));
 				}
@@ -149,7 +149,6 @@ public class Document {
 			else {
 				System.err.println("Tree trace ids: " + StringUtils.toString(treeIds, " "));
 			}
-
 			for (var id : BitSetUtils.members(treeIds)) {
 				var name = "tree-" + id;
 				treeRecords.add(new TreeRecord(name, id, true, true, null));
@@ -196,6 +195,7 @@ public class Document {
 				}
 			}
 		}
+		numberOfTaxa.set(taxaBlock.getNtax());
 	}
 
 	public TaxaBlock getTaxaBlock() {
@@ -286,5 +286,13 @@ public class Document {
 
 	public IntegerProperty updatedRunTreesProperty() {
 		return updatedRunTrees;
+	}
+
+	public int getNumberOfTaxa() {
+		return numberOfTaxa.get();
+	}
+
+	public ReadOnlyIntegerProperty numberOfTaxaProperty() {
+		return numberOfTaxa;
 	}
 }

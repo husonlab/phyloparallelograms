@@ -329,6 +329,9 @@ public class MainWindowController {
 	private MenuItem rerootByMidpointMenuItem;
 
 	@FXML
+	private MenuItem removeTaxaMenuItem;
+
+	@FXML
 	private Button findButton;
 
 	@FXML
@@ -806,6 +809,10 @@ public class MainWindowController {
 
 	public MenuItem getRerootByMidpointMenuItem() {
 		return rerootByMidpointMenuItem;
+	}
+
+	public MenuItem getRemoveTaxaMenuItem() {
+		return removeTaxaMenuItem;
 	}
 
 	public CheckMenuItem getShowLegendCheckMenuItem() {
