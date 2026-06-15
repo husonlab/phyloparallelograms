@@ -60,6 +60,7 @@ import phylocompare.utils.SplitPaneSupport;
 import phylocompare.view.Legend;
 import phylocompare.view.NetworkView;
 import phylocompare.view.SetupRubberBandSelection;
+import splitstree6.data.parts.Taxon;
 import splitstree6.layout.tree.TreeDiagramType;
 import splitstree6.view.format.taxlabel.TaxonLabelFormat;
 
@@ -72,7 +73,6 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 public class MainWindowPresenter {
 	private final MainWindow window;
@@ -533,7 +533,7 @@ public class MainWindowPresenter {
 
 		controller.getCopyTreesMenuItem().setOnAction(e -> {
 			if (document.hasTrees()) {
-				var trees = getSelectedRowsOrAll(controller.getTreeTable(), document.getTreeRecords()).stream().map(TreeRecord::getTree).filter(Objects::nonNull).toList();
+				var trees = document.getTreeRecords().stream().filter(TreeRecord::isShow).map(TreeRecord::getTree).toList();
 				if (!trees.isEmpty()) {
 					try {
 						ClipboardUtils.putString(ExportNewick.apply(trees));
@@ -573,7 +573,10 @@ public class MainWindowPresenter {
 		controller.getCopyNetworkMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(serviceRunning));
 
 		controller.getCopyMenuItem().setOnAction(e -> {
-			if (controller.getScrollPane().isFocused() && document.hasNetworks())
+			if (window.getTaxaSelectionModel().size() > 0) {
+				var name = window.getTaxaSelectionModel().getSelectedItems().stream().map(Taxon::getName).toList();
+				ClipboardUtils.putString(StringUtils.toString(name, "\n"));
+			} else if (controller.getScrollPane().isFocused() && document.hasNetworks())
 				controller.getCopyNetworkMenuItem().fire();
 			else if (document.hasTrees()) {
 				controller.getCopyTreesMenuItem().fire();

@@ -20,7 +20,7 @@
   ~
   -->
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
@@ -30,221 +30,254 @@
         <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                     AnchorPane.topAnchor="0.0">
             <center>
-                <SplitPane fx:id="splitPane" dividerPositions="0.4" BorderPane.alignment="CENTER">
-                    <items>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                            <children>
-                                <VBox fx:id="leftVBox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <AnchorPane BorderPane.alignment="CENTER">
+                    <children>
+                        <SplitPane fx:id="splitPane" dividerPositions="0.4" AnchorPane.bottomAnchor="0.0"
+                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <items>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                     <children>
-                                        <ToolBar minHeight="-Infinity" prefHeight="32.0">
-                                            <items>
-                                                <Button fx:id="selectTableButton" mnemonicParsing="false" text="Select">
-                                                    <tooltip>
-                                                        <Tooltip text="Select all or none trees"/>
-                                                    </tooltip>
-                                                </Button>
-                                                <Button fx:id="runLayoutButton" mnemonicParsing="false"
-                                                        text="Run Layout">
-                                                    <tooltip>
-                                                        <Tooltip text="Run the PhyloFusion algorithm"/>
-                                                    </tooltip>
-                                                </Button>
-                                                <Button fx:id="showButton" mnemonicParsing="false" text="Show"/>
-                                            </items>
-                                        </ToolBar>
-                                        <Separator prefWidth="200.0"/>
-                                        <TableView fx:id="treeTable" editable="true" VBox.vgrow="ALWAYS">
-                                            <columns>
-                                                <TableColumn fx:id="treeColumn" maxWidth="400.0" minWidth="70.0"
-                                                             prefWidth="-1.0" text="Tree"/>
-                                                <TableColumn fx:id="layoutColumn" maxWidth="70.0" minWidth="70.0"
-                                                             prefWidth="70.0" text="Layout"/>
-                                                <TableColumn fx:id="showColumn" maxWidth="70.0" minWidth="70.0"
-                                                             prefWidth="70.0" text="Show"/>
-                                            </columns>
-                                        </TableView>
-                                        <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
+                                        <VBox fx:id="leftVBox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <Label fx:id="confidenceLabel" minWidth="30.0"
-                                                       text="Min branch confidence (%):"/>
-                                                <TextField fx:id="confidenceTextField" maxWidth="60.0">
-                                                    <tooltip>
-                                                        <Tooltip text="Minimum  confidence for input branch filtering"/>
-                                                    </tooltip>
-                                                </TextField>
-                                            </children>
-                                            <padding>
-                                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
-                                            </padding>
-                                        </HBox>
-                                        <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
-                                            <children>
-                                                <Label fx:id="concordanceLabel" minWidth="30.0"
-                                                       text="Min branch concordance (%):"/>
-                                                <TextField fx:id="concordanceTextField" maxWidth="60.0">
-                                                    <tooltip>
-                                                        <Tooltip
-                                                                text="Minimum percentage of input trees that contain a branch for input branch filtering"/>
-                                                    </tooltip>
-                                                </TextField>
-                                            </children>
-                                            <padding>
-                                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
-                                            </padding>
-                                        </HBox>
-                                    </children>
-                                    <padding>
-                                        <Insets left="4.0"/>
-                                    </padding>
-                                </VBox>
-
-                            </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="centerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0"
-                                    prefWidth="100.0">
-                            <children>
-                                <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                    <center>
-                                        <AnchorPane fx:id="innerAnchorPane">
-                                            <children>
-                                                <StackPane fx:id="centerPane" AnchorPane.bottomAnchor="0.0"
-                                                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                           AnchorPane.topAnchor="0.0"/>
-                                                <VBox fx:id="legendVBox" AnchorPane.rightAnchor="20.0"
-                                                      AnchorPane.topAnchor="10.0">
+                                                <ToolBar minHeight="-Infinity" prefHeight="32.0">
+                                                    <items>
+                                                        <Button fx:id="selectTableButton" mnemonicParsing="false"
+                                                                text="Select">
+                                                            <tooltip>
+                                                                <Tooltip text="Select all or none trees"/>
+                                                            </tooltip>
+                                                        </Button>
+                                                        <Button fx:id="runLayoutButton" mnemonicParsing="false"
+                                                                text="Run Layout">
+                                                            <tooltip>
+                                                                <Tooltip text="Run the PhyloFusion algorithm"/>
+                                                            </tooltip>
+                                                        </Button>
+                                                        <Button fx:id="showButton" mnemonicParsing="false" text="Show"/>
+                                                    </items>
+                                                    <padding>
+                                                        <Insets left="40.0"/>
+                                                    </padding>
+                                                </ToolBar>
+                                                <Separator prefWidth="200.0"/>
+                                                <TableView fx:id="treeTable" editable="true" VBox.vgrow="ALWAYS">
+                                                    <columns>
+                                                        <TableColumn fx:id="treeColumn" maxWidth="400.0" minWidth="70.0"
+                                                                     prefWidth="-1.0" text="Tree"/>
+                                                        <TableColumn fx:id="layoutColumn" maxWidth="70.0"
+                                                                     minWidth="70.0" prefWidth="70.0" text="Layout"/>
+                                                        <TableColumn fx:id="showColumn" maxWidth="70.0" minWidth="70.0"
+                                                                     prefWidth="70.0" text="Show"/>
+                                                    </columns>
+                                                </TableView>
+                                                <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                                                     <children>
-                                                        <Label text="Trees:"/>
+                                                        <Label fx:id="confidenceLabel" minWidth="30.0"
+                                                               text="Min branch confidence (%):"/>
+                                                        <TextField fx:id="confidenceTextField" maxWidth="60.0">
+                                                            <tooltip>
+                                                                <Tooltip
+                                                                        text="Minimum  confidence for input branch filtering"/>
+                                                            </tooltip>
+                                                        </TextField>
                                                     </children>
-                                                </VBox>
-                                                <TitledPane fx:id="taxonLabelsTitledPane" text="Taxon Labels"
-                                                            AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0"/>
-                                            </children>
-                                        </AnchorPane>
-                                    </center>
-                                    <top>
-                                        <VBox fx:id="rightVBox" BorderPane.alignment="CENTER">
-                                            <children>
-                                                <AnchorPane>
+                                                    <padding>
+                                                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                                                    </padding>
+                                                </HBox>
+                                                <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                                                     <children>
-                                                        <ToolBar minHeight="-Infinity" prefHeight="32.0"
-                                                                 AnchorPane.leftAnchor="0.0"
-                                                                 AnchorPane.rightAnchor="0.0"
-                                                                 AnchorPane.topAnchor="0.0">
-                                                            <items>
-                                                                <MenuButton fx:id="diagramMenuButton" text="Diagram"/>
-                                                                <MenuButton fx:id="settingsMenuButton"
-                                                                            mnemonicParsing="false" text="Settings">
-                                                                    <items>
-                                                                        <CheckMenuItem fx:id="showOutlineCheckMenuItem2"
-                                                                                       mnemonicParsing="false">
-                                                                            <graphic>
-                                                                                <Label text="Show Outline"/>
-                                                                            </graphic>
-                                                                        </CheckMenuItem>
-                                                                        <SeparatorMenuItem mnemonicParsing="false"/>
-                                                                        <MenuItem mnemonicParsing="false">
-                                                                            <graphic>
-                                                                                <HBox alignment="CENTER_LEFT"
-                                                                                      spacing="10.0">
-                                                                                    <children>
-                                                                                        <Spinner
-                                                                                                fx:id="outlineSpreadSpinner"
-                                                                                                editable="true"
-                                                                                                prefWidth="60.0">
-                                                                                            <tooltip>
-                                                                                                <Tooltip
-                                                                                                        text="Set spread of trees"/>
-                                                                                            </tooltip>
-                                                                                        </Spinner>
-                                                                                        <Label text="Spread"/>
-                                                                                    </children>
-                                                                                </HBox>
-                                                                            </graphic>
-                                                                        </MenuItem>
-                                                                        <SeparatorMenuItem mnemonicParsing="false"/>
-                                                                        <CheckMenuItem
-                                                                                fx:id="curvedReticulateEdgesCheckMenuItem2"
-                                                                                mnemonicParsing="false">
-                                                                            <graphic>
-                                                                                <Label text="Curved Reticulate Edges"/>
-                                                                            </graphic>
-                                                                        </CheckMenuItem>
-                                                                        <CheckMenuItem fx:id="useTransferMenuItem2"
-                                                                                       mnemonicParsing="false">
-                                                                            <graphic>
-                                                                                <Label text="Use Transfer Edges"/>
-                                                                            </graphic>
-                                                                        </CheckMenuItem>
-                                                                        <MenuItem mnemonicParsing="false">
-                                                                            <graphic>
-                                                                                <HBox alignment="CENTER_LEFT"
-                                                                                      spacing="10.0">
-                                                                                    <children>
-                                                                                        <Spinner
-                                                                                                fx:id="transferAcceptorPercentSpinner"
-                                                                                                editable="true"
-                                                                                                prefWidth="60.0">
-                                                                                            <tooltip>
-                                                                                                <Tooltip
-                                                                                                        text="Percent trees on edge required for transfer acceptor edge"/>
-                                                                                            </tooltip>
-                                                                                        </Spinner>
-                                                                                        <Label text="Min Percent"/>
-                                                                                    </children>
-                                                                                </HBox>
-                                                                            </graphic>
-                                                                        </MenuItem>
-                                                                    </items>
-                                                                </MenuButton>
-                                                                <ComboBox fx:id="colorSchemeCBox" prefWidth="150.0"/>
-                                                                <Button fx:id="zoomInButton" mnemonicParsing="false"
-                                                                        text="Zoom In"/>
-                                                                <Button fx:id="zoomOutButton" layoutX="221.0"
-                                                                        layoutY="10.0" mnemonicParsing="false"
-                                                                        text="Zoom Out"/>
-                                                            </items>
-                                                        </ToolBar>
-                                                        <HBox alignment="CENTER_LEFT" minHeight="-Infinity"
-                                                              prefHeight="30.0" spacing="10.0"
-                                                              AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+                                                        <Label fx:id="concordanceLabel" minWidth="30.0"
+                                                               text="Min branch concordance (%):"/>
+                                                        <TextField fx:id="concordanceTextField" maxWidth="60.0">
+                                                            <tooltip>
+                                                                <Tooltip
+                                                                        text="Minimum percentage of input trees that contain a branch for input branch filtering"/>
+                                                            </tooltip>
+                                                        </TextField>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                                                    </padding>
+                                                </HBox>
+                                            </children>
+                                            <padding>
+                                                <Insets left="4.0"/>
+                                            </padding>
+                                        </VBox>
+
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane fx:id="centerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0"
+                                            prefWidth="100.0">
+                                    <children>
+                                        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <center>
+                                                <AnchorPane fx:id="innerAnchorPane">
+                                                    <children>
+                                                        <StackPane fx:id="centerPane" AnchorPane.bottomAnchor="0.0"
+                                                                   AnchorPane.leftAnchor="0.0"
+                                                                   AnchorPane.rightAnchor="0.0"
+                                                                   AnchorPane.topAnchor="0.0"/>
+                                                        <VBox fx:id="legendVBox" AnchorPane.rightAnchor="20.0"
+                                                              AnchorPane.topAnchor="10.0">
                                                             <children>
-                                                                <Button fx:id="selectTaxaButton" mnemonicParsing="false"
-                                                                        text="Select">
-                                                                    <tooltip>
-                                                                        <Tooltip text="Select all or none taxa"/>
-                                                                    </tooltip>
-                                                                </Button>
-                                                                <Button fx:id="findButton" mnemonicParsing="false"
-                                                                        text="Find"/>
-                                                                <ToggleButton fx:id="formatToggleButton"
-                                                                              mnemonicParsing="false" text="Format"/>
-                                                                <MenuButton fx:id="exportMenuButton"
-                                                                            mnemonicParsing="false" text="Export">
-                                                                    <items>
-                                                                        <MenuItem fx:id="copyTreesMenuItem"
-                                                                                  mnemonicParsing="false"
-                                                                                  text="Copy Trees"/>
-                                                                        <MenuItem fx:id="copyNetworkMenuItem"
-                                                                                  mnemonicParsing="false"
-                                                                                  text="Copy Network"/>
-                                                                        <SeparatorMenuItem mnemonicParsing="false"/>
-                                                                    </items>
-                                                                </MenuButton>
+                                                                <Label text="Trees:"/>
                                                             </children>
-                                                        </HBox>
+                                                        </VBox>
+                                                        <TitledPane fx:id="taxonLabelsTitledPane" text="Taxon Labels"
+                                                                    AnchorPane.rightAnchor="20.0"
+                                                                    AnchorPane.topAnchor="5.0"/>
                                                     </children>
                                                 </AnchorPane>
-                                                <Separator prefWidth="200.0"/>
-                                            </children>
-                                        </VBox>
-                                    </top>
-                                </BorderPane>
-                            </children>
-                        </AnchorPane>
-                    </items>
-                </SplitPane>
+                                            </center>
+                                            <top>
+                                                <VBox fx:id="rightVBox" BorderPane.alignment="CENTER">
+                                                    <children>
+                                                        <AnchorPane>
+                                                            <children>
+                                                                <ToolBar minHeight="-Infinity" prefHeight="32.0"
+                                                                         AnchorPane.leftAnchor="0.0"
+                                                                         AnchorPane.rightAnchor="0.0"
+                                                                         AnchorPane.topAnchor="0.0">
+                                                                    <items>
+                                                                        <MenuButton fx:id="diagramMenuButton"
+                                                                                    text="Diagram"/>
+                                                                        <MenuButton fx:id="settingsMenuButton"
+                                                                                    mnemonicParsing="false"
+                                                                                    text="Settings">
+                                                                            <items>
+                                                                                <CheckMenuItem
+                                                                                        fx:id="showOutlineCheckMenuItem2"
+                                                                                        mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <Label text="Show Outline"/>
+                                                                                    </graphic>
+                                                                                </CheckMenuItem>
+                                                                                <SeparatorMenuItem
+                                                                                        mnemonicParsing="false"/>
+                                                                                <MenuItem mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <HBox alignment="CENTER_LEFT"
+                                                                                              spacing="10.0">
+                                                                                            <children>
+                                                                                                <Spinner
+                                                                                                        fx:id="outlineSpreadSpinner"
+                                                                                                        editable="true"
+                                                                                                        prefWidth="60.0">
+                                                                                                    <tooltip>
+                                                                                                        <Tooltip
+                                                                                                                text="Set spread of trees"/>
+                                                                                                    </tooltip>
+                                                                                                </Spinner>
+                                                                                                <Label text="Spread"/>
+                                                                                            </children>
+                                                                                        </HBox>
+                                                                                    </graphic>
+                                                                                </MenuItem>
+                                                                                <SeparatorMenuItem
+                                                                                        mnemonicParsing="false"/>
+                                                                                <CheckMenuItem
+                                                                                        fx:id="curvedReticulateEdgesCheckMenuItem2"
+                                                                                        mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <Label text="Curved Reticulate Edges"/>
+                                                                                    </graphic>
+                                                                                </CheckMenuItem>
+                                                                                <CheckMenuItem
+                                                                                        fx:id="useTransferMenuItem2"
+                                                                                        mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <Label text="Use Transfer Edges"/>
+                                                                                    </graphic>
+                                                                                </CheckMenuItem>
+                                                                                <MenuItem mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <HBox alignment="CENTER_LEFT"
+                                                                                              spacing="10.0">
+                                                                                            <children>
+                                                                                                <Spinner
+                                                                                                        fx:id="transferAcceptorPercentSpinner"
+                                                                                                        editable="true"
+                                                                                                        prefWidth="60.0">
+                                                                                                    <tooltip>
+                                                                                                        <Tooltip
+                                                                                                                text="Percent trees on edge required for transfer acceptor edge"/>
+                                                                                                    </tooltip>
+                                                                                                </Spinner>
+                                                                                                <Label text="Min Percent"/>
+                                                                                            </children>
+                                                                                        </HBox>
+                                                                                    </graphic>
+                                                                                </MenuItem>
+                                                                            </items>
+                                                                        </MenuButton>
+                                                                        <ComboBox fx:id="colorSchemeCBox"
+                                                                                  prefWidth="150.0"/>
+                                                                        <Button fx:id="zoomInButton"
+                                                                                mnemonicParsing="false" text="Zoom In"/>
+                                                                        <Button fx:id="zoomOutButton" layoutX="221.0"
+                                                                                layoutY="10.0" mnemonicParsing="false"
+                                                                                text="Zoom Out"/>
+                                                                    </items>
+                                                                    <padding>
+                                                                        <Insets left="40.0"/>
+                                                                    </padding>
+                                                                </ToolBar>
+                                                                <HBox alignment="CENTER_LEFT" minHeight="-Infinity"
+                                                                      prefHeight="30.0" spacing="10.0"
+                                                                      AnchorPane.rightAnchor="5.0"
+                                                                      AnchorPane.topAnchor="0.0">
+                                                                    <children>
+                                                                        <Button fx:id="selectTaxaButton"
+                                                                                mnemonicParsing="false" text="Select">
+                                                                            <tooltip>
+                                                                                <Tooltip
+                                                                                        text="Select all or none taxa"/>
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="findButton"
+                                                                                mnemonicParsing="false" text="Find"/>
+                                                                        <ToggleButton fx:id="formatToggleButton"
+                                                                                      mnemonicParsing="false"
+                                                                                      text="Format"/>
+                                                                        <MenuButton fx:id="exportMenuButton"
+                                                                                    mnemonicParsing="false"
+                                                                                    text="Export">
+                                                                            <items>
+                                                                                <MenuItem fx:id="copyTreesMenuItem"
+                                                                                          mnemonicParsing="false"
+                                                                                          text="Copy Trees"/>
+                                                                                <MenuItem fx:id="copyNetworkMenuItem"
+                                                                                          mnemonicParsing="false"
+                                                                                          text="Copy Network"/>
+                                                                                <SeparatorMenuItem
+                                                                                        mnemonicParsing="false"/>
+                                                                            </items>
+                                                                        </MenuButton>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </AnchorPane>
+                                                        <Separator prefWidth="200.0"/>
+                                                    </children>
+                                                </VBox>
+                                            </top>
+                                        </BorderPane>
+                                    </children>
+                                </AnchorPane>
+                            </items>
+                        </SplitPane>
+                        <ToggleButton fx:id="sideBarCheckMenuItem" mnemonicParsing="false" text="Side"
+                                      AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0">
+                            <tooltip>
+                                <Tooltip text="Show or hide the side bar"/>
+                            </tooltip>
+                        </ToggleButton>
+                    </children>
+                </AnchorPane>
             </center>
             <top>
                 <VBox BorderPane.alignment="CENTER">

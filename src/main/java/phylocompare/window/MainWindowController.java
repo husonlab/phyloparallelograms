@@ -23,7 +23,9 @@
 package phylocompare.window;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -342,13 +344,21 @@ public class MainWindowController {
 
 	private ZoomableScrollPane scrollPane;
 
+	@FXML
+	private ToggleButton sideBarCheckMenuItem;
+
 	private final BooleanProperty disableAllShow = new SimpleBooleanProperty(false);
 	private final BooleanProperty disableAllRun = new SimpleBooleanProperty(false);
+	private final DoubleProperty lastLeftDivider = new SimpleDoubleProperty();
+
 
 	@FXML
 	private void initialize() {
+		lastLeftDivider.set(splitPane.getDividerPositions()[0]);
+
 		MaterialIcons.setIcon(settingsMenuButton, MaterialIcons.more_vert);
 
+		MaterialIcons.setIcon(sideBarCheckMenuItem, MaterialIcons.view_sidebar);
 		MaterialIcons.setIcon(runLayoutButton, MaterialIcons.play_circle, "", false);
 		MaterialIcons.setIcon(showButton, MaterialIcons.play_circle, "", false);
 		MaterialIcons.setIcon(selectTableButton, MaterialIcons.select_all);
@@ -447,6 +457,18 @@ public class MainWindowController {
 
 		confidenceLabel.disableProperty().bind(confidenceTextField.disabledProperty());
 		concordanceLabel.disableProperty().bind(concordanceTextField.disabledProperty());
+
+		sideBarCheckMenuItem.setSelected(true);
+		sideBarCheckMenuItem.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+			if (isSelected) {
+				splitPane.setDividerPositions(lastLeftDivider.get());
+			} else {
+				var pos = splitPane.getDividers().get(0).getPosition();
+				if (pos > 0.02)
+					lastLeftDivider.set(pos);
+				splitPane.setDividerPositions(0.0);
+			}
+		});
 	}
 
 	public BooleanProperty disableAllRunProperty() {

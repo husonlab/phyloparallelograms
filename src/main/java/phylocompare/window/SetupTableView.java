@@ -51,7 +51,7 @@ class SetupTableView {
 		// Tree name
 		treeColumn.setEditable(true);
 		treeColumn.setCellValueFactory(data -> data.getValue().nameProperty());
-		treeColumn.setCellFactory(col -> new TextFieldTableCell<TreeRecord, String>(new DefaultStringConverter()) {
+		treeColumn.setCellFactory(col -> new TextFieldTableCell<>(new DefaultStringConverter()) {
 			@Override
 			public void startEdit() {
 				if (treeNameEditRequested.get())
@@ -60,7 +60,12 @@ class SetupTableView {
 		});
 		treeColumn.setOnEditCommit(e -> {
 			var record = e.getRowValue();
-			record.setName(e.getNewValue());
+			var name = e.getNewValue();
+			if (!name.equals(record.getName())) {
+				record.setName(name);
+				record.getTree().setName(name);
+				controller.getShowButton().fire();
+			}
 		});
 
 		// Run checkbox
