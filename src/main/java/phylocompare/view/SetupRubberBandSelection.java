@@ -23,6 +23,7 @@ package phylocompare.view;
 import javafx.collections.ObservableSet;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import jloda.fx.util.SelectionEffectBlue;
 import jloda.phylo.PhyloTree;
 import phylocompare.model.Document;
 import splitstree6.data.parts.Taxon;
@@ -35,7 +36,7 @@ public class SetupRubberBandSelection {
 		var rect = new Rectangle();
 		rect.setManaged(false);
 		rect.setFill(Color.TRANSPARENT);
-		rect.setStroke(Color.color(0.2, 0.4, 1.0, 0.8));
+		rect.setStroke(SelectionEffectBlue.getInstance().getColor());
 		rect.setVisible(false);
 
 		pane.getChildren().add(rect);
@@ -75,27 +76,29 @@ public class SetupRubberBandSelection {
 		});
 
 		pane.setOnMouseReleased(e -> {
-			if (!rect.isVisible() || e.isStillSincePress())
+			if (!rect.isVisible())
 				return;
 
-			var selectionBounds = rect.localToScene(rect.getBoundsInLocal());
-			for (var entry : nodeLabeledNodeShapeMap.entrySet()) {
-				var v = entry.getKey();
-				var labeledNode = entry.getValue();
-				var label = labeledNode.getLabel();
-				if (label != null) {
-					var b = label.localToScene(label.getBoundsInLocal());
-					if (selectionBounds.intersects(b)) {
-						var network = (PhyloTree) v.getOwner();
-						if (network.hasTaxa(v)) {
-							var taxId = network.getTaxon(v);
-							if (taxId != -1) {
-								var taxon = document.getTaxaBlock().get(taxId);
-								if (taxon != null) {
-									if (selectedTaxa.contains(taxon)) {
-										selectedTaxa.remove(taxon);
-									} else {
-										selectedTaxa.add(taxon);
+			if (!e.isStillSincePress()) {
+				var selectionBounds = rect.localToScene(rect.getBoundsInLocal());
+				for (var entry : nodeLabeledNodeShapeMap.entrySet()) {
+					var v = entry.getKey();
+					var labeledNode = entry.getValue();
+					var label = labeledNode.getLabel();
+					if (label != null) {
+						var b = label.localToScene(label.getBoundsInLocal());
+						if (selectionBounds.contains(b)) {
+							var network = (PhyloTree) v.getOwner();
+							if (network.hasTaxa(v)) {
+								var taxId = network.getTaxon(v);
+								if (taxId != -1) {
+									var taxon = document.getTaxaBlock().get(taxId);
+									if (taxon != null) {
+										if (selectedTaxa.contains(taxon)) {
+											selectedTaxa.remove(taxon);
+										} else {
+											selectedTaxa.add(taxon);
+										}
 									}
 								}
 							}

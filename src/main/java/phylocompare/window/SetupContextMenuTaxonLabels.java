@@ -1,5 +1,5 @@
 /*
- * SetupEditTaxonLabel.java Copyright (C) 2026 Daniel H. Huson
+ * SetupContextMenuTaxonLabels.java Copyright (C) 2026 Daniel H. Huson
  *
  *  (Some files contain contributions from other authors, who are then mentioned separately.)
  *
@@ -18,20 +18,23 @@
  *
  */
 
-package phylocompare.view;
+package phylocompare.window;
 
 import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import jloda.fx.control.RichTextLabel;
 import splitstree6.data.parts.Taxon;
 
-public class SetupEditTaxonLabel {
+public class SetupContextMenuTaxonLabels {
 
 	public static void apply(RichTextLabel label, Taxon taxon, Group parent) {
-		MenuItem editItem = new MenuItem("Edit label");
-		ContextMenu menu = new ContextMenu(editItem);
+		var editItem = new MenuItem("Edit Label");
+		var copyItem = new MenuItem("Copy Selected Labels");
+
+		var menu = new ContextMenu(editItem, new SeparatorMenuItem(), copyItem);
 
 		label.setOnContextMenuRequested(e -> {
 			menu.show(label, e.getScreenX(), e.getScreenY());

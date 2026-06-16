@@ -47,6 +47,7 @@ import jloda.phylo.PhyloTree;
 import jloda.phylogeny.layout.Averaging;
 import jloda.phylogeny.layout.LayoutRootedPhylogeny;
 import jloda.util.BitSetUtils;
+import phylocompare.window.SetupContextMenuTaxonLabels;
 import phylocompare.window.TreeRecord;
 import splitstree6.data.TaxaBlock;
 import splitstree6.data.parts.Taxon;
@@ -175,7 +176,7 @@ public class NetworkView extends Group {
 							taxonLabeledNodeShapeMap.put(taxon, shape);
 							var label = shape.getLabel();
 							if (label != null) {
-								SetupEditTaxonLabel.apply(label, taxon, labelsGroup);
+								SetupContextMenuTaxonLabels.apply(label, taxon, labelsGroup);
 
 								ChangeListener<String> changeListener = (d, o, n) -> label.setText(n);
 

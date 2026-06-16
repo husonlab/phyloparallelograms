@@ -95,6 +95,9 @@ public class MainWindowController {
 	private MenuItem copyTreesMenuItem;
 
 	@FXML
+	private MenuItem copyTaxaMenuItem;
+
+	@FXML
 	private MenuItem copyNetworkMenuItem;
 
 	@FXML
@@ -425,7 +428,8 @@ public class MainWindowController {
 
 		DraggableUtils.makeDraggableInAnchorPane(legendVBox);
 
-		exportMenuButton.getItems().addAll(BasicFX.copyMenu(List.of(copyImageMenuItem), false));
+		exportMenuButton.getItems().addAll(BasicFX.copyMenu(List.of(copyTaxaMenuItem, new SeparatorMenuItem(),
+				copyTreesMenuItem, copyNetworkMenuItem, new SeparatorMenuItem(), copyImageMenuItem), false));
 
 		runLayoutButton.onActionProperty().bindBidirectional(runMenuItem.onActionProperty());
 		runLayoutButton.disableProperty().bindBidirectional(runMenuItem.disableProperty());
@@ -787,6 +791,10 @@ public class MainWindowController {
 
 	public CheckMenuItem getCurvedReticulateEdgesCheckMenuItem() {
 		return curvedReticulateEdgesCheckMenuItem;
+	}
+
+	public MenuItem getCopyTaxaMenuItem() {
+		return copyTaxaMenuItem;
 	}
 
 	public MenuItem getCopyTreesMenuItem() {

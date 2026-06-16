@@ -26,11 +26,13 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.util.Pair;
 import jloda.fx.control.RichTextLabel;
 import jloda.fx.dialog.ExportImageDialog;
 import jloda.fx.dialog.SetParameterDialog;
@@ -71,6 +73,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -531,6 +534,30 @@ public class MainWindowPresenter {
 		controller.getRedoMenuItem().textProperty().bind(undoManager.redoNameProperty());
 		controller.getRedoMenuItem().disableProperty().bind(undoManager.redoableProperty().not().or(serviceRunning));
 
+		controller.getCopyTaxaMenuItem().setOnAction(e -> {
+			var taxa = (window.getTaxaSelectionModel().size() > 0 ? window.getTaxaSelectionModel().getSelectedItems() : document.getTaxaBlock().getTaxa());
+			var network = document.getNetwork();
+			var pairs = new ArrayList<Pair<Point2D, Taxon>>();
+			for (var taxon : taxa) {
+				var taxId = document.getTaxaBlock().indexOf(taxon);
+				var v = network.nodeStream().filter(u -> network.hasTaxa(u) && network.getTaxon(u) == taxId).findAny().orElse(null);
+				if (v != null) {
+					var shape = networkView.getNodeLabeledNodeShapeMap().get(v);
+					if (shape != null) {
+						var pos = new Point2D(shape.getTranslateX(), shape.getTranslateY());
+						pairs.add(new Pair<>(pos, taxon));
+					}
+				}
+			}
+			pairs.sort((a, b) -> {
+				var compare = Double.compare(a.getKey().getY(), b.getKey().getY());
+				return (compare == 0 ? Double.compare(a.getKey().getX(), b.getKey().getX()) : compare);
+			});
+			var names = pairs.stream().map(Pair::getValue).map(Taxon::getName).toList();
+			ClipboardUtils.putString(StringUtils.toString(names, "\n"));
+		});
+		controller.getCopyTaxaMenuItem().disableProperty().bind(serviceRunning.or(document.hasNetworksProperty().not()));
+
 		controller.getCopyTreesMenuItem().setOnAction(e -> {
 			if (document.hasTrees()) {
 				var trees = document.getTreeRecords().stream().filter(TreeRecord::isShow).map(TreeRecord::getTree).toList();
@@ -573,9 +600,11 @@ public class MainWindowPresenter {
 		controller.getCopyNetworkMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(serviceRunning));
 
 		controller.getCopyMenuItem().setOnAction(e -> {
-			if (window.getTaxaSelectionModel().size() > 0) {
-				var name = window.getTaxaSelectionModel().getSelectedItems().stream().map(Taxon::getName).toList();
-				ClipboardUtils.putString(StringUtils.toString(name, "\n"));
+			var scene = window.getStage().getScene();
+			if (scene != null && scene.getFocusOwner() instanceof TextInputControl tic) {
+				tic.copy();              // native text-field copy, restored
+			} else if (window.getTaxaSelectionModel().size() > 0) {
+				controller.getCopyTaxaMenuItem().fire();
 			} else if (controller.getScrollPane().isFocused() && document.hasNetworks())
 				controller.getCopyNetworkMenuItem().fire();
 			else if (document.hasTrees()) {
@@ -605,7 +634,7 @@ public class MainWindowPresenter {
 		controller.getPasteMenuItem().disableProperty().bind(canEditTreesList.not().and(document.emptyProperty().not()));
 
 		controller.getDeleteMenuItem().setOnAction(e -> document.getTreeRecords().removeAll(getSelectedRowsOrAll(controller.getTreeTable(), document.getTreeRecords())));
-		controller.getDeleteMenuItem().disableProperty().bind(canEditTreesList.not());
+		controller.getDeleteMenuItem().disableProperty().bind(serviceRunning.or(document.emptyProperty()));
 
 		controller.getImportTreeNamesMenuItem().setOnAction(e -> {
 			var previousFile = new File(jloda.util.ProgramProperties.get("TreeNamesFile", ""));

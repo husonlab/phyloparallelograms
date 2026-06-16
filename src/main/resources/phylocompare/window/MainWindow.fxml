@@ -247,14 +247,6 @@
                                                                                     mnemonicParsing="false"
                                                                                     text="Export">
                                                                             <items>
-                                                                                <MenuItem fx:id="copyTreesMenuItem"
-                                                                                          mnemonicParsing="false"
-                                                                                          text="Copy Trees"/>
-                                                                                <MenuItem fx:id="copyNetworkMenuItem"
-                                                                                          mnemonicParsing="false"
-                                                                                          text="Copy Network"/>
-                                                                                <SeparatorMenuItem
-                                                                                        mnemonicParsing="false"/>
                                                                             </items>
                                                                         </MenuButton>
                                                                     </children>
@@ -372,12 +364,25 @@
                                                                     shortcut="DOWN"/>
                                             </accelerator>
                                         </MenuItem>
-                                        <MenuItem fx:id="copyImageMenuItem" mnemonicParsing="false" text="Copy Image">
-                                            <accelerator>
-                                                <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP"
-                                                                    shift="DOWN" shortcut="DOWN"/>
-                                            </accelerator>
-                                        </MenuItem>
+                                        <Menu mnemonicParsing="false" text="Copy More">
+                                            <MenuItem fx:id="copyImageMenuItem" mnemonicParsing="false"
+                                                      text="Copy Image">
+                                                <accelerator>
+                                                    <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP"
+                                                                        shift="DOWN" shortcut="DOWN"/>
+                                                </accelerator>
+                                            </MenuItem>
+                                            <MenuItem fx:id="copyTaxaMenuItem"
+                                                      mnemonicParsing="false"
+                                                      text="Copy Taxa"/>
+                                            <MenuItem fx:id="copyTreesMenuItem"
+                                                      mnemonicParsing="false"
+                                                      text="Copy Trees"/>
+                                            <MenuItem fx:id="copyNetworkMenuItem"
+                                                      mnemonicParsing="false"
+                                                      text="Copy Network"/>
+                                        </Menu>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
                                         <MenuItem fx:id="pasteMenuItem" mnemonicParsing="false" text="Paste">
                                             <accelerator>
                                                 <KeyCodeCombination alt="UP" code="V" control="UP" meta="UP" shift="UP"
