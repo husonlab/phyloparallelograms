@@ -76,6 +76,8 @@ public class AlgorithmsService extends AService<Boolean> {
 						}
 					}
 					var algorithm = new PhyloFusionTreeTrace();
+					algorithm.setEdgeWeightMethod(PhyloFusionTreeTrace.EdgeWeightMethod.NNLS);
+
 					algorithm.optionRefinementHeuristicProperty().set(false); // todo: this is broken, so turn off
 					algorithm.compute(getProgressListener(), blocks.taxaBlock(), blocks.treesBlock(), resultBlock);
 					if (false) {

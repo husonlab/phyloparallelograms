@@ -16,6 +16,7 @@ module phylocompare {
 	requires java.desktop;
 	requires java.net.http;
 	requires com.fasterxml.jackson.databind;
+	requires ojalgo;
 
 	exports phylocompare.main;
 	exports phylocompare.window;
