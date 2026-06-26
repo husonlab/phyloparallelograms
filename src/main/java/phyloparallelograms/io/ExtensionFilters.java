@@ -31,7 +31,7 @@ import java.util.List;
 public class ExtensionFilters {
 	private final static FileChooser.ExtensionFilter newick = new FileChooser.ExtensionFilter("Newick file", "*.nwk", "*.newick", "*.new", "*.tree", "*.tre", "*.trees", "*.treefile");
 	private final static FileChooser.ExtensionFilter nexus = new FileChooser.ExtensionFilter("Nexus file", "*.nex", "*.nxs", "*.nexus");
-	private final static FileChooser.ExtensionFilter phypar = new FileChooser.ExtensionFilter("PhyloParallelograms file", "*" + Version.FILE_SUFFIX);
+	private final static FileChooser.ExtensionFilter phypar = new FileChooser.ExtensionFilter("PhyloParallelograms file", "*" + Version.FILE_SUFFIX, "*.phycmp");
 	private final static FileChooser.ExtensionFilter text = new FileChooser.ExtensionFilter("Text file", "*.txt");
 	private final static FileChooser.ExtensionFilter any = new FileChooser.ExtensionFilter("Any file", "*.*");
 	private final static List<FileChooser.ExtensionFilter> allSupported = createAllSupported();
