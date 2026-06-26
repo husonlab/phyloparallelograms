@@ -82,7 +82,8 @@ public class FileOpener implements Consumer<String> {
 					ImportNewick.apply(window, fileName);
 				}
 			}
-			RecentFilesManager.getInstance().insertRecentFile(fileName);
+			if (!fileName.endsWith(".phycmp")) // forget old PhyloCompare files
+				RecentFilesManager.getInstance().insertRecentFile(fileName);
 			window.setFileName(fileName);
 			WindowNotifications.showInfo(window.getController().getCenterPane(), "Loaded file: " + FileUtils.getFileNameWithoutPath(fileName));
 

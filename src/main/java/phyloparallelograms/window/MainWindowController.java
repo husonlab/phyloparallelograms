@@ -227,13 +227,20 @@ public class MainWindowController {
 	private Menu windowMenu;
 
 	@FXML
-	private MenuItem zoomInMenuItem;
+	private MenuItem zoomInVerticallyMenuItem;
 
 	@FXML
-	private MenuItem zoomOutMenuItem;
+	private MenuItem zoomOutVerticallyMenuItem;
 
 	@FXML
 	private MenuItem zoomToFitMenuItem;
+
+	@FXML
+	private MenuItem zoomInHorizontallyMenuItem;
+
+	@FXML
+	private MenuItem zoomOutHorizontallyMenuItem;
+
 
 	@FXML
 	private TextField confidenceTextField;
@@ -277,10 +284,16 @@ public class MainWindowController {
 	private MenuButton exportMenuButton;
 
 	@FXML
-	private Button zoomInButton;
+	private Button zoomInVerticallyButton;
 
 	@FXML
-	private Button zoomOutButton;
+	private Button zoomOutVerticallyButton;
+
+	@FXML
+	private Button zoomInHorizontallyButton;
+
+	@FXML
+	private Button zoomOutHorizontallyButton;
 
 	@FXML
 	private AnchorPane innerAnchorPane;
@@ -367,8 +380,11 @@ public class MainWindowController {
 		MaterialIcons.setIcon(selectTableButton, MaterialIcons.select_all);
 		MaterialIcons.setIcon(selectTaxaButton, MaterialIcons.select_all);
 		MaterialIcons.setIcon(exportMenuButton, MaterialIcons.ios_share);
-		MaterialIcons.setIcon(zoomInButton, MaterialIcons.zoom_in);
-		MaterialIcons.setIcon(zoomOutButton, MaterialIcons.zoom_out);
+		MaterialIcons.setIcon(zoomInVerticallyButton, MaterialIcons.unfold_more);
+		MaterialIcons.setIcon(zoomOutVerticallyButton, MaterialIcons.unfold_less);
+		MaterialIcons.setIcon(zoomInHorizontallyButton, MaterialIcons.unfold_more, "-fx-rotate: 90;", true);
+		MaterialIcons.setIcon(zoomOutHorizontallyButton, MaterialIcons.unfold_less, "-fx-rotate: 90;", true);
+
 		MaterialIcons.setIcon(findButton, MaterialIcons.search);
 		MaterialIcons.setIcon(formatToggleButton, MaterialIcons.tune);
 
@@ -421,10 +437,16 @@ public class MainWindowController {
 		Tooltip.install(layoutColumn.getGraphic(), tip);
 		Tooltip.install(showColumn.getGraphic(), tip);
 
-		zoomInButton.setOnAction(e -> zoomInMenuItem.fire());
-		zoomInButton.disableProperty().bind(zoomInMenuItem.disableProperty());
-		zoomOutButton.setOnAction(e -> zoomOutMenuItem.fire());
-		zoomOutButton.disableProperty().bind(zoomOutMenuItem.disableProperty());
+		zoomInVerticallyButton.setOnAction(e -> zoomInVerticallyMenuItem.fire());
+		zoomInVerticallyButton.disableProperty().bind(zoomInVerticallyMenuItem.disableProperty());
+		zoomOutVerticallyButton.setOnAction(e -> zoomOutVerticallyMenuItem.fire());
+		zoomOutVerticallyButton.disableProperty().bind(zoomOutVerticallyMenuItem.disableProperty());
+
+		zoomInHorizontallyButton.setOnAction(e -> zoomInHorizontallyMenuItem.fire());
+		zoomInHorizontallyButton.disableProperty().bind(zoomInHorizontallyMenuItem.disableProperty());
+		zoomOutHorizontallyButton.setOnAction(e -> zoomOutHorizontallyMenuItem.fire());
+		zoomOutHorizontallyButton.disableProperty().bind(zoomOutHorizontallyMenuItem.disableProperty());
+
 
 		DraggableUtils.makeDraggableInAnchorPane(legendVBox);
 
@@ -661,12 +683,12 @@ public class MainWindowController {
 		return windowMenu;
 	}
 
-	public MenuItem getZoomInMenuItem() {
-		return zoomInMenuItem;
+	public MenuItem getZoomInVerticallyMenuItem() {
+		return zoomInVerticallyMenuItem;
 	}
 
-	public MenuItem getZoomOutMenuItem() {
-		return zoomOutMenuItem;
+	public MenuItem getZoomOutVerticallyMenuItem() {
+		return zoomOutVerticallyMenuItem;
 	}
 
 	public MenuItem getZoomToFitMenuItem() {
@@ -851,5 +873,13 @@ public class MainWindowController {
 
 	public TitledPane getTaxonLabelsTitledPane() {
 		return taxonLabelsTitledPane;
+	}
+
+	public MenuItem getZoomInHorizontallyMenuItem() {
+		return zoomInHorizontallyMenuItem;
+	}
+
+	public MenuItem getZoomOutHorizontallyMenuItem() {
+		return zoomOutHorizontallyMenuItem;
 	}
 }

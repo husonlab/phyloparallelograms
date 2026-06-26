@@ -130,10 +130,12 @@ trees whose *Show* box is checked. Its toolbar contains:
     - *Min Percent* spinner - minimum percentage of trees that must use an edge for it to qualify as a transfer acceptor
     edge.
 - **Color scheme** - drop-down menu of color schemes used to color the trees in the parallelogram.
-- **Zoom In** - zoom the view in by one step.
-- **Zoom Out** - zoom the view out by one step.
+- **Zoom In Vertically** - zoom the view in vertically by one step.
+- **Zoom Out Vertically** - zoom the view out vertically by one step.
+- **Zoom In Horizontally** - zoom the view in horizontally by one step.
+  -**Zoom Out Horizontally** - zoom the view out horizontally by one step.
 
-In the top right of the visualization panel:
+- In the top right of the visualization panel:
 
 - **Export** - menu button with shortcuts to:
     - *Copy Trees* - copy the currently selected input trees to the clipboard (Newick).

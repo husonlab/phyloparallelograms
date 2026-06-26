@@ -220,11 +220,34 @@
                                                                         </MenuButton>
                                                                         <ComboBox fx:id="colorSchemeCBox"
                                                                                   prefWidth="150.0"/>
-                                                                        <Button fx:id="zoomInButton"
-                                                                                mnemonicParsing="false" text="Zoom In"/>
-                                                                        <Button fx:id="zoomOutButton" layoutX="221.0"
-                                                                                layoutY="10.0" mnemonicParsing="false"
-                                                                                text="Zoom Out"/>
+                                                                        <Button fx:id="zoomInVerticallyButton"
+                                                                                mnemonicParsing="false" text="Zoom In">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Expand vertically"/>
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="zoomOutVerticallyButton"
+                                                                                layoutX="221.0" layoutY="10.0"
+                                                                                mnemonicParsing="false" text="Zoom Out">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Contract vertically"/>
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="zoomInHorizontallyButton"
+                                                                                mnemonicParsing="false"
+                                                                                text="Zoom In H">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Expand horizontally"/>
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="zoomOutHorizontallyButton"
+                                                                                layoutX="221.0" layoutY="10.0"
+                                                                                mnemonicParsing="false"
+                                                                                text="Zoom Out H">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Contract horizontally"/>
+                                                                            </tooltip>
+                                                                        </Button>
                                                                     </items>
                                                                     <padding>
                                                                         <Insets left="40.0"/>
@@ -468,28 +491,29 @@
                                         <SeparatorMenuItem mnemonicParsing="false"/>
                                         <MenuItem fx:id="increaseFontSizeMenuItem" text="Increase Font Size">
                                             <accelerator>
-                                                <KeyCodeCombination alt="UP" code="UP" control="UP" meta="UP"
-                                                                    shift="DOWN" shortcut="DOWN"/>
+                                                <KeyCodeCombination alt="UP" code="ADD" control="UP" meta="UP"
+                                                                    shift="UP" shortcut="DOWN"/>
                                             </accelerator>
                                         </MenuItem>
                                         <MenuItem fx:id="decreaseFontSizeMenuItem" text="Decrease Font Size">
                                             <accelerator>
-                                                <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="UP"
-                                                                    shift="DOWN" shortcut="DOWN"/>
+                                                <KeyCodeCombination alt="UP" code="MINUS" control="UP" meta="UP"
+                                                                    shift="UP" shortcut="DOWN"/>
                                             </accelerator>
                                         </MenuItem>
                                         <SeparatorMenuItem mnemonicParsing="false"/>
-                                        <MenuItem fx:id="zoomInMenuItem" text="Zoom In">
+                                        <MenuItem fx:id="zoomInVerticallyMenuItem" text="Zoom In Vertically">
                                             <accelerator>
                                                 <KeyCodeCombination alt="UP" code="UP" control="UP" meta="UP" shift="UP"
                                                                     shortcut="DOWN"/>
                                             </accelerator>
                                         </MenuItem>
-                                        <MenuItem fx:id="zoomOutMenuItem" text="Zoom Out">
+                                        <MenuItem fx:id="zoomOutVerticallyMenuItem" text="Zoom Out Vertically">
                                             <accelerator>
                                                 <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="UP"
                                                                     shift="UP" shortcut="DOWN"/>
                                             </accelerator>
+
                                         </MenuItem>
                                         <MenuItem fx:id="zoomToFitMenuItem" text="Zoom To Fit">
                                             <accelerator>
@@ -497,6 +521,22 @@
                                                                     shift="UP" shortcut="DOWN"/>
                                             </accelerator>
                                         </MenuItem>
+
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="zoomInHorizontallyMenuItem" text="Zoom In Horizontally">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="UP" control="UP" meta="UP"
+                                                                    shift="DOWN" shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <MenuItem fx:id="zoomOutHorizontallyMenuItem" text="Zoom Out Horizontally">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="UP"
+                                                                    shift="DOWN" shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+
+
                                         <SeparatorMenuItem mnemonicParsing="false"/>
                                         <Menu mnemonicParsing="false" text="Diagram Type">
                                             <RadioMenuItem fx:id="rectangularCladogramMenuItem" mnemonicParsing="false"

@@ -29,7 +29,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.collections.SetChangeListener;
 import javafx.event.Event;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -151,11 +150,11 @@ public class NetworkView extends Group {
 		legend.clear();
 	}
 
-	public void update(TaxaBlock taxaBlock, List<TreeRecord> treeRecords, PhyloTree network, double scaleFactor, boolean updateNetworkDrawing, boolean updateTreesDrawing, String colorSchemeName) {
+	public void update(TaxaBlock taxaBlock, List<TreeRecord> treeRecords, PhyloTree network, double scaleFactorX, double scaleFactorY, boolean updateNetworkDrawing, boolean updateTreesDrawing, String colorSchemeName) {
 		if (updateNetworkDrawing) {
 			clear();
-			var width = scaleFactor * Math.max(400, getTargetWidth() - 200);
-			var height = scaleFactor * Math.max(400, getTargetHeight() - 50);
+			var width = scaleFactorX * Math.max(400, getTargetWidth() - 200);
+			var height = scaleFactorY * Math.max(400, getTargetHeight() - 50);
 			service.setup(taxaBlock, network, getOptionDiagram(), getOptionAveraging(), getOptionScaling(), width, height, optionReticulateEdgesAreSpecial.get(), getApplicableAcceptorPercentage());
 			service.setOnSucceeded(a -> {
 				var result = service.getValue();
@@ -249,10 +248,6 @@ public class NetworkView extends Group {
 
 	private void drawTracedTrees(PhyloTree network, String colorSchemeName, List<TreeRecord> treeRecords) {
 		var trees = BitSetUtils.asBitSet(treeRecords.stream().filter(TreeRecord::isShow).mapToInt(TreeRecord::getId).toArray());
-		Function<Node, Point2D> nodePointFunction = v -> {
-			var shape = nodeLabeledNodeShapeMap.get(v);
-			return new Point2D(shape.getTranslateX(), shape.getTranslateY());
-		};
 		Function<Edge, Path> edgePathFunction = e -> (Path) edgeLabeledEdgeShapeHashMap.get(e).getShape();
 		tracedTreesGroup.getChildren().setAll(DrawTracedTrees.apply(network, colorSchemeName, treeRecords, trees, getOptionOutlineWidth(), edgePathFunction, legend));
 	}

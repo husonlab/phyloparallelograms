@@ -23,10 +23,12 @@ package phyloparallelograms.window;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
@@ -59,6 +61,7 @@ import phyloparallelograms.utils.DoubleSpinnerBinder;
 import phyloparallelograms.utils.SplitPaneSupport;
 import phyloparallelograms.view.Legend;
 import phyloparallelograms.view.NetworkView;
+import phyloparallelograms.view.ScaleDrawing;
 import phyloparallelograms.view.SetupRubberBandSelection;
 import splitstree6.data.parts.Taxon;
 import splitstree6.layout.tree.TreeDiagramType;
@@ -85,16 +88,20 @@ public class MainWindowPresenter {
 	private final RemoveTaxaService removeTaxaService;
 	private final NetworkView networkView;
 
+	private final MainWindowController controller;
+	private final DoubleProperty scaleFactorX = new SimpleDoubleProperty(this, "scaleFactorX", 1.0);
+	private final DoubleProperty scaleFactorY = new SimpleDoubleProperty(this, "scaleFactorY", 1.0);
+
+
 	public MainWindowPresenter(MainWindow window) {
 		this.window = window;
-		var controller = window.getController();
+		controller = window.getController();
 		var document = window.getDocument();
 		var undoManager = window.getUndoManager();
 
 		var confidenceThreshold = document.confidenceThresholdProperty();
 		var concordanceThreshold = document.confidenceThresholdProperty();
 
-		var scaleFactor = new SimpleDoubleProperty(this, "scaleFactor", 1.0);
 
 		SetupColorSchemes.apply(window);
 
@@ -152,7 +159,7 @@ public class MainWindowPresenter {
 					networkView.getLegend().setVisible(false);
 				Platform.runLater(() -> {
 					var treeRecords = controller.getTreeTable().getItems();
-					networkView.update(document.getTaxaBlock(), treeRecords, network, scaleFactor.get(), true, true, document.getColorSchemeName());
+					networkView.update(document.getTaxaBlock(), treeRecords, network, scaleFactorX.get(), scaleFactorY.get(), true, true, document.getColorSchemeName());
 					networkView.getLegend().setVisible(legendVisible);
 				});
 
@@ -166,7 +173,7 @@ public class MainWindowPresenter {
 			else {
 				var network = document.getNetworks().get(0);
 				var treeRecords = controller.getTreeTable().getItems();
-				networkView.update(document.getTaxaBlock(), treeRecords, network, scaleFactor.get(), false, true, document.getColorSchemeName());
+				networkView.update(document.getTaxaBlock(), treeRecords, network, scaleFactorX.get(), scaleFactorY.get(), false, true, document.getColorSchemeName());
 			}
 			// todo: need to implement selection of which network to draw
 		});
@@ -175,7 +182,8 @@ public class MainWindowPresenter {
 
 		algorithmsService = new AlgorithmsService(controller.getBottomFlowPane());
 		algorithmsService.setOnSucceeded(e -> {
-			scaleFactor.set(1.0);
+			scaleFactorX.set(1.0);
+			scaleFactorY.set(1.0);
 			Platform.runLater(updateNetworkDrawing);
 		});
 
@@ -249,9 +257,6 @@ public class MainWindowPresenter {
 		controller.getCurvedReticulateEdgesCheckMenuItem().setSelected(networkView.optionReticulateEdgesAreSpecialProperty().get());
 		controller.getCurvedReticulateEdgesCheckMenuItem().selectedProperty().addListener((v, o, n) ->
 				undoManager.doAndAdd("special edges", networkView.optionReticulateEdgesAreSpecialProperty(), o, n));
-
-		controller.getRootPane().widthProperty().addListener(e -> runUpdateNetworkDrawing());
-		controller.getRootPane().heightProperty().addListener(e -> runUpdateNetworkDrawing());
 
 		var stackPane = new StackPane(networkView);
 		stackPane.setPadding(new Insets(25));
@@ -452,20 +457,54 @@ public class MainWindowPresenter {
 			}
 		});
 
-		controller.getZoomInMenuItem().setOnAction(e -> {
-			scaleFactor.set(1.1 * scaleFactor.get());
+		var maintainAspectRatio = new SimpleBooleanProperty();
+		maintainAspectRatio.bind(Bindings.createBooleanBinding(() -> networkView.getOptionDiagram().isRadialOrCircular(), networkView.optionDiagramProperty()));
+
+		controller.getZoomInVerticallyMenuItem().setOnAction(e -> {
+			if (maintainAspectRatio.get())
+				scaleFactorX.set(1.1 * scaleFactorX.get());
+			scaleFactorY.set(1.1 * scaleFactorY.get());
 		});
-		controller.getZoomInMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
-		controller.getZoomOutMenuItem().setOnAction(e -> {
-			scaleFactor.set(1 / 1.1 * scaleFactor.get());
+		controller.getZoomInVerticallyMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
+		controller.getZoomOutVerticallyMenuItem().setOnAction(e -> {
+			if (maintainAspectRatio.get())
+				scaleFactorX.set(1 / 1.1 * scaleFactorX.get());
+			scaleFactorY.set(1 / 1.1 * scaleFactorY.get());
 		});
-		controller.getZoomOutMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
+		controller.getZoomOutVerticallyMenuItem().disableProperty().bind(document.hasNetworksProperty().not());
 
 		controller.getZoomToFitMenuItem().setOnAction(e -> {
-			scaleFactor.set(1.0);
+			scaleFactorX.set(1.0);
+			scaleFactorY.set(1.0);
+			runUpdateNetworkDrawing();
 		});
 
-		scaleFactor.addListener(e -> updateNetworkDrawing.run());
+
+		controller.getZoomInHorizontallyMenuItem().setOnAction(e -> {
+			scaleFactorX.set(1.1 * scaleFactorX.get());
+			if (maintainAspectRatio.get())
+				scaleFactorY.set(1.1 * scaleFactorY.get());
+		});
+		controller.getZoomInHorizontallyMenuItem().disableProperty().bind(controller.getZoomInVerticallyMenuItem().disableProperty().or(maintainAspectRatio));
+
+
+		controller.getZoomOutHorizontallyMenuItem().setOnAction(e -> {
+			scaleFactorX.set(1 / 1.1 * scaleFactorX.get());
+			if (maintainAspectRatio.get())
+				scaleFactorY.set(1 / 1.1 * scaleFactorY.get());
+		});
+		controller.getZoomOutHorizontallyMenuItem().disableProperty().bind(controller.getZoomInVerticallyMenuItem().disableProperty().or(maintainAspectRatio));
+
+		scaleFactorX.addListener((v, o, n) -> {
+			var group = BasicFX.getAllRecursively(networkView, Group.class).iterator().next();
+			var scaleBy = n.doubleValue() / o.doubleValue();
+			ScaleDrawing.apply(group, scaleBy, 1);
+		});
+		scaleFactorY.addListener((v, o, n) -> {
+			var group = BasicFX.getAllRecursively(networkView, Group.class).iterator().next();
+			var scaleBy = n.doubleValue() / o.doubleValue();
+			ScaleDrawing.apply(group, 1, scaleBy);
+		});
 
 		controller.getIncreaseFontSizeMenuItem().setOnAction(e -> {
 			for (var taxon : document.getTaxaBlock().getTaxa()) {
@@ -755,7 +794,9 @@ public class MainWindowPresenter {
 
 	public void runRecomputeNetwork() {
 		algorithmsService.setupCalculation(this.window, true);
-		algorithmsService.setOnScheduled(a -> networkView.clear());
+		algorithmsService.setOnScheduled(a -> {
+			networkView.clear();
+		});
 		algorithmsService.setOnSucceeded(a -> {
 			runUpdateNetworkDrawing();
 			window.dirtyProperty().set(true);
@@ -769,6 +810,7 @@ public class MainWindowPresenter {
 
 	public void runUpdateTreesDrawing() {
 		updateTreesDrawing.run();
+
 		if (!algorithmsService.isRunning() && BruteForceTreeTracer.requireTracing(window.getDocument().getNetworks(), window.getDocument().getTreeRecords())) {
 			algorithmsService.setupCalculation(window, false);
 			algorithmsService.setOnSucceeded(a -> {
