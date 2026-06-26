@@ -16,6 +16,7 @@ module phyloparallelograms {
 	requires java.desktop;
 	requires java.net.http;
 	requires com.fasterxml.jackson.databind;
+	requires ojalgo;
 
 	exports phyloparallelograms.main;
 	exports phyloparallelograms.window;
