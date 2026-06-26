@@ -51,7 +51,7 @@ The portable archive can be unpacked and run without administrator privileges.
 
 ## Getting Started
 
-1. Launch PhyloCompare.
+1. Launch PhyloParallelograms.
 2. Open a file containing rooted phylogenetic trees.
 3. Select the trees to compare.
 4. Explore areas of agreement and disagreement among the trees.
@@ -64,14 +64,14 @@ The complete user manual is available here:
 
 ## Citation
 
-If you use PhyloCompare in your research, please cite:
+If you use PhyloParallelgrams in your research, please cite:
 
-Daniel H. Huson, Banu Cetinkaya and Louxin Zhang. PhyloCompare: visualizing agreement and conflict among trees as
-phylogenetic parallelograms. (Manuscript in preparation).
+Daniel H. Huson, Banu Cetinkaya and Louxin Zhang. Phylogenetic Parallelograms for Visual Comparison of Discordant
+Trees. (Manuscript in preparation).
 
 ## License
 
-PhyloCompare is distributed under the GNU General Public License v3 (GPL v3).
+PhyloParallelgrams is distributed under the GNU General Public License v3 (GPL v3).
 
 ## Contact
 

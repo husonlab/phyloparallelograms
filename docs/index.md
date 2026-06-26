@@ -1,9 +1,9 @@
-# PhyloCompare
+# PhyloParallelograms
 
-PhyloCompare is an interactive desktop application for comparing phylogenetic trees using
+PhyloParallelograms is an interactive desktop application for comparing phylogenetic trees using
 phylogenetic parallelograms.
 
-Open source repository: https://github.com/husonlab/phylocompare
+Open source repository: https://github.com/husonlab/phyloparallelograms
 
 ## Documentation
 
@@ -14,7 +14,7 @@ Open source repository: https://github.com/husonlab/phylocompare
 
 Latest installers are available from:
 
-- [GitHub Releases](https://github.com/husonlab/phylocompare/releases/latest)
+- [GitHub Releases](https://github.com/husonlab/phyloparallelograms/releases/latest)
 
 Supported platforms:
 
@@ -26,7 +26,7 @@ Supported platforms:
 
 Source code is hosted at:
 
-- [https://github.com/husonlab/phylocompare](https://github.com/husonlab/phylocompare)
+- [https://github.com/husonlab/phyloparallelograms](https://github.com/husonlab/phyloparallelograms)
 
 ## Main author
 
