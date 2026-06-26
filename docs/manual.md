@@ -1,4 +1,4 @@
-# PhyloCompare User Manual
+# PhyloParallelgrams User Manual
 
 **Version 1.0.3**
 **Daniel H. Huson, 2026**
@@ -8,16 +8,18 @@
 
 --
 
-PhyloCompare author: Daniel H. Huson
+PhyloParallelgrams author: Daniel H. Huson
 Contributors: Banu Cetinkaya (tree tracing in PhyloFusion) and Louxin Zhang (PhyloFusion algorithm)
 
 ## 1. Introduction
 
-PhyloCompare is a JavaFX desktop application for computing and displaying a **(phylogenetic) Parallelogram**, that is a
+PhyloParallelgrams is a JavaFX desktop application for computing and displaying a **(phylogenetic) Parallelogram**, that
+is a
 new type of tree comparison that draws two or more trees co-located in parallel to show where they have the same
 topology and where they differ.
 
-Under the hood, PhyloCompare uses the **PhyloFusion** algorithm to compute an underlying rooted network that contains
+Under the hood, PhyloParallelgrams uses the **PhyloFusion** algorithm to compute an underlying rooted network that
+contains
 all trees and aims at minimizing the number of required reticulations. The parallelogram is then obtained by tracing
 each input tree through this network and drawing the resulting embeddings side-by-side, so that shared edges line up and
 disagreements stand out as divergent branches.
@@ -25,7 +27,8 @@ disagreements stand out as divergent branches.
 ### What is a phylogenetic parallelogram?
 
 A phylogenetic parallelogram can be viewed as a generalization of a tanglegram. Rather than drawing two trees separately
-and connecting corresponding taxa by lines, PhyloCompare first computes a rooted network that contains all input trees
+and connecting corresponding taxa by lines, PhyloParallelgrams first computes a rooted network that contains all input
+trees
 and then draws each tree as an embedding inside this common structure. This causes topologically identical regions of
 different trees to align automatically, while disagreements appear as visibly diverging branches.
 
@@ -78,7 +81,7 @@ Typical use cases:
 ## 2. Installation
 
 Installers are available here:
-`https://github.com/husonlab/phylocompare/releases/`
+`https://github.com/husonlab/phyloparallelgrams/releases/`
 
 ## 3. The main window at a glance
 
@@ -155,14 +158,14 @@ that has embedded trees.)
 
 ### 4.2 Opening files
 
-- **File > New...** (`Cmd+N`) - open a new, empty PhyloCompare window.
+- **File > New...** (`Cmd+N`) - open a new, empty PhyloParallelgrams window.
 - **File > Open...** (`Cmd+O`) - open a file containing one or more rooted trees.
 - **File > Recent** - re-open a recently used file.
 
 ### 4.3 Saving and exporting
 
 - **File > Save...** (`Cmd+S`) - save the current session (input trees, run settings, computed network, parallelogram
-  selection) to a PhyloCompare document with file extension `phycmp`.
+  selection) to a PhyloParallelgrams document with file extension `phycmp`.
 - **File > Export > Image...** - save the current visualization (network plus parallelogram) as an image. Supported
   image formats: PNG, SVG and PDF.
 - **File > Export > Newick...** - export the computed network (or the selected trees) in extended Newick format.
@@ -200,7 +203,7 @@ that has embedded trees.)
 | Page Setup...          | -        | Configure print page settings.                |
 | Print...               | `Cmd+P`  | Print the current view.                       |
 | Close                  | `Cmd+W`  | Close the current window.                     |
-| Quit                   | `Cmd+Q`  | Exit PhyloCompare.                            |
+| Quit                   | `Cmd+Q`  | Exit PhyloParallelgrams.                      |
 
 ### 6.2 Edit menu
 
@@ -275,7 +278,7 @@ minimizes the hybridization number h(N).
 
 ## 8. The phylogenetic parallelogram
 
-The *phylogenetic parallelogram* is the central visualization in PhyloCompare.
+The *phylogenetic parallelogram* is the central visualization in PhyloParallelgrams.
 A given set of rooted input trees are drawn in parallel in the same coordinate frame,
 guided by an underlying rooted network *N* (computed by PhyloFusion).
 
@@ -296,9 +299,10 @@ parallelogram.
 
 ## 9. Citation
 
-If you use PhyloCompare in published work, please cite:
+If you use PhyloParallelgrams in published work, please cite:
 
-- Huson, D. H., B. Cetinkaya and L. Zhang. PhyloCompare: visualizing agreement and conflict among trees as phylogenetic
+- Huson, D. H., B. Cetinkaya and L. Zhang. PhyloParallelgrams: visualizing agreement and conflict among trees as
+  phylogenetic
   parallelograms, manuscript in preparation.
 
 and the underlying PhyloFusion paper:
@@ -314,7 +318,7 @@ This is the paper that describes how the layout of the underlying network is com
 
 ## 10. License
 
-PhyloCompare is released under the **GNU General Public License, version 3 or later** (GPL-3.0-or-later). See
+PhyloParallelgrams is released under the **GNU General Public License, version 3 or later** (GPL-3.0-or-later). See
 the `LICENSE` file shipped with the distribution, or https://www.gnu.org/licenses/.
 
 --

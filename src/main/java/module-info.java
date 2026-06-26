@@ -1,4 +1,4 @@
-module phylocompare {
+module phyloparallelograms {
 	uses jloda.fx.service.UpdateService;
 
 	requires javafx.base;
@@ -17,16 +17,16 @@ module phylocompare {
 	requires java.net.http;
 	requires com.fasterxml.jackson.databind;
 
-	exports phylocompare.main;
-	exports phylocompare.window;
-	exports phylocompare.view;
-	exports phylocompare.model;
+	exports phyloparallelograms.main;
+	exports phyloparallelograms.window;
+	exports phyloparallelograms.view;
+	exports phyloparallelograms.model;
 
-	opens phylocompare.main;
-	opens phylocompare.window;
-	opens phylocompare.algorithm;
-	opens phylocompare.view;
-	opens phylocompare.utils;
-	opens phylocompare.trace;
-	opens phylocompare.model;
+	opens phyloparallelograms.main;
+	opens phyloparallelograms.window;
+	opens phyloparallelograms.algorithm;
+	opens phyloparallelograms.view;
+	opens phyloparallelograms.utils;
+	opens phyloparallelograms.trace;
+	opens phyloparallelograms.model;
 }

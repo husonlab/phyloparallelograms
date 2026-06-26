@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ MainWindow.fxml Copyright (C) 2026 Daniel H. Huson
+  ~
+  ~  (Some files contain contributions from other authors, who are then mentioned separately.)
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="phyloparallelograms.window.MainWindowController">
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0">
+            <center>
+                <AnchorPane BorderPane.alignment="CENTER">
+                    <children>
+                        <SplitPane fx:id="splitPane" dividerPositions="0.4" AnchorPane.bottomAnchor="0.0"
+                                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <items>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                    <children>
+                                        <VBox fx:id="leftVBox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <children>
+                                                <ToolBar minHeight="-Infinity" prefHeight="32.0">
+                                                    <items>
+                                                        <Button fx:id="selectTableButton" mnemonicParsing="false"
+                                                                text="Select">
+                                                            <tooltip>
+                                                                <Tooltip text="Select all or none trees"/>
+                                                            </tooltip>
+                                                        </Button>
+                                                        <Button fx:id="runLayoutButton" mnemonicParsing="false"
+                                                                text="Run Layout">
+                                                            <tooltip>
+                                                                <Tooltip text="Run the PhyloFusion algorithm"/>
+                                                            </tooltip>
+                                                        </Button>
+                                                        <Button fx:id="showButton" mnemonicParsing="false" text="Show"/>
+                                                    </items>
+                                                    <padding>
+                                                        <Insets left="40.0"/>
+                                                    </padding>
+                                                </ToolBar>
+                                                <Separator prefWidth="200.0"/>
+                                                <TableView fx:id="treeTable" editable="true" VBox.vgrow="ALWAYS">
+                                                    <columns>
+                                                        <TableColumn fx:id="treeColumn" maxWidth="400.0" minWidth="70.0"
+                                                                     prefWidth="-1.0" text="Tree"/>
+                                                        <TableColumn fx:id="layoutColumn" maxWidth="70.0"
+                                                                     minWidth="70.0" prefWidth="70.0" text="Layout"/>
+                                                        <TableColumn fx:id="showColumn" maxWidth="70.0" minWidth="70.0"
+                                                                     prefWidth="70.0" text="Show"/>
+                                                    </columns>
+                                                </TableView>
+                                                <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
+                                                    <children>
+                                                        <Label fx:id="confidenceLabel" minWidth="30.0"
+                                                               text="Min branch confidence (%):"/>
+                                                        <TextField fx:id="confidenceTextField" maxWidth="60.0">
+                                                            <tooltip>
+                                                                <Tooltip
+                                                                        text="Minimum  confidence for input branch filtering"/>
+                                                            </tooltip>
+                                                        </TextField>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                                                    </padding>
+                                                </HBox>
+                                                <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
+                                                    <children>
+                                                        <Label fx:id="concordanceLabel" minWidth="30.0"
+                                                               text="Min branch concordance (%):"/>
+                                                        <TextField fx:id="concordanceTextField" maxWidth="60.0">
+                                                            <tooltip>
+                                                                <Tooltip
+                                                                        text="Minimum percentage of input trees that contain a branch for input branch filtering"/>
+                                                            </tooltip>
+                                                        </TextField>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                                                    </padding>
+                                                </HBox>
+                                            </children>
+                                            <padding>
+                                                <Insets left="4.0"/>
+                                            </padding>
+                                        </VBox>
+
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane fx:id="centerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0"
+                                            prefWidth="100.0">
+                                    <children>
+                                        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <center>
+                                                <AnchorPane fx:id="innerAnchorPane">
+                                                    <children>
+                                                        <StackPane fx:id="centerPane" AnchorPane.bottomAnchor="0.0"
+                                                                   AnchorPane.leftAnchor="0.0"
+                                                                   AnchorPane.rightAnchor="0.0"
+                                                                   AnchorPane.topAnchor="0.0">
+                                                            <padding>
+                                                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                                                            </padding>
+                                                        </StackPane>
+                                                        <VBox fx:id="legendVBox" AnchorPane.rightAnchor="20.0"
+                                                              AnchorPane.topAnchor="10.0">
+                                                            <children>
+                                                                <Label text="Trees:"/>
+                                                            </children>
+                                                        </VBox>
+                                                        <TitledPane fx:id="taxonLabelsTitledPane" text="Taxon Labels"
+                                                                    AnchorPane.rightAnchor="20.0"
+                                                                    AnchorPane.topAnchor="5.0"/>
+                                                    </children>
+                                                </AnchorPane>
+                                            </center>
+                                            <top>
+                                                <VBox fx:id="rightVBox" BorderPane.alignment="CENTER">
+                                                    <children>
+                                                        <AnchorPane>
+                                                            <children>
+                                                                <ToolBar minHeight="-Infinity" prefHeight="32.0"
+                                                                         AnchorPane.leftAnchor="0.0"
+                                                                         AnchorPane.rightAnchor="0.0"
+                                                                         AnchorPane.topAnchor="0.0">
+                                                                    <items>
+                                                                        <MenuButton fx:id="diagramMenuButton"
+                                                                                    text="Diagram"/>
+                                                                        <MenuButton fx:id="settingsMenuButton"
+                                                                                    mnemonicParsing="false"
+                                                                                    text="Settings">
+                                                                            <items>
+                                                                                <CheckMenuItem
+                                                                                        fx:id="showOutlineCheckMenuItem2"
+                                                                                        mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <Label text="Show Outline"/>
+                                                                                    </graphic>
+                                                                                </CheckMenuItem>
+                                                                                <SeparatorMenuItem
+                                                                                        mnemonicParsing="false"/>
+                                                                                <MenuItem mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <HBox alignment="CENTER_LEFT"
+                                                                                              spacing="10.0">
+                                                                                            <children>
+                                                                                                <Spinner
+                                                                                                        fx:id="outlineSpreadSpinner"
+                                                                                                        editable="true"
+                                                                                                        prefWidth="60.0">
+                                                                                                    <tooltip>
+                                                                                                        <Tooltip
+                                                                                                                text="Set spread of trees"/>
+                                                                                                    </tooltip>
+                                                                                                </Spinner>
+                                                                                                <Label text="Spread"/>
+                                                                                            </children>
+                                                                                        </HBox>
+                                                                                    </graphic>
+                                                                                </MenuItem>
+                                                                                <SeparatorMenuItem
+                                                                                        mnemonicParsing="false"/>
+                                                                                <CheckMenuItem
+                                                                                        fx:id="curvedReticulateEdgesCheckMenuItem2"
+                                                                                        mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <Label text="Curved Reticulate Edges"/>
+                                                                                    </graphic>
+                                                                                </CheckMenuItem>
+                                                                                <CheckMenuItem
+                                                                                        fx:id="useTransferMenuItem2"
+                                                                                        mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <Label text="Use Transfer Edges"/>
+                                                                                    </graphic>
+                                                                                </CheckMenuItem>
+                                                                                <MenuItem mnemonicParsing="false">
+                                                                                    <graphic>
+                                                                                        <HBox alignment="CENTER_LEFT"
+                                                                                              spacing="10.0">
+                                                                                            <children>
+                                                                                                <Spinner
+                                                                                                        fx:id="transferAcceptorPercentSpinner"
+                                                                                                        editable="true"
+                                                                                                        prefWidth="60.0">
+                                                                                                    <tooltip>
+                                                                                                        <Tooltip
+                                                                                                                text="Percent trees on edge required for transfer acceptor edge"/>
+                                                                                                    </tooltip>
+                                                                                                </Spinner>
+                                                                                                <Label text="Min Percent"/>
+                                                                                            </children>
+                                                                                        </HBox>
+                                                                                    </graphic>
+                                                                                </MenuItem>
+                                                                            </items>
+                                                                        </MenuButton>
+                                                                        <ComboBox fx:id="colorSchemeCBox"
+                                                                                  prefWidth="150.0"/>
+                                                                        <Button fx:id="zoomInButton"
+                                                                                mnemonicParsing="false" text="Zoom In"/>
+                                                                        <Button fx:id="zoomOutButton" layoutX="221.0"
+                                                                                layoutY="10.0" mnemonicParsing="false"
+                                                                                text="Zoom Out"/>
+                                                                    </items>
+                                                                    <padding>
+                                                                        <Insets left="40.0"/>
+                                                                    </padding>
+                                                                </ToolBar>
+                                                                <HBox alignment="CENTER_LEFT" minHeight="-Infinity"
+                                                                      prefHeight="30.0" spacing="10.0"
+                                                                      AnchorPane.rightAnchor="5.0"
+                                                                      AnchorPane.topAnchor="0.0">
+                                                                    <children>
+                                                                        <Button fx:id="selectTaxaButton"
+                                                                                mnemonicParsing="false" text="Select">
+                                                                            <tooltip>
+                                                                                <Tooltip
+                                                                                        text="Select all or none taxa"/>
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="findButton"
+                                                                                mnemonicParsing="false" text="Find"/>
+                                                                        <ToggleButton fx:id="formatToggleButton"
+                                                                                      mnemonicParsing="false"
+                                                                                      text="Format"/>
+                                                                        <MenuButton fx:id="exportMenuButton"
+                                                                                    mnemonicParsing="false"
+                                                                                    text="Export">
+                                                                            <items>
+                                                                            </items>
+                                                                        </MenuButton>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </AnchorPane>
+                                                        <Separator prefWidth="200.0"/>
+                                                    </children>
+                                                </VBox>
+                                            </top>
+                                        </BorderPane>
+                                    </children>
+                                </AnchorPane>
+                            </items>
+                        </SplitPane>
+                        <ToggleButton fx:id="sideBarCheckMenuItem" mnemonicParsing="false" text="Side"
+                                      AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0">
+                            <tooltip>
+                                <Tooltip text="Show or hide the side bar"/>
+                            </tooltip>
+                        </ToggleButton>
+                    </children>
+                </AnchorPane>
+            </center>
+            <top>
+                <VBox BorderPane.alignment="CENTER">
+                    <children>
+                        <MenuBar fx:id="menuBar">
+                            <menus>
+                                <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
+                                    <items>
+                                        <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="New...">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="N" control="UP" meta="DOWN"
+                                                                    shift="UP" shortcut="UP"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open...">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="O" control="UP" meta="DOWN"
+                                                                    shift="UP" shortcut="UP"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <Menu fx:id="recentFilesMenu" mnemonicParsing="false" text="Recent"/>
+
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <Menu mnemonicParsing="false" text="Import">
+                                            <items>
+                                                <MenuItem fx:id="importTreeNamesMenuItem" mnemonicParsing="false"
+                                                          text="Tree Names..."/>
+                                            </items>
+                                        </Menu>
+                                        <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">
+                                            <MenuItem fx:id="exportImageMenuItem" mnemonicParsing="false"
+                                                      text="Image..."/>
+                                            <MenuItem fx:id="exportNewickMenuItem" mnemonicParsing="false"
+                                                      text="Newick..."/>
+                                        </Menu>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save...">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="S" control="UP" meta="DOWN"
+                                                                    shift="UP" shortcut="UP"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="pageSetupMenuItem" mnemonicParsing="false"
+                                                  text="Page Setup..."/>
+                                        <MenuItem fx:id="printMenuItem" mnemonicParsing="false" text="Print...">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="P" control="UP" meta="DOWN"
+                                                                    shift="DOWN" shortcut="UP"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" text="Close">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="W" control="UP" meta="DOWN"
+                                                                    shift="UP" shortcut="UP"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="Q" control="UP" meta="DOWN"
+                                                                    shift="UP" shortcut="UP"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                    </items>
+                                </Menu>
+                                <Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
+                                    <items>
+                                        <MenuItem fx:id="undoMenuItem" mnemonicParsing="false" text="Undo">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="Z" control="UP" meta="UP" shift="UP"
+                                                                    shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <MenuItem fx:id="redoMenuItem" mnemonicParsing="false" text="Redo">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="Z" control="UP" meta="UP"
+                                                                    shift="DOWN" shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="cutMenuItem" mnemonicParsing="false" text="Cut">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="X" control="UP" meta="UP" shift="UP"
+                                                                    shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <MenuItem fx:id="copyMenuItem" mnemonicParsing="false" text="Copy">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP"
+                                                                    shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <Menu mnemonicParsing="false" text="Copy More">
+                                            <MenuItem fx:id="copyImageMenuItem" mnemonicParsing="false"
+                                                      text="Copy Image">
+                                                <accelerator>
+                                                    <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP"
+                                                                        shift="DOWN" shortcut="DOWN"/>
+                                                </accelerator>
+                                            </MenuItem>
+                                            <MenuItem fx:id="copyTaxaMenuItem" mnemonicParsing="false"
+                                                      text="Copy Taxa"/>
+                                            <MenuItem fx:id="copyTreesMenuItem" mnemonicParsing="false"
+                                                      text="Copy Trees"/>
+                                            <MenuItem fx:id="copyNetworkMenuItem" mnemonicParsing="false"
+                                                      text="Copy Network"/>
+                                        </Menu>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="pasteMenuItem" mnemonicParsing="false" text="Paste">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="V" control="UP" meta="UP" shift="UP"
+                                                                    shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" text="Delete">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="BACK_SPACE" control="UP" meta="UP"
+                                                                    shift="UP" shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="clearMenuItem" mnemonicParsing="false" text="Clear">
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="rerootByOutgroupMenuItem" mnemonicParsing="false"
+                                                  text="Reroot By Outgroup"/>
+                                        <MenuItem fx:id="rerootByMidpointMenuItem" mnemonicParsing="false"
+                                                  text="Reroot By Midpoint"/>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="removeTaxaMenuItem" mnemonicParsing="false"
+                                                  text="Remove Taxa"/>
+
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <CheckMenuItem fx:id="findCheckMenuItem" mnemonicParsing="false" text="Find...">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="F" control="UP" meta="UP" shift="UP"
+                                                                    shortcut="DOWN"/>
+                                            </accelerator>
+                                        </CheckMenuItem>
+                                        <MenuItem fx:id="findAgainMenuItem" mnemonicParsing="false" text="Find Again">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="G" control="UP" meta="UP" shift="UP"
+                                                                    shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                    </items>
+                                </Menu>
+                                <Menu fx:id="treesMenu" mnemonicParsing="false" text="Layout">
+                                    <items>
+                                        <MenuItem fx:id="useAllMenuItem" mnemonicParsing="false" text="Use All Trees"/>
+                                        <MenuItem fx:id="useNoneMenuItem" mnemonicParsing="false"
+                                                  text="Use None Trees"/>
+                                        <MenuItem fx:id="runMenuItem" mnemonicParsing="false"
+                                                  text="Run PhyloFusion Layout">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="R" control="UP" meta="UP" shift="UP"
+                                                                    shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="showAllMenuItem" mnemonicParsing="false"
+                                                  text="Show All Trees"/>
+                                        <MenuItem fx:id="showNoneMenuItem" mnemonicParsing="false"
+                                                  text="Show None Trees"/>
+                                        <MenuItem fx:id="showSelectedMenuItem" mnemonicParsing="false"
+                                                  text="Show Selected Trees"/>
+
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="showTreesExhaustive" mnemonicParsing="false"
+                                                  text="Show Trees Exhaustive"/>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="setConfidenceThresholdMenuItem" mnemonicParsing="false"
+                                                  text="Set Confidence Threshold..."/>
+                                        <MenuItem fx:id="setCondordanceThresholdMenuItem" mnemonicParsing="false"
+                                                  text="Set Concordance Threshold..."/>
+                                    </items>
+                                </Menu>
+
+                                <Menu mnemonicParsing="false" text="View">
+                                    <items>
+                                        <MenuItem fx:id="fullScreenMenuItem" mnemonicParsing="false"
+                                                  text="Enter Full Screen">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP"
+                                                                    shift="UP" shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <CheckMenuItem fx:id="useDarkThemeCheckMenuItem" mnemonicParsing="false"
+                                                       text="Use Dark Theme"/>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="increaseFontSizeMenuItem" text="Increase Font Size">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="UP" control="UP" meta="UP"
+                                                                    shift="DOWN" shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <MenuItem fx:id="decreaseFontSizeMenuItem" text="Decrease Font Size">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="UP"
+                                                                    shift="DOWN" shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="zoomInMenuItem" text="Zoom In">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="UP" control="UP" meta="UP" shift="UP"
+                                                                    shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <MenuItem fx:id="zoomOutMenuItem" text="Zoom Out">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="UP"
+                                                                    shift="UP" shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <MenuItem fx:id="zoomToFitMenuItem" text="Zoom To Fit">
+                                            <accelerator>
+                                                <KeyCodeCombination alt="UP" code="PERIOD" control="UP" meta="UP"
+                                                                    shift="UP" shortcut="DOWN"/>
+                                            </accelerator>
+                                        </MenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <Menu mnemonicParsing="false" text="Diagram Type">
+                                            <RadioMenuItem fx:id="rectangularCladogramMenuItem" mnemonicParsing="false"
+                                                           text="Rectangular Cladogram"/>
+                                            <RadioMenuItem fx:id="rectangularPhylogramMenuItem" mnemonicParsing="false"
+                                                           text="Rectangular Phylogram"/>
+                                            <RadioMenuItem fx:id="circularCladogramMenuItem" mnemonicParsing="false"
+                                                           text="Circular Cladogram"/>
+                                            <RadioMenuItem fx:id="circularPhylogramMenuItem" mnemonicParsing="false"
+                                                           text="Circular Phylogram"/>
+                                            <RadioMenuItem fx:id="radialCladogramMenuItem" mnemonicParsing="false"
+                                                           text="Radial Cladogram"/>
+                                            <RadioMenuItem fx:id="radialPhylogramMenuItem" mnemonicParsing="false"
+                                                           text="Radial Phylogram"/>
+                                        </Menu>
+                                        <CheckMenuItem fx:id="showOutlineCheckMenuItem" mnemonicParsing="false"
+                                                       selected="true" text="Show Outline"/>
+                                        <CheckMenuItem fx:id="showLegendCheckMenuItem" mnemonicParsing="false"
+                                                       selected="true" text="Show Trees Legend"/>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <CheckMenuItem fx:id="curvedReticulateEdgesCheckMenuItem"
+                                                       mnemonicParsing="false" selected="true"
+                                                       text="Curved Reticulate Edges"/>
+                                        <CheckMenuItem fx:id="useTransferMenuItem" mnemonicParsing="false"
+                                                       text="Use Transfer Edges"/>
+                                        <MenuItem fx:id="acceptorPercentMenuItem" text="Set Acceptor Min Percent..."/>
+
+                                    </items>
+                                </Menu>
+                                <Menu fx:id="windowMenu" mnemonicParsing="false" text="Window">
+                                    <items>
+                                        <MenuItem fx:id="setWindowSizeMenuItem" mnemonicParsing="false"
+                                                  text="Set Window Size..."/>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Help">
+                                    <items>
+                                        <MenuItem fx:id="checkForUpdatesMenuItem" mnemonicParsing="false"
+                                                  text="Check for Updates..."/>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="About..."/>
+                                        <SeparatorMenuItem mnemonicParsing="false"/>
+                                        <MenuItem fx:id="openOnlineUserManualInBrowserMenuItem" mnemonicParsing="false"
+                                                  text="Open User Manual in Browser..."/>
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                    </children>
+                </VBox>
+            </top>
+            <bottom>
+                <AnchorPane fx:id="bottomAnchorPane" BorderPane.alignment="CENTER">
+                    <children>
+                        <FlowPane fx:id="bottomFlowPane" alignment="CENTER_LEFT" hgap="2.0" maxHeight="-Infinity"
+                                  minHeight="32.0" prefWrapLength="100.0" rowValignment="TOP" vgap="2.0"
+                                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <padding>
+                                <Insets bottom="2.0" left="10.0" right="60.0" top="2.0"/>
+                            </padding>
+                            <children>
+                                <Label fx:id="statusLabel" text="Label"/>
+                            </children>
+                        </FlowPane>
+                        <Label fx:id="memoryUsageLabel" text="Memory" AnchorPane.bottomAnchor="10.0"
+                               AnchorPane.rightAnchor="16.0"/>
+                    </children>
+                </AnchorPane>
+            </bottom>
+
+        </BorderPane>
+    </children>
+</AnchorPane>

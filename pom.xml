@@ -25,7 +25,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.husonlab</groupId>
-    <artifactId>phylocompare</artifactId>
+    <artifactId>PhyloParallelograms</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
@@ -35,7 +35,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <javafx.version>22.0.2</javafx.version>
         <javafx.plugin.version>0.0.8</javafx.plugin.version>
-        <main.class>phylocompare.main.PhyloCompare</main.class>
+        <main.class>phyloparallelograms.main.PhyloParallelograms</main.class>
     </properties>
 
     <dependencies>
