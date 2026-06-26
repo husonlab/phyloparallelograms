@@ -1,10 +1,10 @@
-# PhyloCompare
+# PhyloParallelograms
 
 <div style="text-align:center;">
   <img src="docs/images/parallelogram.png" width="600" alt="Example of a parallelogram">
 </div>
 
-PhyloCompare is an interactive desktop application for comparing rooted phylogenetic trees.
+PhyloParallelograms is an interactive desktop application for comparing rooted phylogenetic trees.
 It provides a new visualization called a phylogenetic parallelogram, in which
 multiple trees are drawn in parallel in the same coordinate space. This highlights shared evolutionary
 structure while making conflicting signals immediately visible.
@@ -25,7 +25,7 @@ Phylogenetic parallelogram
 
 Download the latest release from:
 
-https://github.com/husonlab/phylocompare/releases/latest
+https://github.com/husonlab/phyloparallelograms/releases/latest
 
 ### macOS
 
@@ -34,7 +34,7 @@ Download the installer matching your processor:
 - Apple Silicon (M1/M2/M3/...): macOS ARM64
 - Intel Macs: macOS Intel
 
-Open the downloaded DMG file and drag PhyloCompare into the Applications folder.
+Open the downloaded DMG file and drag PhyloParallelograms into the Applications folder.
 
 ### Windows
 
@@ -60,7 +60,7 @@ The portable archive can be unpacked and run without administrator privileges.
 
 The complete user manual is available here:
 
-[User Manual](https://husonlab.github.io/phylocompare/manual.html)
+[User Manual](https://husonlab.github.io/phyloparallelograms/manual.html)
 
 ## Citation
 
