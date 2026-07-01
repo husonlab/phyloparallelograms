@@ -1,2 +1,149 @@
-((('An. coluzzii':29,'An. gambiae':31):105,((('An. arabiensis':118,'An. quadriannulatus':112):25,'An. melas':169):36,'An. merus':214):23):26)[&&NHX:GN=Species topology];
-((((('An. coluzzii':87,'An. gambiae':80):38,'An. arabiensis':119):38,'An. quadriannulatus':144):20,('An. melas':225,'An. merus':228):10):29)[&&NHX:GN=Whole genome];
+#nexus [SplitsTree6]
+
+BEGIN SPLITSTREE6;
+DIMENSIONS nDataNodes=6 nAlgorithms=4;
+PROGRAM version='SplitsTree App (version 6.7.9, built 25 May 2026)';
+WORKFLOW creationDate='1782617782621'; [Sun Jun 28 05:36:22 CEST 2026]
+END; [SPLITSTREE6]
+
+[
+Methods:
+Analysis was performed using SplitsTree App 6.0.0 (Huson and Bryant 2024).
+The original input consisted of 6 taxa and 2 trees.
+The Show Trees method was used (View=Tanglegram) so as to obtain a Tanglegram visualization (Huson 2025).
+
+References:
+Huson 2025: D.H. Huson. Displacement-Optimized Tanglegrams for Trees and Networks. Manuscript in preparation (2025).
+Huson and Bryant 2024: D.H. Huson and D. Bryant. The SplitsTree App: interactive analysis and visualization using phylogenetic trees and networks. Nature Methods, 2024.
+]
+
+BEGIN TAXA;
+TITLE 'Input Taxa';
+LINK ALGORITHM = 'Input Data Loader';
+DIMENSIONS ntax=6;
+TAXLABELS
+	[1] 'An. coluzzii'
+	[2] 'An. gambiae'
+	[3] 'An. arabiensis'
+	[4] 'An. quadriannulatus'
+	[5] 'An. melas'
+	[6] 'An. merus'
+;
+DISPLAYLABELS
+	[1] '<i>An. coluzzii'
+	[2] '<i>An. gambiae'
+	[3] '<i>An. arabiensis'
+	[4] '<i>An. quadriannulatus'
+	[5] '<i>An. melas'
+	[6] '<i>An. merus'
+;
+[TAXINFO;]
+END; [TAXA]
+
+BEGIN ALGORITHM;
+TITLE 'Taxa Filter';
+LINK ALGORITHM = 'Input Data Loader';
+NAME 'Taxa Filter';
+OPTIONS
+;
+END; [ALGORITHM]
+
+BEGIN TAXA;
+TITLE 'Working Taxa';
+LINK ALGORITHM = 'Taxa Filter';
+DIMENSIONS ntax=6;
+TAXLABELS
+	[1] 'An. coluzzii'
+	[2] 'An. gambiae'
+	[3] 'An. arabiensis'
+	[4] 'An. quadriannulatus'
+	[5] 'An. melas'
+	[6] 'An. merus'
+;
+DISPLAYLABELS
+	[1] '<i>An. coluzzii'
+	[2] '<i>An. gambiae'
+	[3] '<i>An. arabiensis'
+	[4] '<i>An. quadriannulatus'
+	[5] '<i>An. melas'
+	[6] '<i>An. merus'
+;
+[TAXINFO;]
+END; [TAXA]
+
+BEGIN TREES;
+TITLE 'Input Trees';
+LINK ALGORITHM = 'Input Data Loader';
+[Number of trees: 2]
+PROPERTIES partialTrees=no rooted=yes;
+TRANSLATE
+	1 'An. coluzzii',
+	2 'An. gambiae',
+	3 'An. arabiensis',
+	4 'An. quadriannulatus',
+	5 'An. melas',
+	6 'An. merus',
+;
+[TREES]
+		[1] tree 'Species topology'=[&R] (((1:29,2:31):105,(((3:118,4:112):25,5:169):36,6:214):23):26)[&&NHX:GN=Species topology];
+		[2] tree 'Whole genome'=[&R] (((((1:87,2:80):38,3:119):38,4:144):20,(5:225,6:228):10):29)[&&NHX:GN=Whole genome];
+END; [TREES]
+
+BEGIN ALGORITHM;
+TITLE 'Input Data Filter';
+LINK TREES = 'Input Trees';
+NAME 'Trees Taxa Filter';
+END; [ALGORITHM]
+
+BEGIN TREES;
+TITLE 'Working Trees';
+LINK ALGORITHM = 'Input Data Filter';
+[Number of trees: 2]
+PROPERTIES partialTrees=no rooted=yes;
+TRANSLATE
+	1 'An. coluzzii',
+	2 'An. gambiae',
+	3 'An. arabiensis',
+	4 'An. quadriannulatus',
+	5 'An. melas',
+	6 'An. merus',
+;
+[TREES]
+		[1] tree 'Species topology'=[&R] (((1:29,2:31):105,(((3:118,4:112):25,5:169):36,6:214):23):26)[&&NHX:GN=Species topology];
+		[2] tree 'Whole genome'=[&R] (((((1:87,2:80):38,3:119):38,4:144):20,(5:225,6:228):10):29)[&&NHX:GN=Whole genome];
+END; [TREES]
+
+BEGIN ALGORITHM;
+TITLE 'Show Trees';
+LINK TREES = 'Working Trees';
+NAME 'Show Trees';
+OPTIONS
+	View = 'Tanglegram';
+END; [ALGORITHM]
+
+BEGIN VIEW;
+TITLE 'Tanglegram';
+LINK ALGORITHM = 'Show Trees';
+NAME 'TanglegramView';
+INPUT 'TREES';
+OPTIONS
+	Tree1 = 1,
+	Diagram1 = 'RectangularCladogram',
+	Averaging1 = 'ChildAverage',
+	Tree2 = 2,
+	Diagram2 = 'RectangularCladogram',
+	Averaging2 = 'ChildAverage',
+	OptimizeTanglegramCrossings1 = 'true',
+	OptimizeReticulateCrossings1 = 'true',
+	OptimizeTanglegramCrossings2 = 'true',
+	OptimizeReticulateCrossings2 = 'true',
+	NNPresort = 'true',
+	Orientation = 'Rotate0Deg',
+	HorizontalZoomFactor = 0.62092132,
+	VerticalZoomFactor = 1,
+	FontScaleFactor = 1.2,
+	ShowTreeNames = 'true',
+	ShowTreeInfo = 'false',
+	ShowInternalLabels = 'false',
+	LabelEdgesBy = 'None';
+END; [VIEW]
