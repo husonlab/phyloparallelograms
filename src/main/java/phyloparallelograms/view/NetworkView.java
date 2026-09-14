@@ -41,7 +41,6 @@ import jloda.fx.options.Option;
 import jloda.fx.selection.SelectionModel;
 import jloda.fx.util.ProgramProperties;
 import jloda.fx.util.SelectionEffectBlue;
-import jloda.fx.window.MainWindowManager;
 import jloda.graph.Edge;
 import jloda.graph.Node;
 import jloda.phylo.PhyloTree;
@@ -126,18 +125,12 @@ public class NetworkView extends Group {
 		this.service = new NetworkViewService(bottomPane);
 		this.legend = legend;
 
-		var lightEffect = new DropShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGRAY, 0.3, 0.9, 0.0, 0.0);
-
-		var darkEffect = new DropShadow(BlurType.THREE_PASS_BOX, Color.DARKGRAY, 0.3, 0.9, 0.0, 0.0);
+		var effect = new DropShadow(BlurType.THREE_PASS_BOX, Color.DARKGRAY, 0.3, 0.9, 0.0, 0.0);
 
 		optionShowOutline.addListener((v, o, n) -> {
-			outlinesGroup.setEffect(n ? (MainWindowManager.isUseDarkTheme() ? darkEffect : lightEffect) : null);
+			outlinesGroup.setEffect(n ? effect : null);
 		});
-		outlinesGroup.setEffect(isOptionShowOutline() ? (MainWindowManager.isUseDarkTheme() ? darkEffect : lightEffect) : null);
-
-		MainWindowManager.useDarkThemeProperty().addListener((v, o, n) -> {
-			outlinesGroup.setEffect(isOptionShowOutline() ? (n ? darkEffect : lightEffect) : null);
-		});
+		outlinesGroup.setEffect(isOptionShowOutline() ? effect : null);
 
 		taxonSelectionModel.getSelectedItems().addListener((SetChangeListener<? super Taxon>) e -> {
 			if (e.wasAdded()) {

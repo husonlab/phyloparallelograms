@@ -44,7 +44,35 @@ import static phyloparallelograms.trace.TreeTrace.getTT;
 import static phyloparallelograms.trace.TreeTrace.setTT;
 
 /**
- * uses brute force trace of all shown trees in the network
+ * traces input trees through a rooted phylogenetic network by brute force.
+ * <p>
+ * The network carries <em>tree-trace</em> ({@code TT}) annotations: every node and edge stores a {@link BitSet}
+ * of the ids of the input trees that pass through it (see {@link TreeTrace}; these are written out as
+ * {@code [&TT=..]} Newick comments and used downstream to highlight each tree). This class fills in those
+ * annotations for any tree that is marked <em>shown</em> but is not yet recorded on the network, i.e. whose id is
+ * absent from the root's {@code TT} set.
+ * <p>
+ * A tree displayed by the network is obtained by choosing, at each reticulation node (in-degree &gt; 1), exactly
+ * one of its incoming edges. The algorithm enumerates the full Cartesian product of these choices -- every
+ * embedded tree -- and marks an untraced input tree as soon as some embedded tree matches it. Trees are compared
+ * by their hardwired clusters (the set of taxa below each node), not by topology directly.
+ * <ol>
+ *     <li>collect the shown rows whose id is missing from the root's {@code TT} set;</li>
+ *     <li>if the network has no {@code TT} annotation yet, initialise the root, the leaves and the reticulate
+ *     edges with empty sets and clear all other node/edge data;</li>
+ *     <li>enumerate one incoming-edge choice per reticulation ({@link #allChoicesOfReticulateEdges}) and process
+ *     the choices in parallel;</li>
+ *     <li>for each choice, extract the clusters of the embedded tree (following only tree edges plus the chosen
+ *     reticulate edges) and, for each untraced tree (optionally pre-filtered by confidence/concordance), test
+ *     whether the tree's clusters are all compatible -- pairwise disjoint or nested -- with those clusters,
+ *     restricting the network's clusters to the tree's taxa when the tree spans fewer taxa. A match means the
+ *     tree is displayed under this choice, so its id is set on the root, on the leaves it contains and on the
+ *     chosen reticulate edges, and then pushed up through the internal nodes;</li>
+ *     <li>finally {@link CompleteTreeTrace} propagates the leaf and edge sets to every remaining node and edge.</li>
+ * </ol>
+ * The number of embedded trees is the product of the reticulation in-degrees, so the cost is exponential in the
+ * number of reticulations -- hence "brute force"; the work is spread across cores over the choices.
+ * <p>
  * Daniel Huson, 3.2026
  */
 public class BruteForceTreeTracer {

@@ -3,13 +3,13 @@ BEGIN metadata;
 	note	Fontaine et al, Extensive introgression in a malaria vector species complex revealed by phylogenomics. *Science* 347(6217): 1258524.\nhttps://doi.org/10.1126/science.1258524, see also:  https://github.com/husonlab/trees-to-networks-tutorial
 END;
 BEGIN taxa;
-	1	An_christyi	An_christyi
-	2	An_coluzzii	An_coluzzii
-	3	An_gambiae	An_gambiae
-	4	An_merus	An_merus
-	5	An_arabiensis	An_arabiensis
-	6	An_melas	An_melas
-	7	An_quadriannulatus	An_quadriannulatus
+	1	An_christyi	<size "18.6"><i>An. christyi
+	2	An_coluzzii	<size "18.6"><i>An. coluzzii
+	3	An_gambiae	<size "18.6"><i>An. gambiae
+	4	An_merus	<size "18.6"><i>An. merus
+	5	An_arabiensis	<size "18.6"><i>An. arabiensis
+	6	An_melas	<size "18.6"><i>An. melas
+	7	An_quadriannulatus	<size "18.6"><i>An. quadriannulatus
 END;
 BEGIN trees;
 	1	X_dist_01	1	1	#97141DFF	(An_christyi:0.09394225,((An_coluzzii:0.00338618,An_gambiae:0.00573722):0.0179329:100,(An_merus:0.0221336,(An_arabiensis:0.0159828,(An_melas:0.02543,An_quadriannulatus:0.0153727):0.00171413:47):0.00338297:75):0.0030584:67):0.04492685:1)[&&NHX:GN=X_dist_01];
@@ -29,7 +29,7 @@ BEGIN trees;
 	15	inv_3La_02	1	1	#73605BFF	(An_christyi:0.08642385,(((An_quadriannulatus:0.0122011,An_merus:0.0205557):0.00442467:89,An_melas:0.0274273):0.0032574:89,(An_coluzzii:0.00577517,(An_arabiensis:0.0121264,An_gambiae:0.0101053):0.00285064:70):0.00155259:55):0.04152285:1)[&&NHX:GN=inv_3La_02];
 END;
 BEGIN networks;
-	0	N1	((An_christyi[&TT={1-15}]:0.10426972,(((((An_melas[&TT={1-15}]:0.0217667,(An_merus[&TT={1-15}]:0.02382303)#H1[&TT={1-15}]:[&TT={6,9-11,13}]0.00145123)[&TT={1-15}]:0.0033863,((An_quadriannulatus[&TT={1-15}]:0.01445974,#H1:[&TT={7,14,15}]0)[&TT={1-15}]:0)#H2[&TT={1-15}]:[&TT={1,7,12,15}]0.0032157)[&TT={1-15}]:0,((((An_arabiensis[&TT={1-15}]:0.01090053,(An_gambiae[&TT={1-15}]:0.00716833)#H3[&TT={1-15}]:[&TT={10,15}]0.00364017)[&TT={1-15}]:0.00005048,(((An_coluzzii[&TT={1-15}]:0.00625186,#H3:[&TT={1-9,11,13,14}]0)[&TT={1-15}]:0.0046844,#H2:[&TT={13,14}]0.00336085)[&TT={1-15}]:0)#H4[&TT={1-15}]:[&TT={6,8-12,15}]0)[&TT={1-15}]:0.00265797,#H2:[&TT={2-6,8-11}]0)[&TT={1-15}]:0,#H3:[&TT={12}]0.00674587)[&TT={1-15}]:0.0027941)[&TT={1-15}]:0.00385785,#H1:[&TT={1-5,8,12}]0.00038684)[&TT={1-15}]:0,#H4:[&TT={1-5,7,13,14}]0.00616256)[&TT={1-15}]:0.05272613)[&TT={1-15}]:0)[&TT={1-15}];
+	0	N1	((An_christyi[&TT={1-15}]:0.10426972,(((((An_melas[&TT={1-15}]:0.0217667,(An_merus[&TT={1-15}]:0.02382303)#H1[&TT={1-15}]:[&TT={6,9-11,13}]0.00145123)[&TT={1-15}]:0.0033863,((An_quadriannulatus[&TT={1-15}]:0.01445974,#H1:[&TT={7,14,15}]0)[&TT={1-15}]:0)#H2[&TT={1-15}]:[&TT={1,7,12,15}]0.0032157)[&TT={1-15}]:0,((((An_arabiensis[&TT={1-15}]:0.01090053,(An_gambiae[&TT={1-15}]:0.00716833)#H3[&TT={1-15}]:[&TT={10,15}]0.00364017)[&TT={1-15}]:0.00005048,(((An_coluzzii[&TT={1-15}]:0.00625186,##H3:[&TT={1-9,11,13,14}]0)[&TT={1-15}]:0.0046844,#H2:[&TT={13,14}]0.00336085)[&TT={1-15}]:0)#H4[&TT={1-15}]:[&TT={6,8-12,15}]0)[&TT={1-15}]:0.00265797,##H2:[&TT={2-6,8-11}]0)[&TT={1-15}]:0,#H3:[&TT={12}]0.00674587)[&TT={1-15}]:0.0027941)[&TT={1-15}]:0.00385785,#H1:[&TT={1-5,8,12}]0.00038684)[&TT={1-15}]:0,##H4:[&TT={1-5,7,13,14}]0.00616256)[&TT={1-15}]:0.05272613)[&TT={1-15}]:0)[&TT={1-15}];
 END;
 BEGIN parameters;
 	color_scheme_name	string	Retro29
@@ -42,7 +42,7 @@ BEGIN parameters;
 	outline_width	double	50
 	show_outline	boolean	false
 	acceptor_percentage	double	50
-	show_transfer	boolean	false
+	show_transfer	boolean	true
 	rectangular_edges	boolean	false
 	reticulate_edges_are_special	boolean	true
 END;
