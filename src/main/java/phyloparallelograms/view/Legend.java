@@ -32,12 +32,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import jloda.fx.undo.UndoManager;
 import jloda.fx.util.BasicFX;
+import jloda.fx.util.ProgramProperties;
 import phyloparallelograms.window.MainWindow;
 import phyloparallelograms.window.TreeRecord;
 
 public class Legend {
 	private final MainWindow window;
 	private final VBox vbox;
+
+	// the persistent user preference for whether the legend is shown; kept separate from the vbox's actual
+	// visibility so that the >25-trees auto-hide and the redraw show/hide juggling never overwrite the stored choice
+	private final BooleanProperty showLegend = new SimpleBooleanProperty(this, "ShowLegend", true);
 
 	public Legend(MainWindow window, VBox vbox) {
 		this.window = window;
@@ -69,7 +74,13 @@ public class Legend {
 		});
 
 		vbox.managedProperty().bind(vbox.visibleProperty());
-		window.getController().getShowLegendCheckMenuItem().selectedProperty().bindBidirectional(visibleProperty());
+
+		// persist the show/hide choice across sessions; the menu item drives the preference, the preference
+		// drives the actual visibility (but the >25 auto-hide above may still hide the vbox for a big dataset)
+		ProgramProperties.track(showLegend, true);
+		window.getController().getShowLegendCheckMenuItem().selectedProperty().bindBidirectional(showLegend);
+		showLegend.addListener((v, o, n) -> vbox.setVisible(n));
+		vbox.setVisible(showLegend.get());
 	}
 
 	public void clear() {

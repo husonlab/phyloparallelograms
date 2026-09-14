@@ -570,7 +570,9 @@ public class MainWindowPresenter {
 			try {
 				controller.getScrollPane().setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 				controller.getScrollPane().setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-				ExportImageDialog.show(window.getFileName(), window.getStage(), controller.getInnerAnchorPane());
+				// tightCrop: keep the whole pane (so the overlaid legend is included) but crop the exported image
+				// to its painted content, removing the large white margins the PDF otherwise had
+				ExportImageDialog.show(window.getFileName(), window.getStage(), controller.getInnerAnchorPane(), true);
 			} finally {
 				controller.getScrollPane().setHbarPolicy(hPolicy);
 				controller.getScrollPane().setVbarPolicy(vPolicy);
