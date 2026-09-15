@@ -107,7 +107,9 @@ The nuclear tree includes two Indochinese and one Sundaic sample of the Asian
 leopard cat and the Sunda clouded leopard, which are absent from the
 mitogenome tree; the mitogenome tree has a single Asian leopard cat. The five
 taxa present in only one tree were retained, so the scaffold is computed with
-the missing-taxa procedure of PhyloFusion. `Danthonioideae.tre` contains the chloroplast
+the missing-taxa procedure of PhyloFusion. The cleaned images and the scripts used to
+prepare them are provided as an example of image capture with PhyloSketch at
+https://github.com/husonlab/phylosketch2/tree/main/examples/examples-capture-cats/cats. `Danthonioideae.tre` contains the chloroplast
 and ITS trees (`Chloroplast`, `ITS`) for 69 taxa of Danthonioideae from
 Pirie et al. (2009), with branch lengths. The corresponding
 `-tanglegram.stree6` and `-parallelogram.phypar` documents are the four
