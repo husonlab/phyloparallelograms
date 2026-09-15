@@ -14,18 +14,18 @@ version 6.7 or later); the exact versions are given in the Methods of the paper.
 
 ## Layout
 
-There is one subdirectory per figure of the paper (Fig. 8, the node
-labelling, has no data):
+There is one subdirectory per figure of the paper. Fig. 7, which shows the
+user interface, uses the data of `figure4`, and Fig. 8, the node labelling,
+has no data.
 
 | Directory | Figure | Data set | Source |
 |-----------|--------|----------|--------|
 | `figure1` | Fig. 1 | Species tree and whole-genome tree of six species of the *Anopheles gambiae* complex | Fontaine et al. 2015, Fig. 1B |
 | `figure2` | Fig. 2 | Two rooted trees on five taxa used to illustrate the scaffold construction | this paper |
-| `figure3` | Fig. 3 | Four pairs of synthetic trees on 20 taxa at Robinson–Foulds distances 2, 12, 26 and 32 | de Vienne 2019 |
-| `figure4` | Fig. 4 | Tanglegram displacement and scaffold hybridization number for 1,700 synthetic tree pairs, with the scripts to recompute and plot them | de Vienne 2019 |
-| `figure5` | Fig. 5 | Gene trees for 15 loci of the *Anopheles gambiae* complex | alignments of Fontaine et al. 2015 |
-| `figure6` | Fig. 6 | Plastid and nuclear trees for 31 orchid genera; chloroplast and ITS trees for 69 Danthonioideae taxa | Pérez-Escobar et al. 2021; Pirie et al. 2009 |
-| `figure7` | Fig. 7 | Plastid and nuclear trees for 129 Fagaceae taxa | Zhou et al. 2022 |
+| `figure3` | Fig. 3 | Four pairs of synthetic trees on 20 taxa at Robinson–Foulds distances 2, 12, 26 and 32 (panels a–d), and tanglegram displacement and scaffold hybridization number for 1,700 synthetic tree pairs with the scripts to recompute and plot them (panel e) | de Vienne 2019 |
+| `figure4` | Figs. 4 and 7 | Gene trees for 15 loci of the *Anopheles gambiae* complex | alignments of Fontaine et al. 2015 |
+| `figure5` | Fig. 5 | Plastid and nuclear trees for 31 orchid genera; chloroplast and ITS trees for 69 Danthonioideae taxa | Pérez-Escobar et al. 2021; Pirie et al. 2009 |
+| `figure6` | Fig. 6 | Plastid and nuclear trees for 129 Fagaceae taxa | Zhou et al. 2022 |
 
 ## File types
 
@@ -65,23 +65,21 @@ chooses the taxon ordering a < b < c < d < e, under which the scaffold has a
 single reticulation; opening the file in PhyloParallelograms reproduces the
 parallelogram shown in the figure.
 
-### figure3: four synthetic tree pairs
+### figure3: synthetic tree pairs and the complexity benchmark
 
 `Vienne-<RF>-1.tre` is the pair `1.tre` from directory `RF_<RF>` of the data
 set `AllPairs` distributed as supplementary material with de Vienne (2019),
 for RF = 2, 12, 26 and 32. Each file contains two rooted trees on the taxa
 t1 to t20 whose Robinson–Foulds distance is RF. The `-tanglegram.stree6` and
-`-parallelogram.phypar` documents are the panels of Fig. 3.
-
-### figure4: complexity of tanglegrams and parallelograms
+`-parallelogram.phypar` documents are panels a to d of Fig. 3.
 
 `rf_td_h.tsv` contains, for all 1,700 tree pairs analysed (100 pairs for each
 Robinson–Foulds distance 2, 4, ..., 34), the minimum total displacement of
 the displacement-optimized tanglegram and the hybridization number of the
-scaffold. It is the Source Data of Fig. 4. The scripts that compute the
-table and draw the plot are described in `figure4/README.md`.
+scaffold. It is the Source Data of Fig. 3e. The scripts that compute the
+table and draw the plot are described in `figure3/README.md`.
 
-### figure5: gene trees for 15 loci of the *Anopheles gambiae* complex
+### figure4: gene trees for 15 loci of the *Anopheles gambiae* complex
 
 `mosquitoes-loci.tre` contains maximum-likelihood trees for 15 loci of 3 to
 7 kb, rooted on *An. christyi*, with bootstrap support values. The loci were
@@ -92,11 +90,13 @@ which also provides the alignments and the locus coordinates. The tree names
 give the chromosomal region of the locus: `X_dist` (distal X chromosome),
 `X_peri` (pericentromeric X chromosome), `auto_2R` and `auto_3R` (autosomal
 arms 2R and 3R), and `inv_2La` and `inv_3La` (the 2La and 3La inversions).
-`mosquitoes-loci-parallelogram.phypar` is the document behind Fig. 5; the same
-data set is shipped with PhyloParallelograms as an example
-(`examples/mosquitos-loci.phypar`).
+`mosquitoes-loci-parallelogram.phypar` is the document behind Fig. 4. Fig. 7,
+which shows the user interface, was made from the same document with only
+the five X-distal trees and the pericentromeric tree selected and the
+minimum branch support set to 50%. The same data set is shipped with
+PhyloParallelograms as an example (`examples/mosquitos-loci.phypar`).
 
-### figure6: cytonuclear discordance in orchids and in Danthonioideae
+### figure5: cytonuclear discordance in orchids and in Danthonioideae
 
 `Orchids-Genera.tre` contains the plastid and nuclear trees (`Plastid`,
 `Nuclear`) for 31 orchid genera derived from the phylogenies of
@@ -104,21 +104,21 @@ Pérez-Escobar et al. (2021). `Danthonioideae.tre` contains the chloroplast
 and ITS trees (`Chloroplast`, `ITS`) for 69 taxa of Danthonioideae from
 Pirie et al. (2009), with branch lengths. The corresponding
 `-tanglegram.stree6` and `-parallelogram.phypar` documents are the four
-panels of Fig. 6. The Danthonioideae data set is also shipped with
+panels of Fig. 5. The Danthonioideae data set is also shipped with
 PhyloParallelograms as an example (`examples/Danthonioideae.phypar`).
 
-### figure7: cytonuclear discordance in Fagaceae
+### figure6: cytonuclear discordance in Fagaceae
 
 `Fagaceae.tre` contains the chloroplast and nuclear trees (`Chloroplast`,
 `Nuclear`) for 129 Fagaceae taxa, with branch lengths and support values,
 recomputed from data provided by the authors of Zhou et al. (2022). The
 `-tanglegram.stree6` and `-parallelogram.phypar` documents are the two
-panels of Fig. 7.
+panels of Fig. 6.
 
 ## How the orchid and Fagaceae trees were produced
 
-A description of how the genus-level orchid trees (figure6) and the Fagaceae
-trees (figure7) were derived from the published data, together with the
+A description of how the genus-level orchid trees (figure5) and the Fagaceae
+trees (figure6) were derived from the published data, together with the
 scripts used, will be added to the respective directories.
 
 ## References

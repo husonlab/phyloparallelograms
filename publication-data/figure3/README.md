@@ -1,6 +1,13 @@
-# Figure 4: complexity of tanglegrams and parallelograms versus RF distance
+# Figure 3: synthetic tree pairs and the complexity benchmark
 
-Fig. 4 compares, for 1,700 pairs of synthetic trees on 20 taxa (100 pairs for
+Panels a to d of Fig. 3 show four synthetic tree pairs as tanglegrams and
+parallelograms (files `Vienne-<RF>-1.tre`, `Vienne-<RF>-1-tanglegram.stree6`
+and `Vienne-<RF>-1-parallelogram.phypar` in this directory; see the README in
+the parent directory). Panel e is the complexity benchmark described here.
+
+## Panel e: complexity of tanglegrams and parallelograms versus RF distance
+
+Panel e compares, for 1,700 pairs of synthetic trees on 20 taxa (100 pairs for
 each Robinson–Foulds distance 2, 4, ..., 34), the minimum total displacement
 (TD) of a displacement-optimized tanglegram with the hybridization number (H)
 of the PhyloFusion scaffold underlying the phylogenetic parallelogram.
@@ -10,7 +17,7 @@ of the PhyloFusion scaffold underlying the phylogenetic parallelogram.
 - `rf_td_h.tsv`: the results, one row per tree pair, with columns `RF`
   (Robinson–Foulds distance), `TD` (minimum total displacement of the
   tanglegram) and `H` (hybridization number of the scaffold). This table is
-  the Source Data of Fig. 4; the plot can be reproduced from it directly (step
+  the Source Data of Fig. 3e; the plot can be reproduced from it directly (step
   4 below) without rerunning the computation.
 - `tanglegram-phylofusion.wflow6`: a SplitsTree workflow that reads one tree
   pair, computes the displacement-optimized tanglegram (which reports TD) and
@@ -21,7 +28,7 @@ of the PhyloFusion scaffold underlying the phylogenetic parallelogram.
   collects RF, TD and H into `rf_td_h.tsv`.
 - `plot-rf-td-h.py`: draws the plot from the table.
 
-## Reproducing the results
+## Reproducing panel e
 
 1. Download the data set `AllPairs` from the supplementary material of
    de Vienne (2019) and unpack it into this directory. It contains the
@@ -42,8 +49,8 @@ of the PhyloFusion scaffold underlying the phylogenetic parallelogram.
    produces the box plots shown in the paper; without it, violin plots are
    drawn.
 
-The four tree pairs shown in Fig. 3 are the files `1.tre` of `RF_2`, `RF_12`,
-`RF_26` and `RF_32`; see `../figure3`.
+The four tree pairs shown in panels a to d are the files `1.tre` of `RF_2`,
+`RF_12`, `RF_26` and `RF_32`.
 
 ## Reference
 
