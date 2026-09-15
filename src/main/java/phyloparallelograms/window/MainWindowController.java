@@ -476,10 +476,14 @@ public class MainWindowController {
 
 		DraggableUtils.makeDraggableInAnchorPane(legendVBox);
 
-		var exportItems = BasicFX.copyMenu(List.of(copyTaxaMenuItem, new SeparatorMenuItem(),
-				copyTreesMenuItem, copyNetworkMenuItem, new SeparatorMenuItem(), copyImageMenuItem,
-				new SeparatorMenuItem(), exportImageMenuItem), false);
-		exportItems.get(exportItems.size() - 1).setText("Export Image..."); // the menu-bar item reads just "Image..."
+		var exportItems = BasicFX.copyMenu(List.of(
+				copyTaxaMenuItem, copyTreesMenuItem, copyNetworkMenuItem,
+				new SeparatorMenuItem(), copyImageMenuItem,
+				new SeparatorMenuItem(), printMenuItem,
+				new SeparatorMenuItem(), exportImageMenuItem, exportNewickMenuItem), false);
+		// the menu-bar items read just "Image..."/"Data..." under the Export sub-menu; spell them out here
+		exportItems.get(exportItems.size() - 2).setText("Export Image...");
+		exportItems.get(exportItems.size() - 1).setText("Export Data...");
 		exportMenuButton.getItems().addAll(exportItems);
 
 		runLayoutButton.onActionProperty().bindBidirectional(runMenuItem.onActionProperty());

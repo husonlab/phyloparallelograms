@@ -77,7 +77,8 @@ Typical use cases:
 - Six diagram layouts (rectangular, circular, or radial; cladogram or phylogram).
 - Optional rendering of transfer edges and outline-style display of the underlying network.
 - Advanced PhyloFusion settings - reticulation placement and branch-length fitting - accessible from a settings panel.
-- Export to image and Newick formats; copy trees or network to the clipboard.
+- Export to image (PNG, SVG, PDF) and data (extended Newick) formats; copy taxa, trees, network, or image to the
+  clipboard.
 
 ## 2. Installation
 
@@ -111,11 +112,12 @@ Above the table:
 
 Below the table:
 
-- **Min branch confidence** - a numeric field. Input branches with confidence values below this threshold are pruned
-  from each input tree before PhyloFusion is run. Set to `0` to disable filtering.
+- **Min branch confidence (%)** - a spinner (range 0-100, step 1; you can also type a value such as `50.5`). Input
+  branches with confidence values below this percentage are pruned from each input tree before PhyloFusion is run. Set
+  to `0` to disable filtering.
 
-- **Min concordance** - a numeric field. Input branches with concordance values below this threshold are pruned
-  from each input tree before PhyloFusion is run. Set to `0` to disable filtering.
+- **Min branch concordance (%)** - a spinner (range 0-100, step 1). Input branches supported by fewer than this
+  percentage of the input trees are pruned before PhyloFusion is run. Set to `0` to disable filtering.
 
 ### 3.2 Visualization panel (right panel)
 
@@ -123,7 +125,7 @@ The right panel renders the computed rooted network and, on top of it, the phylo
 trees whose *Show* box is checked. Its toolbar contains:
 
 - **Diagram** - opens a menu for choosing the diagram type (see Section 6.4).
-- **More Drawing options** - opens a menu with rendering options:
+- **Settings** - opens a menu with rendering options:
     - *Show Outline* - show the outline the underlying network.
     - *Spread* spinner - controls the spread of the trees drawn in the parallelogram.
     - *Curved Reticulate Edges* - draw reticulation edges as curves rather than rectangular segments.
@@ -134,20 +136,30 @@ trees whose *Show* box is checked. Its toolbar contains:
 - **Zoom In Vertically** - zoom the view in vertically by one step.
 - **Zoom Out Vertically** - zoom the view out vertically by one step.
 - **Zoom In Horizontally** - zoom the view in horizontally by one step.
-  -**Zoom Out Horizontally** - zoom the view out horizontally by one step.
+- **Zoom Out Horizontally** - zoom the view out horizontally by one step.
 
-- In the top right of the visualization panel:
+Further to the right in the same toolbar:
 
-- **Export** - menu button with shortcuts to:
+- **Find** - toggle a find bar (shown below the toolbar) for searching trees in the table and taxa in the network. Its
+  state mirrors *Edit > Find...*.
+- **Format** - toggle the settings panel described in Section 3.3.
+- **Export** - a menu button with shortcuts to:
+    - *Copy Taxa* - copy the selected taxon labels to the clipboard.
     - *Copy Trees* - copy the currently selected input trees to the clipboard (Newick).
-    - *Copy Network* - copy the underlying network to the clipboard.
-    - *Copy Image* - copy the computed image to the clipboard.
+    - *Copy Network* - copy the underlying network to the clipboard (extended Newick).
+    - *Copy Image* - copy the current visualization to the clipboard as an image.
+    - *Print...* - print the current view.
+    - *Export Image...* - save the visualization as an image (PNG, SVG, PDF), cropped to its content.
+    - *Export Data...* - export the computed network (or the selected trees) in extended Newick format.
 
-A floating legend (top right) shows the color assigned to each tree in the parallelogram.
+When the window is too narrow to show every toolbar button, the right-most buttons collapse into a `>>` overflow menu.
+
+A floating legend (top right) shows the color assigned to each tree in the parallelogram; toggle it with *View > Show
+Trees Legend* (the setting is remembered between sessions).
 
 ### 3.3 Taxon-label and PhyloFusion settings panel
 
-The **Settings** button (the *tune* icon) in the visualization panel toggles a floating panel that overlays the top
+The **Format** button (the *tune* icon) in the visualization panel toggles a floating panel that overlays the top
 right
 of the network view. The panel is an accordion with two sections; click a section header to expand it:
 
@@ -199,10 +211,10 @@ that has embedded trees.)
 ### 4.3 Saving and exporting
 
 - **File > Save...** (`Cmd+S`) - save the current session (input trees, run settings, computed network, parallelogram
-  selection) to a PhyloParallelgrams document with file extension `phycmp`.
-- **File > Export > Image...** - save the current visualization (network plus parallelogram) as an image. Supported
-  image formats: PNG, SVG and PDF.
-- **File > Export > Newick...** - export the computed network (or the selected trees) in extended Newick format.
+  selection, and the dataset note) to a PhyloParallelgrams document with file extension `phypar`.
+- **File > Export > Image...** - save the current visualization (network plus parallelogram) as an image, cropped to
+  its content. Supported image formats: PNG, SVG and PDF.
+- **File > Export > Data...** - export the computed network (or the selected trees) in extended Newick format.
 - **File > Page Setup...** / **File > Print...** (`Cmd+P`) - printing.
 
 ## 5. A typical workflow
@@ -232,7 +244,7 @@ that has embedded trees.)
 | Recent                 | -        | Recently opened files.                        |
 | Import > Tree Names... | -        | Import a list of tree names.                  |
 | Export > Image...      | -        | Export the current visualization as an image. |
-| Export > Newick...     | -        | Export trees or network in Newick format.     |
+| Export > Data...       | -        | Export trees or network in extended Newick format. |
 | Save...                | `Cmd+S`  | Save the current session.                     |
 | Page Setup...          | -        | Configure print page settings.                |
 | Print...               | `Cmd+P`  | Print the current view.                       |
@@ -285,7 +297,9 @@ Additional edit menu items:
     - Circular Phylogram
     - Radial Cladogram
     - Radial Phylogram
+- **Flip Vertically** - flip the drawing vertically.
 - **Show Outline** - render in outline mode.
+- **Show Trees Legend** - show or hide the floating color legend. The choice is remembered between sessions.
 - **Curved Reticulate Edges** - draw reticulation edges as curves.
 - **Use Transfer Edges** - Use and display transfer-style edges.
 - **Set Acceptor Min Percent...** - Minimum percent of trees that have to use a reticulate edge so that it
@@ -357,4 +371,4 @@ the `LICENSE` file shipped with the distribution, or https://www.gnu.org/license
 
 --
 
-*Manual last updated: July 2026.*
+*Manual last updated: September 2026.*

@@ -333,7 +333,7 @@
                                         </Menu>
                                         <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">
                                             <MenuItem fx:id="exportImageMenuItem" mnemonicParsing="false" text="Image..." />
-                                            <MenuItem fx:id="exportNewickMenuItem" mnemonicParsing="false" text="Newick..." />
+                                            <MenuItem fx:id="exportNewickMenuItem" mnemonicParsing="false" text="Data..." />
                                         </Menu>
                                         <SeparatorMenuItem mnemonicParsing="false" />
                                         <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save...">
