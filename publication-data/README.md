@@ -24,7 +24,7 @@ has no data.
 | `figure2` | Fig. 2 | Two rooted trees on five taxa used to illustrate the scaffold construction | this paper |
 | `figure3` | Fig. 3 | Four pairs of synthetic trees on 20 taxa at Robinson–Foulds distances 2, 12, 26 and 32 (panels a–d), and tanglegram displacement and scaffold hybridization number for 1,700 synthetic tree pairs with the scripts to recompute and plot them (panel e) | de Vienne 2019 |
 | `figure4` | Figs. 4 and 7 | Gene trees for 15 loci of the *Anopheles gambiae* complex | alignments of Fontaine et al. 2015 |
-| `figure5` | Fig. 5 | Plastid and nuclear trees for 31 orchid genera; chloroplast and ITS trees for 69 Danthonioideae taxa | Pérez-Escobar et al. 2021; Pirie et al. 2009 |
+| `figure5` | Fig. 5 | Nuclear and mitogenome trees of the living cats (43 taxa in total); chloroplast and ITS trees for 69 Danthonioideae taxa | Li et al. 2016; Pirie et al. 2009 |
 | `figure6` | Fig. 6 | Plastid and nuclear trees for 129 Fagaceae taxa | Zhou et al. 2022 |
 
 ## File types
@@ -96,11 +96,18 @@ the five X-distal trees and the pericentromeric tree selected and the
 minimum branch support set to 50%. The same data set is shipped with
 PhyloParallelograms as an example (`examples/mosquitos-loci.phypar`).
 
-### figure5: cytonuclear discordance in orchids and in Danthonioideae
+### figure5: organellar discordance in cats and in Danthonioideae
 
-`Orchids-Genera.tre` contains the plastid and nuclear trees (`Plastid`,
-`Nuclear`) for 31 orchid genera derived from the phylogenies of
-Pérez-Escobar et al. (2021). `Danthonioideae.tre` contains the chloroplast
+`cats.tre` contains the nuclear (`Nuclear`, 42 tips) and mitogenome
+(`Mitogenome`, 39 tips) trees of the living cats, transcribed from Fig. 1A of
+Li et al. (2016) with the image-capture function of PhyloSketch (Huson 2025)
+after all elements other than tree edges and leaf labels had been removed from
+the figure and the coloured and dashed edges converted to solid black lines.
+The nuclear tree includes two Indochinese and one Sundaic sample of the Asian
+leopard cat and the Sunda clouded leopard, which are absent from the
+mitogenome tree; the mitogenome tree has a single Asian leopard cat. The five
+taxa present in only one tree were retained, so the scaffold is computed with
+the missing-taxa procedure of PhyloFusion. `Danthonioideae.tre` contains the chloroplast
 and ITS trees (`Chloroplast`, `ITS`) for 69 taxa of Danthonioideae from
 Pirie et al. (2009), with branch lengths. The corresponding
 `-tanglegram.stree6` and `-parallelogram.phypar` documents are the four
@@ -111,15 +118,26 @@ PhyloParallelograms as an example (`examples/Danthonioideae.phypar`).
 
 `Fagaceae.tre` contains the chloroplast and nuclear trees (`Chloroplast`,
 `Nuclear`) for 129 Fagaceae taxa, with branch lengths and support values,
-recomputed from data provided by the authors of Zhou et al. (2022). The
-`-tanglegram.stree6` and `-parallelogram.phypar` documents are the two
-panels of Fig. 6.
+recomputed from the MrBayes-formatted data sets provided by Zhou et al. (2022)
+on Dryad (https://doi.org/10.5061/dryad.vq83bk3tc). The `-tanglegram.stree6`
+and `-parallelogram.phypar` documents are the two panels of Fig. 6.
 
-## How the orchid and Fagaceae trees were produced
-
-A description of how the genus-level orchid trees (figure5) and the Fagaceae
-trees (figure6) were derived from the published data, together with the
-scripts used, will be added to the respective directories.
+How the Fagaceae trees were produced (B. Cetinkaya): Bayesian analyses were
+performed in MrBayes v3.2.6 (Ronquist et al. 2012) using the partitioning
+schemes and substitution models specified in the supplied NEXUS files. MCMC
+analyses were run for 10 million generations, sampling trees every 100
+generations, with the first 25% of samples discarded as burn-in. *Betula
+pendula* (`Betula_pendula_MG386401`) was used as the outgroup. Because the
+nuclear and plastid data sets used different taxon-labelling conventions,
+labels were standardized before comparing the resulting trees. Species and
+specimen identities were determined from the original labels using
+Supplementary Data 1 of Zhou et al., with assistance from ChatGPT, and
+renamed in the form `Genus_species_identifier`. Nuclear and plastid labels
+representing the same biological specimen or accession were assigned
+identical standardized names. When no exact counterpart was present in the
+other data set, the original sample identifier was retained, and sufficient
+identifier information was preserved to ensure that all taxon labels remained
+unique.
 
 ## References
 
@@ -134,12 +152,18 @@ scripts used, will be added to the respective directories.
 - Huson, D. H. & Bryant, D. The SplitsTree App: interactive analysis and
   visualization using phylogenetic trees and networks. *Nat. Methods* 21,
   1773–1774 (2024).
-- Pérez-Escobar, O. A. et al. Hundreds of nuclear and plastid loci yield novel
-  insights into orchid relationships. *Am. J. Bot.* 108, 1166–1180 (2021).
 - Pirie, M. D., Humphreys, A. M., Barker, N. P. & Linder, H. P. Reticulation,
   data combination, and inferring evolutionary history: an example from
   Danthonioideae (Poaceae). *Syst. Biol.* 58, 612–628 (2009).
   https://doi.org/10.1093/sysbio/syp060
+- Huson, D. H. Sketch, capture and layout phylogenies. *PLOS Comput. Biol.*
+  21, e1013805 (2025). https://doi.org/10.1371/journal.pcbi.1013805
+- Li, G., Davis, B. W., Eizirik, E. & Murphy, W. J. Phylogenomic evidence for
+  ancient hybridization in the genomes of living cats (Felidae). *Genome Res.*
+  26, 1–11 (2016). https://doi.org/10.1101/gr.186668.114
+- Ronquist, F. et al. MrBayes 3.2: efficient Bayesian phylogenetic inference
+  and model choice across a large model space. *Syst. Biol.* 61, 539–542
+  (2012). https://doi.org/10.1093/sysbio/sys029
 - Zhang, L., Cetinkaya, B. & Huson, D. H. PhyloFusion: fast and easy fusion of
   rooted phylogenetic trees into rooted phylogenetic networks. *Syst. Biol.*
   75, 88–102 (2026). https://doi.org/10.1093/sysbio/syaf049
