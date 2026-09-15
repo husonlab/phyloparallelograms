@@ -1,0 +1,33 @@
+#PhyloParallelograms 1.0
+BEGIN metadata;
+END;
+BEGIN taxa;
+	1	An. coluzzii	<size "20.5"><i>  An. coluzzii
+	2	An. gambiae	<size "20.5"><i>  An. gambiae
+	3	An. arabiensis	<size "20.5"><i>  An. arabiensis
+	4	An. quadriannulatus	<size "20.5"><i>  An. quadriannulatus
+	5	An. melas	<size "20.5"><i>  An. melas
+	6	An. merus	<size "20.5"><i>  An. merus
+END;
+BEGIN trees;
+	1	Species_topology	1	1	#8633BCFF	((('An. coluzzii','An. gambiae'),((('An. arabiensis','An. quadriannulatus'),'An. melas'),'An. merus')))[&&NHX:GN=Species_topology];
+	2	Whole-genome	1	1	#41A744FF	((((('An. coluzzii','An. gambiae'),'An. arabiensis'),'An. quadriannulatus'),('An. melas','An. merus')))[&&NHX:GN=Whole-genome];
+END;
+BEGIN networks;
+	0	N1	((((('An. arabiensis'[&TT={1,2}]:0.99999999)#H1[&TT={1,2}]:[&TT={2}]0,('An. coluzzii'[&TT={1,2}]:0.99999999,'An. gambiae'[&TT={1,2}]:0.99999999)[&TT={1,2}]:0.5)[&TT={1,2}]:0.5,(('An. quadriannulatus'[&TT={1,2}]:0.99999997,#H1:[&TT={1}]0)[&TT={1,2}]:0.00000004)#H2[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0.5,(('An. melas'[&TT={1,2}]:0.66666666,#H2:[&TT={1}]0.99999994)[&TT={1,2}]:0.66666666,'An. merus'[&TT={1,2}]:0.99999999)[&TT={1,2}]:0.99999999)[&TT={1,2}]:0.99999999)[&TT={1,2}];
+END;
+BEGIN parameters;
+	color_scheme_name	string	Caspian8
+	confidence_threshold	double	0
+	concordance_threshold	double	0
+	diagram	enum	RectangularCladogram
+	flip_vertically	boolean	false
+	averaging	enum	ChildAverage
+	scaling	enum	LateBranching
+	outline_width	double	35
+	show_outline	boolean	true
+	acceptor_percentage	double	50
+	show_transfer	boolean	true
+	rectangular_edges	boolean	false
+	reticulate_edges_are_special	boolean	true
+END;

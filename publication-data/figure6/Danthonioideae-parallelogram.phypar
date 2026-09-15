@@ -1,0 +1,97 @@
+#PhyloParallelograms 1.0
+BEGIN metadata;
+	note	Pirie, M.D., Humphreys, A.M., Barker, N.P. & Linder, H.P. (2009).\nReticulation, data combination, and inferring evolutionary history:\nan example from Danthonioideae (Poaceae). Systematic Biology 58: 612-628.\nhttps://academic.oup.com/sysbio/article/58/6/612/1635430
+END;
+BEGIN taxa;
+	1	Centropodia_glauca	Centropodia_glauca
+	2	Merxmuellera_papposa_NPB1759	Merxmuellera_papposa_NPB1759
+	3	Merxmuellera_rangei_NPB960	Merxmuellera_rangei_NPB960
+	4	Austrodanthonia_clavata_MDP454	Austrodanthonia_clavata_MDP454
+	5	Austrodanthonia_mera_AMH125	Austrodanthonia_mera_AMH125
+	6	Notodanthonia_longifolia_MDP305	Notodanthonia_longifolia_MDP305
+	7	Rytidosperma_australe_MDP418	Rytidosperma_australe_MDP418
+	8	Rytidosperma_setifolium_AMH121	Rytidosperma_setifolium_AMH121
+	9	Rytidosperma_lechleri_CMB4256	Rytidosperma_lechleri_CMB4256
+	10	Austrodanthonia_eriantha_AMH43	Austrodanthonia_eriantha_AMH43
+	11	Joycea_lepidopoda_MDP285	Joycea_lepidopoda_MDP285
+	12	Rytidosperma_pumilum_NGW	Rytidosperma_pumilum_NGW
+	13	Rytidosperma_thomsonii_AMH118	Rytidosperma_thomsonii_AMH118
+	14	Karroochloa_curva_GAV604	Karroochloa_curva_GAV604
+	15	Tribolium_brachystachyum_GAV593	Tribolium_brachystachyum_GAV593
+	16	Karroochloa_schismoides_GAV562	Karroochloa_schismoides_GAV562
+	17	Schismus_barbartus_GAV503	Schismus_barbartus_GAV503
+	18	Merxmuellera_disticha_NPB1002	Merxmuellera_disticha_NPB1002
+	19	Merxmuellera_dura_NPB983	Merxmuellera_dura_NPB983
+	20	Cortaderia_fulvida_G5088	Cortaderia_fulvida_G5088
+	21	Cortaderia_toetoe_G5042	Cortaderia_toetoe_G5042
+	22	Cortaderia_richardii_G3816	Cortaderia_richardii_G3816
+	23	Cortaderia_turbaria_G17358	Cortaderia_turbaria_G17358
+	24	Cortaderia_splendens_G10872	Cortaderia_splendens_G10872
+	25	Plinthanthesis_paradoxa_HPL5638	Plinthanthesis_paradoxa_HPL5638
+	26	Plinthanthesis_rodwayi_MDP415	Plinthanthesis_rodwayi_MDP415
+	27	Cortaderia_pilosa_MDP345	Cortaderia_pilosa_MDP345
+	28	Notochloe_microdon_Watson_sn	Notochloe_microdon_Watson_sn
+	29	Cortaderia_archboldii_JM115	Cortaderia_archboldii_JM115
+	30	Danthonia_alpina_MDP480	Danthonia_alpina_MDP480
+	31	Danthonia_alpina_MDP481	Danthonia_alpina_MDP481
+	32	Danthonia_decumbens_MDP312	Danthonia_decumbens_MDP312
+	33	Danthonia_domingensis_AA373	Danthonia_domingensis_AA373
+	34	Danthonia_spicata_Kellogg_sn	Danthonia_spicata_Kellogg_sn
+	35	Danthonia_californica_amer_MDP330	Danthonia_californica_amer_MDP330
+	36	Danthonia_araucana_MDP337	Danthonia_araucana_MDP337
+	37	Danthonia_chilensis_aureo_MDP340	Danthonia_chilensis_aureo_MDP340
+	38	Danthonia_secundiflora_ML1617	Danthonia_secundiflora_ML1617
+	39	Danthonia_malacantha_MDP339	Danthonia_malacantha_MDP339
+	40	Danthonia_chilensis_chile_MDP342	Danthonia_chilensis_chile_MDP342
+	41	Chaetobromus_involucratus_inv_NPB1715	Chaetobromus_involucratus_inv_NPB1715
+	42	Pseudopentameris_macrantha_HPL5470	Pseudopentameris_macrantha_HPL5470
+	43	Cortaderia_columbiana_ML920	Cortaderia_columbiana_ML920
+	44	Cortaderia_hapalotricha_ML1525	Cortaderia_hapalotricha_ML1525
+	45	Lamprothyrsus_peruvianus_G11154	Lamprothyrsus_peruvianus_G11154
+	46	Cortaderia_araucana_G7162	Cortaderia_araucana_G7162
+	47	Cortaderia_jubata_ML1515	Cortaderia_jubata_ML1515
+	48	Cortaderia_rudiuscula_G11157	Cortaderia_rudiuscula_G11157
+	49	Cortaderia_selloana_Robinson	Cortaderia_selloana_Robinson
+	50	Cortaderia_nitida_ML1434	Cortaderia_nitida_ML1434
+	51	Cortaderia_boliviensis_ML672	Cortaderia_boliviensis_ML672
+	52	Lamprothyrsus_hieronymi_OM3534	Lamprothyrsus_hieronymi_OM3534
+	53	Cortaderia_bifida_ML1497	Cortaderia_bifida_ML1497
+	54	Cortaderia_sericantha_ML1128	Cortaderia_sericantha_ML1128
+	55	Chionochloa_antarctica_OTA57955	Chionochloa_antarctica_OTA57955
+	56	Chionochloa_flavescens_CHR475418	Chionochloa_flavescens_CHR475418
+	57	Chionochloa_macra_CHR475278	Chionochloa_macra_CHR475278
+	58	Chionochloa_frigida_MDP417	Chionochloa_frigida_MDP417
+	59	Chionochloa_rubra_OTA57960	Chionochloa_rubra_OTA57960
+	60	Pentameris_thuarii_HPL5456	Pentameris_thuarii_HPL5456
+	61	Pentaschistis_airoides_jugorum_CG81	Pentaschistis_airoides_jugorum_CG81
+	62	Prionanthium_dentatum_HPL5430	Prionanthium_dentatum_HPL5430
+	63	Pentaschistis_aurea_pilosogluma_CG47	Pentaschistis_aurea_pilosogluma_CG47
+	64	Merxmuellera_cincta_sericea_NPB1545	Merxmuellera_cincta_sericea_NPB1545
+	65	Merxmuellera_decora_NPB1168	Merxmuellera_decora_NPB1168
+	66	Merxmuellera_lupulina_HPL7004	Merxmuellera_lupulina_HPL7004
+	67	Merxmuellera_arundinacea_NPB1017	Merxmuellera_arundinacea_NPB1017
+	68	Merxmuellera_drakensbergensis_PM4	Merxmuellera_drakensbergensis_PM4
+	69	Merxmuellera_macowanii_NPB1008	Merxmuellera_macowanii_NPB1008
+END;
+BEGIN trees;
+	1	Chloroplast	1	1	#8633BCFF	(Centropodia_glauca:0.521273,(Merxmuellera_papposa_NPB1759:0.100432,Merxmuellera_rangei_NPB960:0.087657):0.361039,((((((((((((((((Austrodanthonia_clavata_MDP454:0.036744,Austrodanthonia_mera_AMH125:0.034563):0.051975,Notodanthonia_longifolia_MDP305:0.045753):0.029504,((Rytidosperma_australe_MDP418:0.119878,Rytidosperma_setifolium_AMH121:0.066731):0.036804,Rytidosperma_lechleri_CMB4256:0.072316):0.016468):0.01411,(Austrodanthonia_eriantha_AMH43:0.08936,Joycea_lepidopoda_MDP285:0.067158):0.02344):0.009021,(Rytidosperma_pumilum_NGW:0.051636,Rytidosperma_thomsonii_AMH118:0.030129):0.053185):0.060928,(Karroochloa_curva_GAV604:0.347282,Tribolium_brachystachyum_GAV593:0.244553):0.045652):0.059444,(Karroochloa_schismoides_GAV562:0.186666,Schismus_barbartus_GAV503:0.196477):0.199465):0.240609,(Merxmuellera_disticha_NPB1002:0.383695,Merxmuellera_dura_NPB983:0.329249):0.015217):0.137999,((((Cortaderia_fulvida_G5088:0.044628,Cortaderia_toetoe_G5042:0.020834,Cortaderia_richardii_G3816:0.073458,Cortaderia_turbaria_G17358:0.032931):0.017979,Cortaderia_splendens_G10872:0.023316):0.110207,(Plinthanthesis_paradoxa_HPL5638:0.086031,Plinthanthesis_rodwayi_MDP415:0.239907):0.068258):0.076608,((Cortaderia_pilosa_MDP345:0.07314,Notochloe_microdon_Watson_sn:0.100366,Cortaderia_archboldii_JM115:0.122066):0.02066,(((((Danthonia_alpina_MDP480:0.01322,Danthonia_alpina_MDP481:0.011785):0.026976,Danthonia_decumbens_MDP312:0.023542):0.016342,Danthonia_domingensis_AA373:0.139648):0.01598,Danthonia_spicata_Kellogg_sn:0.124942):0.015563,((Danthonia_californica_amer_MDP330:0.010279,Danthonia_araucana_MDP337:0.010853,Danthonia_chilensis_aureo_MDP340:0.017052):0.030008,(Danthonia_secundiflora_ML1617:0.01192,Danthonia_malacantha_MDP339:0.053247):0.044901,Danthonia_chilensis_chile_MDP342:0.011833):0.022873):0.061148):0.099332):0.05597):0.059795,(Chaetobromus_involucratus_inv_NPB1715:0.445784,Pseudopentameris_macrantha_HPL5470:0.299682):0.262945):0.015947,((Cortaderia_columbiana_ML920:0.106836,Cortaderia_hapalotricha_ML1525:0.140065):0.054721,((Lamprothyrsus_peruvianus_G11154:0.040167,((Cortaderia_araucana_G7162:0.065096,Cortaderia_jubata_ML1515:0.029286,(Cortaderia_rudiuscula_G11157:0.011105,Cortaderia_selloana_Robinson:0.062224):0.019733):0.020423,Cortaderia_nitida_ML1434:0.045449):0.022553,(Cortaderia_boliviensis_ML672:0.079466,Lamprothyrsus_hieronymi_OM3534:0.025784):0.023521):0.023634,(Cortaderia_bifida_ML1497:0.105617,Cortaderia_sericantha_ML1128:0.101861):0.025865):0.031786):0.059946):0.235225,((Chionochloa_antarctica_OTA57955:0.082101,((Chionochloa_flavescens_CHR475418:0.041778,Chionochloa_macra_CHR475278:0.010079):0.052526,Chionochloa_frigida_MDP417:0.09478):0.020668):0.043181,Chionochloa_rubra_OTA57960:0.12574):0.057909):0.079673,(Pentameris_thuarii_HPL5456:0.26043,((Pentaschistis_airoides_jugorum_CG81:0.392225,Prionanthium_dentatum_HPL5430:0.359494):0.074769,Pentaschistis_aurea_pilosogluma_CG47:0.133191):0.496549):0.484866):0.063643,(Merxmuellera_cincta_sericea_NPB1545:0.102874,(Merxmuellera_decora_NPB1168:0.065967,Merxmuellera_lupulina_HPL7004:0.04002):0.042524):0.03586):0.026688,Merxmuellera_arundinacea_NPB1017:0.116248):0.27519,(Merxmuellera_drakensbergensis_PM4:0.0427,Merxmuellera_macowanii_NPB1008:0.049167):0.156439):0.561916)[&&NHX:GN=Chloroplast];
+	2	ITS	1	1	#41A744FF	(Centropodia_glauca:0.231153,(Merxmuellera_papposa_NPB1759:0.061818,Merxmuellera_rangei_NPB960:0.084984):0.106825,(((((((Austrodanthonia_clavata_MDP454:0.024644,Austrodanthonia_mera_AMH125:0.010143,((Joycea_lepidopoda_MDP285:0.083075,Notodanthonia_longifolia_MDP305:0.03619):0.016696,Karroochloa_curva_GAV604:0.041171,Rytidosperma_australe_MDP418:0.009402,Rytidosperma_lechleri_CMB4256:0.020081,(Rytidosperma_pumilum_NGW:0.019224,Rytidosperma_thomsonii_AMH118:0.004896):0.008954,Rytidosperma_setifolium_AMH121:0.01527):0.010737):0.026057,Tribolium_brachystachyum_GAV593:0.085111):0.093828,((Karroochloa_schismoides_GAV562:0.118504,Schismus_barbartus_GAV503:0.055746):0.120551,(Merxmuellera_disticha_NPB1002:0.116102,Merxmuellera_dura_NPB983:0.08835):0.024171):0.045697):0.039209,(((Chaetobromus_involucratus_inv_NPB1715:0.187722,Pseudopentameris_macrantha_HPL5470:0.046025):0.228832,((Cortaderia_fulvida_G5088:0.00437,Cortaderia_toetoe_G5042:0.004458,Cortaderia_richardii_G3816:0.004514,Cortaderia_splendens_G10872:0.01349,Cortaderia_turbaria_G17358:0.004544):0.059592,(Notochloe_microdon_Watson_sn:0.031345,(Plinthanthesis_paradoxa_HPL5638:0.023249,Plinthanthesis_rodwayi_MDP415:0.005782):0.010684):0.021152):0.020972):0.020162,(((Cortaderia_columbiana_ML920:0.016222,Cortaderia_hapalotricha_ML1525:0.024142):0.048764,Cortaderia_bifida_ML1497:0.005271,Cortaderia_nitida_ML1434:0.028702,Cortaderia_sericantha_ML1128:0.056564):0.011103,(Cortaderia_pilosa_MDP345:0.047275,((((Danthonia_alpina_MDP480:0.004987,Danthonia_decumbens_MDP312:0.008156):0.017958,Danthonia_alpina_MDP481:0.005355):0.011037,Danthonia_domingensis_AA373:0.029031):0.015535,((((((Danthonia_californica_amer_MDP330:0.015447,Danthonia_chilensis_chile_MDP342:0.010682):0.008814,Danthonia_malacantha_MDP339:0.016332):0.013209,Danthonia_chilensis_aureo_MDP340:0.005691):0.02596,Danthonia_araucana_MDP337:0.017391):0.041369,Danthonia_spicata_Kellogg_sn:0.117698):0.014185,Danthonia_secundiflora_ML1617:0.018476):0.019975,Cortaderia_archboldii_JM115:0.016894):0.017646):0.015865,(Lamprothyrsus_peruvianus_G11154:0.008156,(Cortaderia_araucana_G7162:0.008628,Cortaderia_jubata_ML1515:0.00499,Cortaderia_rudiuscula_G11157:0.019349):0.057561):0.01536,Cortaderia_boliviensis_ML672:0.016708,Lamprothyrsus_hieronymi_OM3534:0.034565):0.029871):0.027449):0.020044,(((Chionochloa_antarctica_OTA57955:0.005205,Chionochloa_frigida_MDP417:0.004607,Chionochloa_macra_CHR475278:0.004557,Chionochloa_rubra_OTA57960:0.004645):0.008721,Chionochloa_flavescens_CHR475418:0.009581):0.031,(Merxmuellera_arundinacea_NPB1017:0.039116,Merxmuellera_cincta_sericea_NPB1545:0.052833):0.032705,(Merxmuellera_decora_NPB1168:0.014828,Merxmuellera_lupulina_HPL7004:0.005367):0.058438,(Pentaschistis_airoides_jugorum_CG81:0.051013,(Pentaschistis_aurea_pilosogluma_CG47:0.066341,Prionanthium_dentatum_HPL5430:0.033442):0.013053):0.124511):0.023429):0.144956,Merxmuellera_drakensbergensis_PM4:0.018615):0.01916,Merxmuellera_macowanii_NPB1008:0.015511):0.088485)[&&NHX:GN=ITS];
+END;
+BEGIN networks;
+	0	N1	(((((((((Merxmuellera_cincta_sericea_NPB1545[&TT={1,2}]:0.05861167,(Merxmuellera_arundinacea_NPB1017[&TT={1,2}]:0.039116)#H1[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0.03848367,(Merxmuellera_decora_NPB1168[&TT={1,2}]:0.0403975,Merxmuellera_lupulina_HPL7004[&TT={1,2}]:0.0226935)[&TT={1,2}]:0.050481)[&TT={1,2}]:0.012431,((((((Chionochloa_macra_CHR475278[&TT={1,2}]:0,(Chionochloa_flavescens_CHR475418[&TT={1,2}]:0.009581)#H3[&TT={1,2}]:[&TT={1}]0.032197)[&TT={1,2}]:0.0285415,Chionochloa_frigida_MDP417[&TT={1,2}]:0.0496935)[&TT={1,2}]:0.020668,Chionochloa_antarctica_OTA57955[&TT={1,2}]:0.043653)[&TT={1,2}]:0.043181,Chionochloa_rubra_OTA57960[&TT={1,2}]:0.0651925)[&TT={1,2}]:0.008721,#H3:[&TT={2}]0)[&TT={1,2}]:0.031)#H2[&TT={1,2}]:[&TT={2}]0,((Pentameris_thuarii_HPL5456[&TT={1}]:0.26042999,((Pentaschistis_airoides_jugorum_CG81[&TT={1,2}]:0.221619,(Prionanthium_dentatum_HPL5430[&TT={1,2}]:0.03344201)#H5[&TT={1,2}]:[&TT={1}]0.32605198)[&TT={1,2}]:0,(Pentaschistis_aurea_pilosogluma_CG47[&TT={1,2}]:0.08427333,#H5:[&TT={2}]0)[&TT={1,2}]:0.03098533)[&TT={1,2}]:0.31053)[&TT={1,2}]:0)#H4[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0.023429,(((((((((((((((Notodanthonia_longifolia_MDP305[&TT={1,2}]:0.0409715,(Joycea_lepidopoda_MDP285[&TT={1,2}]:0.067158)#H6[&TT={1,2}]:[&TT={2}]0.015917)[&TT={1,2}]:0,((Austrodanthonia_clavata_MDP454[&TT={1,2}]:0.030694,Austrodanthonia_mera_AMH125[&TT={1,2}]:0.022353)[&TT={1,2}]:0)#H7[&TT={1,2}]:[&TT={1}]0.051975)[&TT={1,2}]:0.0231,(Rytidosperma_lechleri_CMB4256[&TT={1,2}]:0.0461985,(Rytidosperma_australe_MDP418[&TT={1,2}]:0.06464,Rytidosperma_setifolium_AMH121[&TT={1,2}]:0.0410005)[&TT={1,2}]:0.036804)[&TT={1,2}]:0.016468)[&TT={1,2}]:0.01411,(Austrodanthonia_eriantha_AMH43[&TT={1}]:0.08936,#H6:[&TT={1}]0)[&TT={1}]:0.02344)[&TT={1,2}]:0.009021,(Rytidosperma_pumilum_NGW[&TT={1,2}]:0.03543,Rytidosperma_thomsonii_AMH118[&TT={1,2}]:0.0175125)[&TT={1,2}]:0.0310695)[&TT={1,2}]:0.060928,(Karroochloa_curva_GAV604[&TT={1,2}]:0.1942265,(Tribolium_brachystachyum_GAV593[&TT={1,2}]:0.085111)#H8[&TT={1,2}]:[&TT={1}]0.15944199)[&TT={1,2}]:0)[&TT={1,2}]:0,#H7:[&TT={2}]0)[&TT={1,2}]:0.00591,#H8:[&TT={2}]0)[&TT={1,2}]:0.073681,(((Merxmuellera_disticha_NPB1002[&TT={1,2}]:0.2498985,Merxmuellera_dura_NPB983[&TT={1,2}]:0.2087995)[&TT={1,2}]:0.015217)#H9[&TT={1,2}]:[&TT={2}]0.008954,(Karroochloa_schismoides_GAV562[&TT={1,2}]:0.152585,Schismus_barbartus_GAV503[&TT={1,2}]:0.1261115)[&TT={1,2}]:0.13162333)[&TT={1,2}]:0.05676933)[&TT={1,2}]:0.127476,#H9:[&TT={1}]0)[&TT={1,2}]:0.024866,((((((Notochloe_microdon_Watson_sn[&TT={1,2}]:0.031345)#H10[&TT={1,2}]:[&TT={2}]0,(Plinthanthesis_paradoxa_HPL5638[&TT={1,2}]:0.05464,Plinthanthesis_rodwayi_MDP415[&TT={1,2}]:0.1228445)[&TT={1,2}]:0.02282467)[&TT={1,2}]:0.03329267,(Cortaderia_splendens_G10872[&TT={1,2}]:0.018403,(Cortaderia_fulvida_G5088[&TT={1,2}]:0.024499,Cortaderia_toetoe_G5042[&TT={1,2}]:0.012646,Cortaderia_richardii_G3816[&TT={1,2}]:0.038986,Cortaderia_turbaria_G17358[&TT={1,2}]:0.0187375)[&TT={1,2}]:0.017979)[&TT={1,2}]:0.0848995)[&TT={1,2}]:0.03279667,((Chaetobromus_involucratus_inv_NPB1715[&TT={1,2}]:0.316753,Pseudopentameris_macrantha_HPL5470[&TT={1,2}]:0.1728535)[&TT={1,2}]:0.22883199)#H11[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0.03198667,((((((Lamprothyrsus_peruvianus_G11154[&TT={1,2}]:0.0241615,(((Cortaderia_rudiuscula_G11157[&TT={1,2}]:0.00727533,Cortaderia_selloana_Robinson[&TT={1}]:0.062224)[&TT={1,2}]:0.01590333,(Cortaderia_araucana_G7162[&TT={1,2}]:0.036862,Cortaderia_jubata_ML1515[&TT={1,2}]:0.017138)[&TT={1,2}]:0)[&TT={1,2}]:0.02528467,(Cortaderia_nitida_ML1434[&TT={1,2}]:0.028702)#H13[&TT={1,2}]:[&TT={1}]0.016747)[&TT={1,2}]:0.02741467)[&TT={1,2}]:0.01536,(Cortaderia_boliviensis_ML672[&TT={1,2}]:0.048087,Lamprothyrsus_hieronymi_OM3534[&TT={1,2}]:0.0301745)[&TT={1,2}]:0.023521)[&TT={1,2}]:0.023634,((Cortaderia_bifida_ML1497[&TT={1,2}]:0.055444,Cortaderia_sericantha_ML1128[&TT={1,2}]:0.0792125)[&TT={1,2}]:0)#H14[&TT={1,2}]:[&TT={1}]0.025865)[&TT={1,2}]:0.031786,(#H13:[&TT={2}]0,#H14:[&TT={2}]0,(Cortaderia_columbiana_ML920[&TT={1,2}]:0.061529,Cortaderia_hapalotricha_ML1525[&TT={1,2}]:0.0821035)[&TT={1,2}]:0.04704867)[&TT={1,2}]:0.00938767)[&TT={1,2}]:0,((((Cortaderia_pilosa_MDP345[&TT={1,2}]:0.0602075,(Cortaderia_archboldii_JM115[&TT={1,2}]:0.04606933,((((Danthonia_spicata_Kellogg_sn[&TT={1,2}]:0.117698)#H17[&TT={1,2}]:[&TT={1}]0.007244,(Danthonia_domingensis_AA373[&TT={1,2}]:0.0843395,((Danthonia_alpina_MDP481[&TT={1,2}]:0.00064967,(Danthonia_alpina_MDP480[&TT={1,2}]:0.004987)#H18[&TT={1,2}]:[&TT={1}]0.008233)[&TT={1,2}]:0.01584067,(Danthonia_decumbens_MDP312[&TT={1,2}]:0.00729867,#H18:[&TT={2}]0)[&TT={1,2}]:0.01710067)[&TT={1,2}]:0.0136895)[&TT={1,2}]:0.010644)[&TT={1,2}]:0.010227,(((((Danthonia_chilensis_aureo_MDP340[&TT={1,2}]:0.0113715,((Danthonia_californica_amer_MDP330[&TT={1,2}]:0.00864925,(Danthonia_chilensis_chile_MDP342[&TT={1,2}]:0.010682)#H19[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0.00201625,(Danthonia_malacantha_MDP339[&TT={1,2}]:0.016332)#H20[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0.00641125)[&TT={1,2}]:0.02596,Danthonia_araucana_MDP337[&TT={1,2}]:0.014122)[&TT={1,2}]:0.03285367,#H17:[&TT={2}]0)[&TT={1,2}]:0.00566967,(Danthonia_secundiflora_ML1617[&TT={1,2}]:0,#H20:[&TT={1}]0.036915)[&TT={1,2}]:0.0316885)[&TT={1,2}]:0,#H19:[&TT={1}]0.001151)[&TT={1,2}]:0.021424)[&TT={1,2}]:0)#H16[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0.04682133)[&TT={1,2}]:0,#H10:[&TT={1}]0.069021)[&TT={1,2}]:0.0182625,#H16:[&TT={1}]0.061148)[&TT={1,2}]:0)#H15[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0.029871)#H12[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0,#H15:[&TT={1}]0.099332)[&TT={1,2}]:0.0417095)[&TT={1,2}]:0,#H11:[&TT={1}]0.034113)[&TT={1,2}]:0,#H12:[&TT={1}]0.030075)[&TT={1,2}]:0.1276345,#H2:[&TT={1}]0.018188)[&TT={1,2}]:0,#H4:[&TT={1}]0.48486599)[&TT={1,2}]:0)[&TT={1,2}]:0.085822,(Merxmuellera_drakensbergensis_PM4[&TT={1,2}]:0.018615)#H21[&TT={1,2}]:[&TT={2}]0)[&TT={1,2}]:0,#H1:[&TT={1}]0.077132)[&TT={1,2}]:0.147175,(Merxmuellera_macowanii_NPB1008[&TT={1,2}]:0,#H21:[&TT={1}]0.024085)[&TT={1,2}]:0.085975)[&TT={1,2}]:0.3252005,(Centropodia_glauca[&TT={1,2}]:0.37621299,(Merxmuellera_papposa_NPB1759[&TT={1,2}]:0.081125,Merxmuellera_rangei_NPB960[&TT={1,2}]:0.0863205)[&TT={1,2}]:0.233932)[&TT={1,2}]:0)[&TT={1,2}]:0)[&TT={1,2}];
+END;
+BEGIN parameters;
+	color_scheme_name	string	Caspian8
+	confidence_threshold	double	0
+	concordance_threshold	double	0
+	diagram	enum	RectangularPhylogram
+	flip_vertically	boolean	false
+	averaging	enum	ChildAverage
+	scaling	enum	LateBranching
+	outline_width	double	5
+	show_outline	boolean	false
+	acceptor_percentage	double	50
+	show_transfer	boolean	true
+	rectangular_edges	boolean	false
+	reticulate_edges_are_special	boolean	true
+END;

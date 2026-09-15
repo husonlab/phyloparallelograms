@@ -1,0 +1,191 @@
+#nexus [SplitsTree6]
+
+BEGIN SPLITSTREE6;
+DIMENSIONS nDataNodes=6 nAlgorithms=4;
+PROGRAM version='SplitsTree (version dev) - License GPL v3';
+WORKFLOW creationDate='1789287067608'; [Sun Sep 13 10:11:07 CEST 2026]
+END; [SPLITSTREE6]
+
+[
+Methods:
+Analysis was performed using SplitsTree (version dev)  (Huson and Bryant 2024 ; DH Huson and D. Bryant, The SplitsTree App: interactive analysis and visualization using phylogenetic trees and networks. Nature Methods 21(10):1773-1774 2024.).
+The original input consisted of 20 taxa and 2 trees.
+The Show Trees method was used (View=Tanglegram) so as to obtain a Tanglegram visualization (Huson 2025).
+
+References:
+Huson 2025: D.H. Huson. Displacement-Optimized Tanglegrams for Trees and Networks. Manuscript in preparation (2025).
+Huson and Bryant 2024: DH Huson and D. Bryant, The SplitsTree App: interactive analysis and visualization using phylogenetic trees and networks. Nature Methods 21(10):1773-1774 2024.
+]
+
+BEGIN TAXA;
+TITLE 'Input Taxa';
+LINK ALGORITHM = 'Input Data Loader';
+DIMENSIONS ntax=20;
+TAXLABELS
+	[1] 't13'
+	[2] 't1'
+	[3] 't9'
+	[4] 't16'
+	[5] 't11'
+	[6] 't10'
+	[7] 't18'
+	[8] 't6'
+	[9] 't7'
+	[10] 't20'
+	[11] 't12'
+	[12] 't3'
+	[13] 't14'
+	[14] 't4'
+	[15] 't5'
+	[16] 't19'
+	[17] 't8'
+	[18] 't2'
+	[19] 't17'
+	[20] 't15'
+;
+[DISPLAYLABELS;]
+[TAXINFO;]
+END; [TAXA]
+
+BEGIN ALGORITHM;
+TITLE 'Taxa Filter';
+LINK ALGORITHM = 'Input Data Loader';
+NAME 'Taxa Filter';
+OPTIONS
+;
+END; [ALGORITHM]
+
+BEGIN TAXA;
+TITLE 'Working Taxa';
+LINK ALGORITHM = 'Taxa Filter';
+DIMENSIONS ntax=20;
+TAXLABELS
+	[1] 't13'
+	[2] 't1'
+	[3] 't9'
+	[4] 't16'
+	[5] 't11'
+	[6] 't10'
+	[7] 't18'
+	[8] 't6'
+	[9] 't7'
+	[10] 't20'
+	[11] 't12'
+	[12] 't3'
+	[13] 't14'
+	[14] 't4'
+	[15] 't5'
+	[16] 't19'
+	[17] 't8'
+	[18] 't2'
+	[19] 't17'
+	[20] 't15'
+;
+[DISPLAYLABELS;]
+[TAXINFO;]
+END; [TAXA]
+
+BEGIN TREES;
+TITLE 'Input Trees';
+LINK ALGORITHM = 'Input Data Loader';
+[Number of trees: 2]
+PROPERTIES partialTrees=no rooted=yes;
+TRANSLATE
+	1 't13',
+	2 't1',
+	3 't9',
+	4 't16',
+	5 't11',
+	6 't10',
+	7 't18',
+	8 't6',
+	9 't7',
+	10 't20',
+	11 't12',
+	12 't3',
+	13 't14',
+	14 't4',
+	15 't5',
+	16 't19',
+	17 't8',
+	18 't2',
+	19 't17',
+	20 't15',
+;
+[TREES]
+		[1] tree 'Vienne-12-1-1'=[&R] ((1,((2,3),4)),((5,6),7),((((8,9),10),(11,(12,(13,14)))),((15,(16,17)),(18,(19,20)))))[&&NHX:GN=Vienne-12-1-1];
+		[2] tree 'Vienne-12-1-2'=[&R] ((1,((2,4),3)),((5,6),7),((12,(((8,9),10),(11,(13,14)))),((((18,15),20),19),(16,17))))[&&NHX:GN=Vienne-12-1-2];
+END; [TREES]
+
+BEGIN ALGORITHM;
+TITLE 'Input Data Filter';
+LINK TREES = 'Input Trees';
+NAME 'Trees Taxa Filter';
+END; [ALGORITHM]
+
+BEGIN TREES;
+TITLE 'Working Trees';
+LINK ALGORITHM = 'Input Data Filter';
+[Number of trees: 2]
+PROPERTIES partialTrees=no rooted=yes;
+TRANSLATE
+	1 't13',
+	2 't1',
+	3 't9',
+	4 't16',
+	5 't11',
+	6 't10',
+	7 't18',
+	8 't6',
+	9 't7',
+	10 't20',
+	11 't12',
+	12 't3',
+	13 't14',
+	14 't4',
+	15 't5',
+	16 't19',
+	17 't8',
+	18 't2',
+	19 't17',
+	20 't15',
+;
+[TREES]
+		[1] tree 'Vienne-12-1-1'=[&R] ((1,((2,3),4)),((5,6),7),((((8,9),10),(11,(12,(13,14)))),((15,(16,17)),(18,(19,20)))))[&&NHX:GN=Vienne-12-1-1];
+		[2] tree 'Vienne-12-1-2'=[&R] ((1,((2,4),3)),((5,6),7),((12,(((8,9),10),(11,(13,14)))),((((18,15),20),19),(16,17))))[&&NHX:GN=Vienne-12-1-2];
+END; [TREES]
+
+BEGIN ALGORITHM;
+TITLE 'Show Trees';
+LINK TREES = 'Working Trees';
+NAME 'Show Trees';
+OPTIONS
+	View = 'Tanglegram';
+END; [ALGORITHM]
+
+BEGIN VIEW;
+TITLE 'Tanglegram';
+LINK ALGORITHM = 'Show Trees';
+NAME 'TanglegramView';
+INPUT 'TREES';
+OPTIONS
+	Tree1 = 1,
+	Diagram1 = 'RectangularCladogram',
+	Averaging1 = 'ChildAverage',
+	Tree2 = 2,
+	Diagram2 = 'RectangularCladogram',
+	Averaging2 = 'ChildAverage',
+	OptimizeTanglegramCrossings1 = 'true',
+	OptimizeReticulateCrossings1 = 'true',
+	OptimizeTanglegramCrossings2 = 'true',
+	OptimizeReticulateCrossings2 = 'true',
+	NNPresort = 'true',
+	Orientation = 'Rotate0Deg',
+	HorizontalZoomFactor = 1,
+	VerticalZoomFactor = 1.21,
+	FontScaleFactor = 1,
+	ShowTreeNames = 'false',
+	ShowTreeInfo = 'false',
+	ShowInternalLabels = 'false',
+	LabelEdgesBy = 'None';
+END; [VIEW]

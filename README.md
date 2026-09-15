@@ -62,6 +62,12 @@ The complete user manual is available here:
 
 [User Manual](https://husonlab.github.io/phyloparallelograms/manual.html)
 
+## Data for the publication
+
+The trees, SplitsTree and PhyloParallelograms documents, and scripts used to
+produce the figures of the paper are in
+[`publication-data/`](publication-data/README.md), organized by figure.
+
 ## Citation
 
 If you use PhyloParallelgrams in your research, please cite:

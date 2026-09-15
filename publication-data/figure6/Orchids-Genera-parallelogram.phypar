@@ -1,0 +1,58 @@
+#PhyloParallelograms 1.0
+BEGIN metadata;
+END;
+BEGIN taxa;
+	1	Chloraea	Chloraea
+	2	Vanilla	Vanilla
+	3	Apostasia	Apostasia
+	4	Phragmipedium	Phragmipedium
+	5	Cypripedium	Cypripedium
+	6	Thelymitra	Thelymitra
+	7	Spiranthes	Spiranthes
+	8	Neottia	Neottia
+	9	Palmorchis	Palmorchis
+	10	Tropidia	Tropidia
+	11	Nervilia	Nervilia
+	12	Catasetum	Catasetum
+	13	Eulophia	Eulophia
+	14	Maxillaria	Maxillaria
+	15	Oncidium	Oncidium
+	16	Zygopetalum	Zygopetalum
+	17	Cymbidium	Cymbidium
+	18	Angraecum	Angraecum
+	19	Vanda	Vanda
+	20	Calypso	Calypso
+	21	Coelia	Coelia
+	22	Octomeria	Octomeria
+	23	Myoxanthus	Myoxanthus
+	24	Cattleya	Cattleya
+	25	Earina	Earina
+	26	Phaius	Phaius
+	27	Eria	Eria
+	28	Bulbophyllum	Bulbophyllum
+	29	Dendrobium	Dendrobium
+	30	Arundina	Arundina
+	31	Coelogyne	Coelogyne
+END;
+BEGIN trees;
+	1	Plastid	1	1	#8633BCFF	(Chloraea,((((((Vanilla,Apostasia),(Phragmipedium,Cypripedium)),(Thelymitra,Spiranthes)),(Neottia,Palmorchis)),(Tropidia,Nervilia)),((((((((Catasetum,Eulophia),((Maxillaria,Oncidium),Zygopetalum)),Cymbidium),(Angraecum,Vanda)),(((Calypso,Coelia),((Octomeria,Myoxanthus),Cattleya)),Earina)),Phaius),Eria),(Bulbophyllum,Dendrobium))),(Arundina,Coelogyne))[&&NHX:GN=Plastid];
+	2	Nuclear	1	1	#41A744FF	(((Tropidia,(Nervilia,((Neottia,Palmorchis),(((Spiranthes,Chloraea),Thelymitra),((Apostasia,Vanilla),(Phragmipedium,Cypripedium)))))),(((Eria,Phaius),((((Calypso,((Cattleya,(Octomeria,Myoxanthus)),Coelia)),Earina),(Cymbidium,((Catasetum,((Maxillaria,Zygopetalum),Oncidium)),Eulophia))),(Angraecum,Vanda))),(Dendrobium,Bulbophyllum))),Coelogyne,Arundina)[&&NHX:GN=Nuclear];
+END;
+BEGIN networks;
+	0	N1	(((Arundina[&TT={1,2}],Coelogyne[&TT={1,2}])[&TT={1,2}],((((((((Spiranthes[&TT={1,2}]:1,(Chloraea[&TT={1,2}]:1)#H1[&TT={1,2}]:[&TT={2}]1)[&TT={1,2}]:1,Thelymitra[&TT={1,2}]:2)[&TT={1,2}]:2,((Vanilla[&TT={1,2}],Apostasia[&TT={1,2}])[&TT={1,2}],(Phragmipedium[&TT={1,2}],Cypripedium[&TT={1,2}])[&TT={1,2}])[&TT={1,2}]:1)[&TT={1,2}]:1,(Neottia[&TT={1,2}],Palmorchis[&TT={1,2}])[&TT={1,2}])[&TT={1,2}]:1,(Nervilia[&TT={1,2}]:1)#H2[&TT={1,2}]:[&TT={2}]1)[&TT={1,2}]:1,(Tropidia[&TT={1,2}]:1,#H2:[&TT={1}]1)[&TT={1,2}]:2)[&TT={1,2}]:1,((Bulbophyllum[&TT={1,2}],Dendrobium[&TT={1,2}])[&TT={1,2}],(((Phaius[&TT={1,2}]:1)#H3[&TT={1,2}]:[&TT={1}]1,((((Cymbidium[&TT={1,2}]:1,((Eulophia[&TT={1,2}]:1,(Catasetum[&TT={1,2}]:1)#H5[&TT={1,2}]:[&TT={1}]1)[&TT={1,2}]:1,(#H5:[&TT={2}]1,((Oncidium[&TT={1,2}]:1,(Maxillaria[&TT={1,2}]:1)#H6[&TT={1,2}]:[&TT={1}]1)[&TT={1,2}]:1,(Zygopetalum[&TT={1,2}]:1,#H6:[&TT={2}]1)[&TT={1,2}]:2)[&TT={1,2}]:2)[&TT={1,2}]:2)[&TT={1,2}]:2)[&TT={1,2}]:2)#H4[&TT={1,2}]:[&TT={1}]1,(Angraecum[&TT={1,2}],Vanda[&TT={1,2}])[&TT={1,2}])[&TT={1,2}]:1,(#H4:[&TT={2}]1,(Earina[&TT={1,2}]:1,((Calypso[&TT={1,2}]:1,(Coelia[&TT={1,2}]:1)#H7[&TT={1,2}]:[&TT={1}]1)[&TT={1,2}]:1,(#H7:[&TT={2}]1,(Cattleya[&TT={1,2}]:1,(Octomeria[&TT={1,2}],Myoxanthus[&TT={1,2}])[&TT={1,2}])[&TT={1,2}]:1)[&TT={1,2}]:2)[&TT={1,2}]:2)[&TT={1,2}]:2)[&TT={1,2}]:2)[&TT={1,2}]:2)[&TT={1,2}]:1,(Eria[&TT={1,2}]:1,#H3:[&TT={2}]1)[&TT={1,2}]:2)[&TT={1,2}]:2)[&TT={1,2}]:3)[&TT={1,2}]:1,#H1:[&TT={1}]1)[&TT={1,2}]:2)[&TT={1,2}]:0.000001)[&TT={1,2}];
+END;
+BEGIN parameters;
+	color_scheme_name	string	Caspian8
+	confidence_threshold	double	0
+	concordance_threshold	double	0
+	diagram	enum	RectangularCladogram
+	flip_vertically	boolean	false
+	averaging	enum	ChildAverage
+	scaling	enum	LateBranching
+	outline_width	double	10
+	show_outline	boolean	false
+	acceptor_percentage	double	75
+	show_transfer	boolean	false
+	rectangular_edges	boolean	false
+	reticulate_edges_are_special	boolean	true
+END;
