@@ -1,0 +1,288 @@
+#nexus [SplitsTree6]
+
+BEGIN SPLITSTREE6;
+DIMENSIONS nDataNodes=6 nAlgorithms=4;
+PROGRAM version='SplitsTree (version dev) - License GPL v3';
+WORKFLOW creationDate='1789478827013'; [Tue Sep 15 15:27:07 CEST 2026]
+END; [SPLITSTREE6]
+
+[!Li G, Davis BW, Eizirik E, Murphy WJ. Phylogenomic evidence for ancient hybridization in the genomes of living cats (Felidae). Genome Res. 2016 Jan;26(1):1-11. doi: 10.1101/gr.186668.114. Epub 2015 Oct 30. PMID: 26518481; PMCID: PMC4691742. Captured from Figure 1a.]
+
+[
+Input:
+Li G, Davis BW, Eizirik E, Murphy WJ. Phylogenomic evidence for ancient hybridization in the genomes of living cats (Felidae). Genome Res. 2016 Jan;26(1):1-11. doi: 10.1101/gr.186668.114. Epub 2015 Oct 30. PMID: 26518481; PMCID: PMC4691742. Captured from Figure 1a.
+
+Methods:
+Analysis was performed using SplitsTree (version dev)  (Huson and Bryant 2024 ; DH Huson and D. Bryant, The SplitsTree App: interactive analysis and visualization using phylogenetic trees and networks. Nature Methods 21(10):1773-1774 2024.).
+The original input consisted of 43 taxa and 2 trees, partial.
+The Show Trees method was used (View=Tanglegram) so as to obtain a Tanglegram visualization (Huson 2025).
+
+References:
+Huson 2025: D.H. Huson. Displacement-Optimized Tanglegrams for Trees and Networks. Manuscript in preparation (2025).
+Huson and Bryant 2024: DH Huson and D. Bryant, The SplitsTree App: interactive analysis and visualization using phylogenetic trees and networks. Nature Methods 21(10):1773-1774 2024.
+]
+
+BEGIN TAXA;
+TITLE 'Input Taxa';
+LINK ALGORITHM = 'Input Data Loader';
+DIMENSIONS ntax=43;
+TAXLABELS
+	[1] 'Domestic cat'
+	[2] 'European wild cat'
+	[3] 'African wild cat'
+	[4] 'Chinese desert cat'
+	[5] 'Sand cat'
+	[6] 'Black-footed cat'
+	[7] 'Jungle cat'
+	[8] 'Asian leopard cat (Indoc.) 1'
+	[9] 'Asian leopard cat (Indoc.) 2'
+	[10] 'Asian leopard cat (Sund.)'
+	[11] 'Fishing cat'
+	[12] 'Flat-headed cat'
+	[13] 'Rusty spotted cat'
+	[14] 'Pallas cat'
+	[15] 'Jaguarundi'
+	[16] 'Puma'
+	[17] 'Cheetah'
+	[18] 'Asian golden cat'
+	[19] 'Bay cat'
+	[20] 'Marbled cat'
+	[21] 'Eurasian lynx'
+	[22] 'Iberian lynx'
+	[23] 'Canada lynx'
+	[24] 'Bobcat'
+	[25] 'Ocelot'
+	[26] 'Margay'
+	[27] 'Andean mt. cat'
+	[28] 'Kodkod'
+	[29] 'Geoffroys cat'
+	[30] 'Tigrina-S.Am.'
+	[31] 'Tigrina-C.Am.'
+	[32] 'Pampas cat'
+	[33] 'African golden cat'
+	[34] 'Caracal'
+	[35] 'Serval'
+	[36] 'Lion'
+	[37] 'Leopard'
+	[38] 'Jaguar'
+	[39] 'Snow leopard'
+	[40] 'Tiger'
+	[41] 'Sunda Clouded leopard'
+	[42] 'Clouded leopard'
+	[43] 'Asian leopard cat'
+;
+[DISPLAYLABELS;]
+[TAXINFO;]
+END; [TAXA]
+
+BEGIN ALGORITHM;
+TITLE 'Taxa Filter';
+LINK ALGORITHM = 'Input Data Loader';
+NAME 'Taxa Filter';
+OPTIONS
+;
+END; [ALGORITHM]
+
+BEGIN TAXA;
+TITLE 'Working Taxa';
+LINK ALGORITHM = 'Taxa Filter';
+DIMENSIONS ntax=43;
+TAXLABELS
+	[1] 'Domestic cat'
+	[2] 'European wild cat'
+	[3] 'African wild cat'
+	[4] 'Chinese desert cat'
+	[5] 'Sand cat'
+	[6] 'Black-footed cat'
+	[7] 'Jungle cat'
+	[8] 'Asian leopard cat (Indoc.) 1'
+	[9] 'Asian leopard cat (Indoc.) 2'
+	[10] 'Asian leopard cat (Sund.)'
+	[11] 'Fishing cat'
+	[12] 'Flat-headed cat'
+	[13] 'Rusty spotted cat'
+	[14] 'Pallas cat'
+	[15] 'Jaguarundi'
+	[16] 'Puma'
+	[17] 'Cheetah'
+	[18] 'Asian golden cat'
+	[19] 'Bay cat'
+	[20] 'Marbled cat'
+	[21] 'Eurasian lynx'
+	[22] 'Iberian lynx'
+	[23] 'Canada lynx'
+	[24] 'Bobcat'
+	[25] 'Ocelot'
+	[26] 'Margay'
+	[27] 'Andean mt. cat'
+	[28] 'Kodkod'
+	[29] 'Geoffroys cat'
+	[30] 'Tigrina-S.Am.'
+	[31] 'Tigrina-C.Am.'
+	[32] 'Pampas cat'
+	[33] 'African golden cat'
+	[34] 'Caracal'
+	[35] 'Serval'
+	[36] 'Lion'
+	[37] 'Leopard'
+	[38] 'Jaguar'
+	[39] 'Snow leopard'
+	[40] 'Tiger'
+	[41] 'Sunda Clouded leopard'
+	[42] 'Clouded leopard'
+	[43] 'Asian leopard cat'
+;
+[DISPLAYLABELS;]
+[TAXINFO;]
+END; [TAXA]
+
+BEGIN TREES;
+TITLE 'Input Trees';
+LINK ALGORITHM = 'Input Data Loader';
+[Number of trees: 2]
+PROPERTIES partialTrees=yes rooted=yes;
+TRANSLATE
+	1 'Domestic cat',
+	2 'European wild cat',
+	3 'African wild cat',
+	4 'Chinese desert cat',
+	5 'Sand cat',
+	6 'Black-footed cat',
+	7 'Jungle cat',
+	8 'Asian leopard cat (Indoc.) 1',
+	9 'Asian leopard cat (Indoc.) 2',
+	10 'Asian leopard cat (Sund.)',
+	11 'Fishing cat',
+	12 'Flat-headed cat',
+	13 'Rusty spotted cat',
+	14 'Pallas cat',
+	15 'Jaguarundi',
+	16 'Puma',
+	17 'Cheetah',
+	18 'Asian golden cat',
+	19 'Bay cat',
+	20 'Marbled cat',
+	21 'Eurasian lynx',
+	22 'Iberian lynx',
+	23 'Canada lynx',
+	24 'Bobcat',
+	25 'Ocelot',
+	26 'Margay',
+	27 'Andean mt. cat',
+	28 'Kodkod',
+	29 'Geoffroys cat',
+	30 'Tigrina-S.Am.',
+	31 'Tigrina-C.Am.',
+	32 'Pampas cat',
+	33 'African golden cat',
+	34 'Caracal',
+	35 'Serval',
+	36 'Lion',
+	37 'Leopard',
+	38 'Jaguar',
+	39 'Snow leopard',
+	40 'Tiger',
+	41 'Sunda Clouded leopard',
+	42 'Clouded leopard',
+	43 'Asian leopard cat',
+;
+[TREES]
+		[1] tree 'cats-nuclear'=[&R] ((((((((((((1:59,2:60):45,(3:72,4:70):34):72,5:176):47,6:215):57,7:281):222,((((((8:25,9:25):35,10:60):75,11:135):28,12:164):80,13:244):138,14:382):121):64,((15:155,16:154):170,17:325):242):57,(((18:170,19:169):182,20:351):193,(((21:59,22:59):48,23:107):108,24:215):329):80):73,(((25:126,26:126):76,27:203):21,((((28:43,29:43):46,30:89):19,31:108):62,32:170):54):473):65,((33:101,34:102):264,35:364):398):53,((((36:111,37:110):75,38:181):74,(39:140,40:140):115):126,(41:102,42:102):279):434):37)[&&NHX:GN=cats-nuclear];
+		[2] tree 'cats-mitogenome'=[&R] ((((((((((((1:84,4:83):66,(3:76,2:76):74):59,5:208):37,6:246):30,7:277):28,14:304):45,(((43:67,11:67):39,12:106):56,13:162):187):45,((34:86,33:86):72,35:159):236):55,(((15:83,16:83):48,17:131):148,((((22:63,23:63):38,21:101):27,24:128):71,((18:62,19:62):51,20:113):86):80):170):77,((((30:72,32:72):43,27:116):29,(25:71,26:71):73):99,((29:70,28:70):58,31:129):115):283):151,(((((36:68,37:68):45,39:113):30,38:143):21,40:164):59,42:222):454):72)[&&NHX:GN=cats-mitogenome];
+END; [TREES]
+
+BEGIN ALGORITHM;
+TITLE 'Input Data Filter';
+LINK TREES = 'Input Trees';
+NAME 'Trees Taxa Filter';
+END; [ALGORITHM]
+
+BEGIN TREES;
+TITLE 'Working Trees';
+LINK ALGORITHM = 'Input Data Filter';
+[Number of trees: 2]
+PROPERTIES partialTrees=yes rooted=yes;
+TRANSLATE
+	1 'Domestic cat',
+	2 'European wild cat',
+	3 'African wild cat',
+	4 'Chinese desert cat',
+	5 'Sand cat',
+	6 'Black-footed cat',
+	7 'Jungle cat',
+	8 'Asian leopard cat (Indoc.) 1',
+	9 'Asian leopard cat (Indoc.) 2',
+	10 'Asian leopard cat (Sund.)',
+	11 'Fishing cat',
+	12 'Flat-headed cat',
+	13 'Rusty spotted cat',
+	14 'Pallas cat',
+	15 'Jaguarundi',
+	16 'Puma',
+	17 'Cheetah',
+	18 'Asian golden cat',
+	19 'Bay cat',
+	20 'Marbled cat',
+	21 'Eurasian lynx',
+	22 'Iberian lynx',
+	23 'Canada lynx',
+	24 'Bobcat',
+	25 'Ocelot',
+	26 'Margay',
+	27 'Andean mt. cat',
+	28 'Kodkod',
+	29 'Geoffroys cat',
+	30 'Tigrina-S.Am.',
+	31 'Tigrina-C.Am.',
+	32 'Pampas cat',
+	33 'African golden cat',
+	34 'Caracal',
+	35 'Serval',
+	36 'Lion',
+	37 'Leopard',
+	38 'Jaguar',
+	39 'Snow leopard',
+	40 'Tiger',
+	41 'Sunda Clouded leopard',
+	42 'Clouded leopard',
+	43 'Asian leopard cat',
+;
+[TREES]
+		[1] tree 'cats-nuclear'=[&R] ((((((((((((1:59,2:60):45,(3:72,4:70):34):72,5:176):47,6:215):57,7:281):222,((((((8:25,9:25):35,10:60):75,11:135):28,12:164):80,13:244):138,14:382):121):64,((15:155,16:154):170,17:325):242):57,(((18:170,19:169):182,20:351):193,(((21:59,22:59):48,23:107):108,24:215):329):80):73,(((25:126,26:126):76,27:203):21,((((28:43,29:43):46,30:89):19,31:108):62,32:170):54):473):65,((33:101,34:102):264,35:364):398):53,((((36:111,37:110):75,38:181):74,(39:140,40:140):115):126,(41:102,42:102):279):434):37)[&&NHX:GN=cats-nuclear];
+		[2] tree 'cats-mitogenome'=[&R] ((((((((((((1:84,4:83):66,(3:76,2:76):74):59,5:208):37,6:246):30,7:277):28,14:304):45,(((43:67,11:67):39,12:106):56,13:162):187):45,((34:86,33:86):72,35:159):236):55,(((15:83,16:83):48,17:131):148,((((22:63,23:63):38,21:101):27,24:128):71,((18:62,19:62):51,20:113):86):80):170):77,((((30:72,32:72):43,27:116):29,(25:71,26:71):73):99,((29:70,28:70):58,31:129):115):283):151,(((((36:68,37:68):45,39:113):30,38:143):21,40:164):59,42:222):454):72)[&&NHX:GN=cats-mitogenome];
+END; [TREES]
+
+BEGIN ALGORITHM;
+TITLE 'Show Trees';
+LINK TREES = 'Working Trees';
+NAME 'Show Trees';
+OPTIONS
+	View = 'Tanglegram';
+END; [ALGORITHM]
+
+BEGIN VIEW;
+TITLE 'Tanglegram';
+LINK ALGORITHM = 'Show Trees';
+NAME 'TanglegramView';
+INPUT 'TREES';
+OPTIONS
+	Tree1 = 1,
+	Diagram1 = 'RectangularCladogram',
+	Averaging1 = 'ChildAverage',
+	Tree2 = 2,
+	Diagram2 = 'RectangularCladogram',
+	Averaging2 = 'ChildAverage',
+	OptimizeTanglegramCrossings1 = 'true',
+	OptimizeReticulateCrossings1 = 'true',
+	OptimizeTanglegramCrossings2 = 'true',
+	OptimizeReticulateCrossings2 = 'true',
+	NNPresort = 'true',
+	Orientation = 'Rotate0Deg',
+	HorizontalZoomFactor = 1,
+	VerticalZoomFactor = 1,
+	FontScaleFactor = 1,
+	ShowTreeNames = 'false',
+	ShowTreeInfo = 'false',
+	ShowInternalLabels = 'false',
+	LabelEdgesBy = 'None';
+END; [VIEW]
