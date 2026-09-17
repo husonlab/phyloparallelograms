@@ -129,17 +129,9 @@ performed in MrBayes v3.2.6 (Ronquist et al. 2012) using the partitioning
 schemes and substitution models specified in the supplied NEXUS files. MCMC
 analyses were run for 10 million generations, sampling trees every 100
 generations, with the first 25% of samples discarded as burn-in. *Betula
-pendula* (`Betula_pendula_MG386401`) was used as the outgroup. Because the
-nuclear and plastid data sets used different taxon-labelling conventions,
-labels were standardized before comparing the resulting trees. Species and
-specimen identities were determined from the original labels using
-Supplementary Data 1 of Zhou et al., with assistance from ChatGPT, and
-renamed in the form `Genus_species_identifier`. Nuclear and plastid labels
-representing the same biological specimen or accession were assigned
-identical standardized names. When no exact counterpart was present in the
-other data set, the original sample identifier was retained, and sufficient
-identifier information was preserved to ensure that all taxon labels remained
-unique.
+pendula* (`Betula_pendula_MG386401`) was used as the outgroup. Because the two data sets use different taxon labels, the labels were matched
+by hand using the sample information provided by Zhou et al., and labels that
+could not be matched were left unchanged.
 
 ## References
 
