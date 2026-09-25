@@ -59,3 +59,6 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+
+# the local documentation for the coding agent, kept out of this public repository (as CLAUDE.md is)
+ai/
