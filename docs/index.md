@@ -10,6 +10,10 @@ Open source repository: https://github.com/husonlab/phyloparallelograms
 - [User Manual](../docs/manual.md)
 - [Release Notes](../release-notes)
 
+If you use this software, please cite:
+
+- [Manuscript](https://www.biorxiv.org/content/10.64898/2026.09.18.752558v1)
+
 ## Downloads
 
 Latest installers are available from:
@@ -30,10 +34,9 @@ Source code is hosted at:
 
 ## Main author
 
-Prof. Daniel H. Huson, University of Tübingen
+- Daniel H. Huson, University of Tübingen
 
 ## Contributors
 
-Banu Cetinkaya, University of Tübingen
-
-Prof. Louxin Zhang, National University of Singapore
+- Banu Cetinkaya, University of Tübingen
+- Louxin Zhang, National University of Singapore
