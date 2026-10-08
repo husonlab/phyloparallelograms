@@ -186,7 +186,8 @@ public class NetworkView extends Group {
 				nodeLabeledNodeShapeMap.putAll(service.getNodeLabeledNodeShapeMap());
 
 				// report the effect of the DO layout: lower displacement means reticulate edges are drawn more compactly
-				phyloparallelograms.utils.ReticulateDisplacement.report(
+				if (false) // only use this to evaluate the option
+					phyloparallelograms.utils.ReticulateDisplacement.report(
 						useReticulateEdgeMultiplicitiesInLayout.get() ? "multiplicities on" : "multiplicities off",
 						network, nodeLabeledNodeShapeMap);
 
