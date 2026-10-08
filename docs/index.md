@@ -7,8 +7,8 @@ Open source repository: https://github.com/husonlab/phyloparallelograms
 
 ## Documentation
 
-- [User Manual](../docs/manual.md)
-- [Release Notes](../release-notes)
+- [User Manual](manual.md)
+- [Release Notes](https://github.com/husonlab/phyloparallelograms/tree/main/release-notes)
 
 If you use this software, please cite:
 
