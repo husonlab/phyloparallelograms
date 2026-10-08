@@ -16,7 +16,11 @@ version 6.7 or later); the exact versions are given in the Methods of the paper.
 
 There is one subdirectory per figure of the main text (`figure1` to
 `figure4`) and per figure of the Supplementary Material (`figureS1`,
-`figureS2`).
+`figureS2`). The file `Supplementary_Material.pdf` is the Supplementary
+Material of the paper: it describes the node labeling, the handling of
+multifurcations and missing taxa, branch lengths, the layout, and the
+preparation of the data sets, and contains Figs. S1 and S2 and Tables S1
+and S2. It is included in the Dryad deposit.
 
 | Directory | Figure | Data set | Source |
 |-----------|--------|----------|--------|
