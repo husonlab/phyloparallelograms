@@ -101,6 +101,9 @@ public class NetworkView extends Group {
 	@Option(description = "Draw reticulate edges in a special style, e.g. as curves")
 	private final BooleanProperty optionReticulateEdgesAreSpecial = new SimpleBooleanProperty(this, "optionReticulateEdgesAreSpecial", true);
 
+	@Option(description = "Use reticulate-edge multiplicities (the number of trees traced through each reticulate edge) when optimizing the network layout")
+	private final BooleanProperty useReticulateEdgeMultiplicitiesInLayout = new SimpleBooleanProperty(this, "useReticulateEdgeMultiplicitiesInLayout", true);
+
 	private final SelectionModel<Taxon> taxonSelectionModel;
 
 	{
@@ -112,6 +115,7 @@ public class NetworkView extends Group {
 		ProgramProperties.track(optionAcceptorPercentage, 75.0);
 		ProgramProperties.track(optionShowTransfer, false);
 		ProgramProperties.track(optionReticulateEdgesAreSpecial, true);
+		ProgramProperties.track(useReticulateEdgeMultiplicitiesInLayout, true);
 	}
 
 	private final Pane centerPane;
@@ -169,7 +173,7 @@ public class NetworkView extends Group {
 			clear();
 			var width = scaleFactorX * Math.max(400, getTargetWidth() - 200);
 			var height = scaleFactorY * Math.max(400, getTargetHeight() - 50);
-			service.setup(taxaBlock, network, getOptionDiagram(), getOptionAveraging(), getOptionScaling(), width, height, optionReticulateEdgesAreSpecial.get(), getApplicableAcceptorPercentage());
+			service.setup(taxaBlock, network, getOptionDiagram(), getOptionAveraging(), getOptionScaling(), width, height, optionReticulateEdgesAreSpecial.get(), getApplicableAcceptorPercentage(), useReticulateEdgeMultiplicitiesInLayout.get());
 			service.setOnSucceeded(a -> {
 				var result = service.getValue();
 				var labelsGroup = result.taxonLabels();
@@ -180,6 +184,11 @@ public class NetworkView extends Group {
 				networkGroup.getChildren().add(labelsGroup); // want labels on top of outline
 				nodeLabeledNodeShapeMap.clear();
 				nodeLabeledNodeShapeMap.putAll(service.getNodeLabeledNodeShapeMap());
+
+				// report the effect of the DO layout: lower displacement means reticulate edges are drawn more compactly
+				phyloparallelograms.utils.ReticulateDisplacement.report(
+						useReticulateEdgeMultiplicitiesInLayout.get() ? "multiplicities on" : "multiplicities off",
+						network, nodeLabeledNodeShapeMap);
 
 				for (var v : nodeLabeledNodeShapeMap.keySet()) {
 					if (network.hasTaxa(v)) {
@@ -361,6 +370,14 @@ public class NetworkView extends Group {
 
 	public BooleanProperty optionReticulateEdgesAreSpecialProperty() {
 		return optionReticulateEdgesAreSpecial;
+	}
+
+	public boolean isUseReticulateEdgeMultiplicitiesInLayout() {
+		return useReticulateEdgeMultiplicitiesInLayout.get();
+	}
+
+	public BooleanProperty useReticulateEdgeMultiplicitiesInLayoutProperty() {
+		return useReticulateEdgeMultiplicitiesInLayout;
 	}
 
 	public Legend getLegend() {

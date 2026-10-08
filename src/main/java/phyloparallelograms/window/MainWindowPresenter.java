@@ -259,6 +259,13 @@ public class MainWindowPresenter {
 		controller.getCurvedReticulateEdgesCheckMenuItem().selectedProperty().addListener((v, o, n) ->
 				undoManager.doAndAdd("special edges", networkView.optionReticulateEdgesAreSpecialProperty(), o, n));
 
+		// Layout Settings: toggle using reticulate-edge multiplicities in the layout optimization
+		controller.getUseReticulateEdgeMultiplicitiesCheckBox().selectedProperty().bindBidirectional(networkView.useReticulateEdgeMultiplicitiesInLayoutProperty());
+		networkView.useReticulateEdgeMultiplicitiesInLayoutProperty().addListener(e -> {
+			if (document.hasNetworks())
+				runUpdateNetworkDrawing();
+		});
+
 		var stackPane = new StackPane(networkView);
 		stackPane.setPadding(new Insets(25));
 
@@ -818,6 +825,17 @@ public class MainWindowPresenter {
 		controller.getMutualRefinementCheckBox().selectedProperty().bindBidirectional(algorithm.optionMutualRefinementProperty());
 		controller.getGroupNonSeparatedCheckBox().selectedProperty().bindBidirectional(algorithm.optionGroupNonSeparatedProperty());
 		controller.getMissingTaxaHeuristicCheckBox().selectedProperty().bindBidirectional(algorithm.optionMissingTaxaHeuristicProperty());
+		// changing any PhyloFusion setting recomputes the network (as if Run Layout were pressed), but only once a
+		// network has been computed, so that editing settings before the first run does not trigger a computation
+		InvalidationListener recomputeOnSettingChange = e -> {
+			if (document.hasNetworks())
+				runRecomputeNetworkAfterAWhile();
+		};
+		algorithm.optionReticulatePlacementProperty().addListener(recomputeOnSettingChange);
+		algorithm.optionEdgeWeightsProperty().addListener(recomputeOnSettingChange);
+		algorithm.optionMutualRefinementProperty().addListener(recomputeOnSettingChange);
+		algorithm.optionGroupNonSeparatedProperty().addListener(recomputeOnSettingChange);
+		algorithm.optionMissingTaxaHeuristicProperty().addListener(recomputeOnSettingChange);
 		// open on the taxon-labels pane, matching the previous behaviour of the Format button
 		controller.getSettingsAccordion().setExpandedPane(controller.getTaxonLabelsTitledPane());
 		controller.getRemoveTaxaMenuItem().setOnAction(e -> {

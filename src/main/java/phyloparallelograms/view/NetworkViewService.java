@@ -49,7 +49,8 @@ public class NetworkViewService extends AService<ComputeTreeLayout.Result> {
 	}
 
 	public void setup(TaxaBlock taxaBlock, PhyloTree network, TreeDiagramType diagram,
-					  Averaging averaging, LayoutRootedPhylogeny.Scaling scaling, double width, double height, boolean reticulateEdgesAreSpecial, double transferAcceptorPercentage) {
+					  Averaging averaging, LayoutRootedPhylogeny.Scaling scaling, double width, double height, boolean reticulateEdgesAreSpecial, double transferAcceptorPercentage,
+					  boolean useReticulateEdgeMultiplicities) {
 		setCallable(() -> {
 			getProgressListener().setTasks("Computing", "layout");
 
@@ -70,7 +71,7 @@ public class NetworkViewService extends AService<ComputeTreeLayout.Result> {
 			edgeLabeledEdgeShapeHashMap.clear();
 
 			return ComputeTreeLayout.apply(network, taxaBlock.getNtax(), taxonLabelMap::get, diagram, averaging, scaling, width, height, alignLabels,
-					nodeLabeledNodeShapeMap, edgeLabeledEdgeShapeHashMap, true, reticulateEdgesAreSpecial);
+					nodeLabeledNodeShapeMap, edgeLabeledEdgeShapeHashMap, true, reticulateEdgesAreSpecial, useReticulateEdgeMultiplicities);
 		});
 		restart();
 	}

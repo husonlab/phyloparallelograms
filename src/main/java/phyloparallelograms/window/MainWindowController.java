@@ -365,6 +365,12 @@ public class MainWindowController {
 	private TitledPane phyloFusionSettingsTitledPane;
 
 	@FXML
+	private TitledPane layoutSettingsTitledPane;
+
+	@FXML
+	private CheckBox useReticulateEdgeMultiplicitiesCheckBox;
+
+	@FXML
 	private ComboBox<splitstree6.compute.phylofusion.PhyloFusionAlgorithm.ReticulationPreference> reticulationPlacementCBox;
 
 	@FXML
@@ -933,6 +939,10 @@ public class MainWindowController {
 
 	public CheckBox getMissingTaxaHeuristicCheckBox() {
 		return missingTaxaHeuristicCheckBox;
+	}
+
+	public CheckBox getUseReticulateEdgeMultiplicitiesCheckBox() {
+		return useReticulateEdgeMultiplicitiesCheckBox;
 	}
 
 	public ToggleButton getNoteToggleButton() {

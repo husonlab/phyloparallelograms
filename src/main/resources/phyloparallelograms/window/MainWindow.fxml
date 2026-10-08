@@ -175,6 +175,28 @@
                                                                         </GridPane>
                                                                     </content>
                                                                 </TitledPane>
+                                                                <TitledPane fx:id="layoutSettingsTitledPane" text="Layout Settings">
+                                                                    <content>
+                                                                        <GridPane hgap="8.0" vgap="8.0">
+                                                                            <padding>
+                                                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                                            </padding>
+                                                                            <columnConstraints>
+                                                                                <ColumnConstraints hgrow="ALWAYS" />
+                                                                            </columnConstraints>
+                                                                            <children>
+                                                                                <CheckBox fx:id="useReticulateEdgeMultiplicitiesCheckBox" text="Use reticulate edge multiplicities" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Use the number of trees traced through each reticulate edge to weight the network layout optimization" />
+                                                                                    </tooltip>
+                                                                                </CheckBox>
+                                                                            </children>
+                                                                            <rowConstraints>
+                                                                                <RowConstraints />
+                                                                            </rowConstraints>
+                                                                        </GridPane>
+                                                                    </content>
+                                                                </TitledPane>
                                                             </panes>
                                                         </Accordion>
                                                         <TitledPane fx:id="noteTitledPane" animated="false" collapsible="false" prefWidth="400.0" text="Note" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0">
