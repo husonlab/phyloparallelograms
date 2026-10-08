@@ -1,6 +1,6 @@
-# Figure 3: synthetic tree pairs and the complexity benchmark
+# Figure 4: synthetic tree pairs and the complexity benchmark
 
-Panels a to d of Fig. 3 show four synthetic tree pairs as tanglegrams and
+Panels a to d of Fig. 4 show four synthetic tree pairs as tanglegrams and
 parallelograms (files `Vienne-<RF>-1.tre`, `Vienne-<RF>-1-tanglegram.stree6`
 and `Vienne-<RF>-1-parallelogram.phypar` in this directory; see the README in
 the parent directory). Panel e is the complexity benchmark described here.
@@ -17,7 +17,7 @@ of the PhyloFusion scaffold underlying the phylogenetic parallelogram.
 - `rf_td_h.tsv`: the results, one row per tree pair, with columns `RF`
   (Robinson–Foulds distance), `TD` (minimum total displacement of the
   tanglegram) and `H` (hybridization number of the scaffold). This table is
-  the Source Data of Fig. 3e; the plot can be reproduced from it directly (step
+  the Source Data of Fig. 4e; the plot can be reproduced from it directly (step
   4 below) without rerunning the computation.
 - `tanglegram-phylofusion.wflow6`: a SplitsTree workflow that reads one tree
   pair, computes the displacement-optimized tanglegram (which reports TD) and
