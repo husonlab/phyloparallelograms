@@ -43,10 +43,9 @@ import java.util.TreeMap;
 /**
  * reads and writes a PhyloParallelograms document to and from a plain text file.
  * <p>
- * This is a text-based, pure-Java replacement for the SQLite-based {@link PhyloParallelogramsDB}, and mirrors its
- * behaviour exactly, so that it can be used interchangeably on platforms (such as iOS) where the native SQLite driver
- * is not available. Both persist the same content: taxa, trees (with layout flags and colors), networks, and the
- * annotated options registry.
+ * This is a pure-Java text format (it replaced the original SQLite-based format, which needed a native driver that is
+ * not available on iOS). It persists taxa, trees (with layout flags and colors), networks, the annotated options
+ * registry and the note.
  * <p>
  * The format is line-oriented and self-describing. It opens with a magic header line, followed by BEGIN/END sections.
  * Within a section, each record is one line of tab-separated, escaped fields:
@@ -87,7 +86,7 @@ public class PhyloParallelogramsText {
 	private static final String METADATA_NOTE = "note";
 
 	/**
-	 * writes the document content to a text file, mirroring {@link PhyloParallelogramsDB#save}
+	 * writes the document content to a text file
 	 */
 	public static void save(String fileName, List<TreeRecord> treeRecords, List<PhyloTree> networks,
 							TaxaBlock taxaBlock, OptionsRegistry options, String note) throws IOException {
@@ -149,7 +148,7 @@ public class PhyloParallelogramsText {
 	}
 
 	/**
-	 * loads the document content from a text file, mirroring {@link PhyloParallelogramsDB#load}
+	 * loads the document content from a text file
 	 */
 	public static void load(String fileName, Document document, OptionsRegistry options) throws IOException {
 		FileUtils.checkFileReadableNonEmpty(fileName);
@@ -270,8 +269,7 @@ public class PhyloParallelogramsText {
 	}
 
 	/**
-	 * checks whether the named file looks like a PhyloParallelograms text file, mirroring
-	 * {@link SQLiteUtils#isSQLiteWithTreesOrNetworksTable}
+	 * checks whether the named file looks like a PhyloParallelograms text file
 	 */
 	public static boolean isPhyloParallelogramsTextFile(String fileName) {
 		if (fileName == null)

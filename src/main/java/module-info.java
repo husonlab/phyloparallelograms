@@ -10,7 +10,6 @@ module phyloparallelograms {
 	requires jloda_phylogeny;
 	requires splitstreesix;
 	requires java.xml;
-	requires java.sql;
 	requires org.apache.commons.numbers.gamma;
 	requires jdk.compiler;
 	requires java.desktop;

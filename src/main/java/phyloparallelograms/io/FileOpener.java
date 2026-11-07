@@ -58,10 +58,6 @@ public class FileOpener implements Consumer<String> {
 		try {
 			if (PhyloParallelogramsText.isPhyloParallelogramsTextFile(fileName)) {
 				PhyloParallelogramsText.load(fileName, window.getDocument(), window.getOptionsRegistry());
-			} else if (SQLiteUtils.isSQLiteWithTreesOrNetworksTable(fileName)) {
-				// legacy: PhyloParallelograms files written in the old SQLite format (desktop only; the native
-				// driver is absent on iOS, where isSQLiteWithTreesOrNetworksTable simply returns false)
-				PhyloParallelogramsDB.load(fileName, window.getDocument(), window.getOptionsRegistry());
 			} else {
 				var firstLine = Objects.requireNonNull(FileUtils.getFirstLineFromFile(new File(fileName))).trim().toLowerCase();
 				if (firstLine.startsWith("#nexus")) {
@@ -94,8 +90,6 @@ public class FileOpener implements Consumer<String> {
 	public static boolean isAcceptable(File file) {
 		var fileName = file.getPath();
 		if (PhyloParallelogramsText.isPhyloParallelogramsTextFile(fileName))
-			return true;
-		if (SQLiteUtils.isSQLiteWithTreesOrNetworksTable(fileName))
 			return true;
 		var firstLine = Objects.requireNonNull(FileUtils.getFirstLineFromFile(new File(fileName))).trim().toLowerCase();
 		return (firstLine.startsWith("#nexus") || (firstLine.startsWith("(") && firstLine.contains(")")));

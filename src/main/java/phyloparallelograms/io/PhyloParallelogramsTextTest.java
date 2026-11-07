@@ -37,7 +37,6 @@ import splitstree6.data.TaxaBlock;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,8 +44,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * round-trip test for {@link PhyloParallelogramsText}: verifies that saving and loading via the text format preserves
- * all document content, that repeated serialization is stable, and that the text format is equivalent to the SQLite
- * format {@link PhyloParallelogramsDB} (which requires the native driver, present on desktop).
+ * all document content and that repeated serialization is stable.
  * <p>
  * This is a standalone runnable test (the repo has no JUnit); a non-zero exit code signals failure. It runs on the
  * JavaFX application thread because {@link Document} installs listeners that use {@code Platform.runLater}.
@@ -136,7 +134,6 @@ public class PhyloParallelogramsTextTest {
 
 		check(PhyloParallelogramsText.isPhyloParallelogramsTextFile(textFile.toString()),
 				"detection: text file recognized");
-		check(!looksLikeSQLite(textFile), "text file is not SQLite");
 
 		var textDoc = new Document();
 		var textCarrier = new OptCarrier();
@@ -152,28 +149,6 @@ public class PhyloParallelogramsTextTest {
 				new ArrayList<>(textDoc.getNetworks()), textDoc.getTaxaBlock(), textOptions, textDoc.getNote());
 		eq(Files.readString(textFile, StandardCharsets.UTF_8), Files.readString(textFile2, StandardCharsets.UTF_8),
 				"idempotence: second save byte-identical to first");
-
-		// -------- Test 3: text format equivalent to SQLite format --------
-		try {
-			var dbFile = Files.createTempFile("phypar-db-", ".phypar");
-			Files.deleteIfExists(dbFile); // let SQLite create it fresh
-			var dbCarrierIn = new OptCarrier();
-			dbCarrierIn.alpha.set(inCarrier.alpha.get());
-			dbCarrierIn.beta.set(inCarrier.beta.get());
-			PhyloParallelogramsDB.save(dbFile.toString(), treeRecords, networks, taxaBlock,
-					OptionsRegistry.of(dbCarrierIn));
-
-			var dbDoc = new Document();
-			var dbCarrier = new OptCarrier();
-			var dbOptions = OptionsRegistry.of(dbCarrier);
-			PhyloParallelogramsDB.load(dbFile.toString(), dbDoc, dbOptions);
-
-			compareContent("sqlite round-trip", treeRecords, networks, taxaBlock, inCarrier, dbDoc, dbCarrier);
-			// and text-loaded == sqlite-loaded
-			compareDocuments("text vs sqlite", textDoc, dbDoc);
-		} catch (UnsatisfiedLinkError | NoClassDefFoundError ex) {
-			System.out.println("skip: SQLite equivalence (native driver unavailable): " + ex.getMessage());
-		}
 	}
 
 	// ---------- comparisons ----------
@@ -213,20 +188,6 @@ public class PhyloParallelogramsTextTest {
 		eq(inCarrier.beta.get(), carrier.beta.get(), label + ": option beta");
 	}
 
-	private static void compareDocuments(String label, Document a, Document b) {
-		eq(a.getTaxaBlock().getNtax(), b.getTaxaBlock().getNtax(), label + ": taxa count");
-		eq(a.getTreeRecords().size(), b.getTreeRecords().size(), label + ": tree count");
-		for (var i = 0; i < Math.min(a.getTreeRecords().size(), b.getTreeRecords().size()); i++) {
-			eq(nwk(a.getTreeRecords().get(i).getTree()), nwk(b.getTreeRecords().get(i).getTree()),
-					label + ": tree[" + i + "] newick");
-			eq(web(a.getTreeRecords().get(i).getColor()), web(b.getTreeRecords().get(i).getColor()),
-					label + ": tree[" + i + "] color");
-		}
-		eq(a.getNetworks().size(), b.getNetworks().size(), label + ": network count");
-		for (var i = 0; i < Math.min(a.getNetworks().size(), b.getNetworks().size()); i++)
-			eq(nwk(a.getNetworks().get(i)), nwk(b.getNetworks().get(i)), label + ": network[" + i + "] newick");
-	}
-
 	// ---------- helpers ----------
 
 	private static TreeRecord makeTreeRecord(String name, int id, boolean run, boolean show, String newick, String color)
@@ -254,16 +215,6 @@ public class PhyloParallelogramsTextTest {
 
 	private static String web(Color color) {
 		return color == null ? null : ColorUtilsFX.toWeb(color);
-	}
-
-	private static boolean looksLikeSQLite(Path file) {
-		try (var raf = new java.io.RandomAccessFile(file.toFile(), "r")) {
-			var header = new byte[16];
-			raf.readFully(header);
-			return new String(header, StandardCharsets.UTF_8).startsWith("SQLite format 3");
-		} catch (Exception ex) {
-			return false;
-		}
 	}
 
 	private static void eq(Object expected, Object actual, String msg) {
