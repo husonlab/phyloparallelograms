@@ -308,6 +308,9 @@ public class MainWindowController {
 	private CheckMenuItem showLegendCheckMenuItem;
 
 	@FXML
+	private CheckMenuItem showQRCodeCheckMenuItem;
+
+	@FXML
 	private CheckMenuItem showOutlineCheckMenuItem2;
 
 	@FXML
@@ -486,10 +489,11 @@ public class MainWindowController {
 				copyTaxaMenuItem, copyTreesMenuItem, copyNetworkMenuItem,
 				new SeparatorMenuItem(), copyImageMenuItem,
 				new SeparatorMenuItem(), printMenuItem,
-				new SeparatorMenuItem(), exportImageMenuItem, exportNewickMenuItem), false);
+				new SeparatorMenuItem(), exportImageMenuItem, exportNewickMenuItem,
+				new SeparatorMenuItem(), showQRCodeCheckMenuItem), false);
 		// the menu-bar items read just "Image..."/"Data..." under the Export sub-menu; spell them out here
-		exportItems.get(exportItems.size() - 2).setText("Export Image...");
-		exportItems.get(exportItems.size() - 1).setText("Export Data...");
+		exportItems.get(exportItems.size() - 4).setText("Export Image...");
+		exportItems.get(exportItems.size() - 3).setText("Export Data...");
 		exportMenuButton.getItems().addAll(exportItems);
 
 		runLayoutButton.onActionProperty().bindBidirectional(runMenuItem.onActionProperty());
@@ -911,6 +915,10 @@ public class MainWindowController {
 
 	public CheckMenuItem getShowLegendCheckMenuItem() {
 		return showLegendCheckMenuItem;
+	}
+
+	public CheckMenuItem getShowQRCodeCheckMenuItem() {
+		return showQRCodeCheckMenuItem;
 	}
 
 	public TitledPane getTaxonLabelsTitledPane() {

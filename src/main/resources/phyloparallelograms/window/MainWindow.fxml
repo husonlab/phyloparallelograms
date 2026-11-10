@@ -531,6 +531,7 @@
                                         </Menu>
                                         <CheckMenuItem fx:id="showOutlineCheckMenuItem" mnemonicParsing="false" selected="true" text="Show Outline" />
                                         <CheckMenuItem fx:id="showLegendCheckMenuItem" mnemonicParsing="false" selected="true" text="Show Trees Legend" />
+                                        <CheckMenuItem fx:id="showQRCodeCheckMenuItem" mnemonicParsing="false" text="Show QR Code" />
                                         <SeparatorMenuItem mnemonicParsing="false" />
                                         <CheckMenuItem fx:id="curvedReticulateEdgesCheckMenuItem" mnemonicParsing="false" selected="true" text="Curved Reticulate Edges" />
                                         <CheckMenuItem fx:id="useTransferMenuItem" mnemonicParsing="false" text="Use Transfer Edges" />

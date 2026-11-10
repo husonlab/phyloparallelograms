@@ -210,7 +210,9 @@ public class NetworkView extends Group {
 								}
 								label.setOnMousePressed(Event::consume);
 								label.setOnMouseClicked(e -> {
-									if (!e.isShiftDown())
+									// on a touch screen there is no shift key, so a tap on a label adds to, or removes from,
+									// the selection; a tap on the background clears the selection
+									if (!e.isShiftDown() && ProgramProperties.isDesktop())
 										taxonSelectionModel.clearSelection();
 									if (taxon != null)
 										taxonSelectionModel.toggleSelection(taxon);

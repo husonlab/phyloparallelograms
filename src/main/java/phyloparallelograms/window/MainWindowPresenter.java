@@ -21,6 +21,10 @@
 package phyloparallelograms.window;
 
 import javafx.application.Platform;
+import jloda.fx.window.NotificationManager;
+import jloda.fx.qr.QRViewUtils;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -673,6 +677,22 @@ public class MainWindowPresenter {
 			}
 		});
 		controller.getCopyNetworkMenuItem().disableProperty().bind(document.hasNetworksProperty().not().or(serviceRunning));
+
+		// Show QR Code: the network in Newick format, with its annotations if that fits into a QR code
+		{
+			var showQRCode = controller.getShowQRCodeCheckMenuItem();
+			showQRCode.selectedProperty().addListener((v, o, n) -> {
+				if (n && NetworkQR.apply(document.getNetwork()) == null) {
+					NotificationManager.showWarning("The network is too large to be shown as a QR code");
+					Platform.runLater(() -> showQRCode.setSelected(false));
+				}
+			});
+			var networkChanged = new SimpleLongProperty(this, "networkChanged", 0);
+			document.getNetworks().addListener((InvalidationListener) e -> networkChanged.set(networkChanged.get() + 1));
+			QRViewUtils.setup(controller.getInnerAnchorPane(), networkChanged, () -> NetworkQR.apply(document.getNetwork()),
+					new SimpleObjectProperty<>(), showQRCode.selectedProperty());
+			showQRCode.disableProperty().bind(document.hasNetworksProperty().not());
+		}
 
 		controller.getCopyMenuItem().setOnAction(e -> {
 			if (focusOwner.get() instanceof TextInputControl tic) {
