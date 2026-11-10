@@ -216,6 +216,30 @@
                                                     <children>
                                                         <ToolBar minHeight="-Infinity" prefHeight="32.0">
                                                                     <items>
+                                                                        <Region maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                                                                        <ToggleButton fx:id="moreToggleButton" mnemonicParsing="false" text="More">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Show or hide the toolbar for diagram, settings, colors and zoom" />
+                                                                            </tooltip>
+                                                                        </ToggleButton>
+                                                                        <Button fx:id="selectTaxaButton" mnemonicParsing="false" text="Select">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Select all or none taxa" />
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <ToggleButton fx:id="findButton" mnemonicParsing="false" text="Find" />
+                                                                        <ToggleButton fx:id="formatToggleButton" mnemonicParsing="false" text="Format" />
+                                                                        <MenuButton fx:id="exportMenuButton" mnemonicParsing="false" text="Export">
+                                                                            <items>
+                                                                            </items>
+                                                                        </MenuButton>
+                                                                    </items>
+                                             <padding>
+                                                <Insets left="25.0" />
+                                             </padding>
+                                                                </ToolBar>
+                                                        <ToolBar fx:id="moreToolBar" minHeight="-Infinity" prefHeight="32.0">
+                                                            <items>
                                                                         <ToggleButton fx:id="noteToggleButton" mnemonicParsing="false">
                                                                             <tooltip>
                                                                                 <Tooltip text="Show or hide a note describing this dataset, e.g. the paper it is from" />
@@ -292,23 +316,8 @@
                                                                                 <Tooltip text="Contract horizontally" />
                                                                             </tooltip>
                                                                         </Button>
-                                                                        <Region maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-                                                                        <Button fx:id="selectTaxaButton" mnemonicParsing="false" text="Select">
-                                                                            <tooltip>
-                                                                                <Tooltip text="Select all or none taxa" />
-                                                                            </tooltip>
-                                                                        </Button>
-                                                                        <ToggleButton fx:id="findButton" mnemonicParsing="false" text="Find" />
-                                                                        <ToggleButton fx:id="formatToggleButton" mnemonicParsing="false" text="Format" />
-                                                                        <MenuButton fx:id="exportMenuButton" mnemonicParsing="false" text="Export">
-                                                                            <items>
-                                                                            </items>
-                                                                        </MenuButton>
-                                                                    </items>
-                                             <padding>
-                                                <Insets left="25.0" />
-                                             </padding>
-                                                                </ToolBar>
+                                                            </items>
+                                                        </ToolBar>
                                                         <Separator prefWidth="200.0" />
                                                     </children>
                                                 </VBox>

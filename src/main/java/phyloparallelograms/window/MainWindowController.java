@@ -405,6 +405,12 @@ public class MainWindowController {
 	@FXML
 	private ToggleButton sideBarCheckMenuItem;
 
+	@FXML
+	private ToggleButton moreToggleButton;
+
+	@FXML
+	private ToolBar moreToolBar;
+
 	private final BooleanProperty disableAllShow = new SimpleBooleanProperty(false);
 	private final BooleanProperty disableAllRun = new SimpleBooleanProperty(false);
 	private final DoubleProperty lastLeftDivider = new SimpleDoubleProperty();
@@ -414,7 +420,13 @@ public class MainWindowController {
 	private void initialize() {
 		lastLeftDivider.set(splitPane.getDividerPositions()[0]);
 
-		MaterialIcons.setIcon(settingsMenuButton, MaterialIcons.more_vert);
+		MaterialIcons.setIcon(settingsMenuButton, MaterialIcons.settings);
+		MaterialIcons.setIcon(moreToggleButton, MaterialIcons.more_vert);
+
+		// the toolbar for diagram, settings, colors and zoom is only shown on request
+		moreToggleButton.setSelected(false);
+		moreToolBar.visibleProperty().bind(moreToggleButton.selectedProperty());
+		moreToolBar.managedProperty().bind(moreToggleButton.selectedProperty());
 
 		MaterialIcons.setIcon(sideBarCheckMenuItem, MaterialIcons.view_sidebar);
 		MaterialIcons.setIcon(runLayoutButton, MaterialIcons.play_circle, "", false);
@@ -951,6 +963,14 @@ public class MainWindowController {
 
 	public CheckBox getUseReticulateEdgeMultiplicitiesCheckBox() {
 		return useReticulateEdgeMultiplicitiesCheckBox;
+	}
+
+	public ToggleButton getMoreToggleButton() {
+		return moreToggleButton;
+	}
+
+	public ToolBar getMoreToolBar() {
+		return moreToolBar;
 	}
 
 	public ToggleButton getNoteToggleButton() {
