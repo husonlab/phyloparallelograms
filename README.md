@@ -74,8 +74,8 @@ produce the figures of the paper are in
 
 If you use PhyloParallelgrams in your research, please cite:
 
-[Paper](https://doi.org/10.64898/2026.09.18.752558) Daniel H. Huson, Banu Cetinkaya and Louxin Zhang. Phylogenetic Parallelograms for Visual Comparison of Discordant
-Trees. (Manuscript in review). 
+Daniel H. Huson, Banu Cetinkaya and Louxin Zhang. Phylogenetic Parallelograms for Visual Comparison of Discordant
+Trees. ([Manuscript in review](https://doi.org/10.64898/2026.09.18.752558)). 
 
 ## License
 
