@@ -20,6 +20,8 @@ Phylogenetic parallelogram
 - Interactive zooming, panning, and selection
 - Export high-quality figures for publication
 - Available for macOS, Windows, and Linux
+- Also available as an app for iPhone and iPad: see the [PhyloParallelograms App page](https://husonlab.github.io/mobile-apps/phyloparallelograms.html)
+  for a description of the app and how to get it
 
 ## Installation
 
