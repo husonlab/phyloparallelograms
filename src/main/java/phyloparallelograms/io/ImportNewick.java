@@ -125,9 +125,11 @@ public class ImportNewick {
 				window.getPresenter().runUpdateNetworkDrawing();
 			});
 		}
+		// count has only numbered the phylogenies that came without a name
+		var imported = phylogenies.size();
 		if (showInfoMessage)
-			WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Imported %d %s".formatted(count, count == 1 ? "phylogeny" : "phylogenies"));
-		return count;
+			WindowNotifications.showInfo(window.getController().getCenterAnchorPane(), "Imported %d %s".formatted(imported, imported == 1 ? "phylogeny" : "phylogenies"));
+		return imported;
 	}
 
 	/**
