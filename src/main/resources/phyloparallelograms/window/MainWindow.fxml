@@ -95,7 +95,7 @@
                                                 </TableView>
                                                 <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                                                     <children>
-                                                        <Label fx:id="confidenceLabel" minWidth="30.0" text="Min branch confidence (%):" />
+                                                        <Label fx:id="confidenceLabel" minWidth="30.0" text="Min confidence:" />
                                                         <Spinner fx:id="confidenceSpinner" editable="true" prefWidth="60.0" />
                                                     </children>
                                                     <padding>
@@ -104,7 +104,7 @@
                                                 </HBox>
                                                 <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
                                                     <children>
-                                                        <Label fx:id="concordanceLabel" minWidth="30.0" text="Min branch concordance (%):" />
+                                                        <Label fx:id="concordanceLabel" minWidth="30.0" text="Min concordance:" />
                                                         <Spinner fx:id="concordanceSpinner" editable="true" prefWidth="60.0" />
                                                     </children>
                                                     <padding>

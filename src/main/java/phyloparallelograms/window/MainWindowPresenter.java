@@ -20,6 +20,9 @@
 
 package phyloparallelograms.window;
 
+import javafx.scene.input.TouchEvent;
+import javafx.scene.input.TouchPoint;
+import javafx.scene.input.ZoomEvent;
 import javafx.application.Platform;
 import jloda.fx.window.NotificationManager;
 import jloda.fx.qr.QRViewUtils;
@@ -137,7 +140,7 @@ public class MainWindowPresenter {
 
 		OptionControls.bindSpinner(controller.getConfidenceSpinner(), optionsRegistry.get("confidence_threshold"), 1);
 		controller.getConfidenceSpinner().disableProperty().bind(document.hasTreeConfidencesProperty().not().or(canRun.not()));
-		CoalescingUndo.track(undoManager, "min branch confidence", confidenceThreshold, UNDO_COALESCE_DELAY);
+		CoalescingUndo.track(undoManager, "min confidence", confidenceThreshold, UNDO_COALESCE_DELAY);
 		confidenceThreshold.addListener(e -> runRecomputeNetworkAfterAWhile());
 
 		controller.getSetConfidenceThresholdMenuItem().setOnAction(e -> {
@@ -149,7 +152,7 @@ public class MainWindowPresenter {
 
 		OptionControls.bindSpinner(controller.getConcordanceSpinner(), optionsRegistry.get("concordance_threshold"), 1);
 		controller.getConcordanceSpinner().disableProperty().bind(canRun.not().or(Bindings.createBooleanBinding(() -> document.getRunTrees().size() < 5, document.updatedRunTreesProperty())));
-		CoalescingUndo.track(undoManager, "min branch concordance", concordanceThreshold, UNDO_COALESCE_DELAY);
+		CoalescingUndo.track(undoManager, "min concordance", concordanceThreshold, UNDO_COALESCE_DELAY);
 		concordanceThreshold.addListener(e -> runRecomputeNetworkAfterAWhile());
 
 		controller.getSetCondordanceThresholdMenuItem().setOnAction(e -> {
@@ -526,21 +529,36 @@ public class MainWindowPresenter {
 			ScaleDrawing.apply(group, 1, scaleBy);
 		});
 
-		// on a touch screen, a pinch scales the drawing as the zoom buttons do, so that the labels keep their size:
-		// with the fingers side by side it scales horizontally, with one above the other vertically, and a diagonal
-		// pinch scales both (the scroll pane determines the direction); radial and circular diagrams keep their
-		// aspect ratio. The zoom events of a gesture come in quick succession and are applied together
+		// on a touch screen, a pinch scales the drawing as the zoom buttons do, so that the labels keep their size.
+		// The zoom events of a gesture come in quick succession and are applied together
 		if (!ProgramProperties.isDesktop()) {
 			var scrollPane = controller.getScrollPane();
 			scrollPane.lockAspectRatioProperty().bind(maintainAspectRatio);
+			// a pinch scales the drawing either horizontally or vertically, whichever the line between the two fingers is
+			// closer to; radial and circular diagrams keep their aspect ratio. The direction is fixed when the pinch starts
 			var pinch = new Object() {
 				double factorX = 1.0;
 				double factorY = 1.0;
 				boolean scheduled = false;
+				boolean fingersHorizontal = true; // from the most recent touch event with two fingers down
+				boolean horizontal = true; // direction of the pinch in progress
 			};
+			scrollPane.addEventFilter(TouchEvent.ANY, e -> {
+				var points = e.getTouchPoints().stream().filter(t -> t.getState() != TouchPoint.State.RELEASED).limit(2).toList();
+				if (points.size() == 2)
+					pinch.fingersHorizontal = Math.abs(points.get(0).getSceneX() - points.get(1).getSceneX()) >= Math.abs(points.get(0).getSceneY() - points.get(1).getSceneY());
+			});
+			scrollPane.addEventFilter(ZoomEvent.ZOOM_STARTED, e -> pinch.horizontal = pinch.fingersHorizontal);
 			scrollPane.setUpdateScaleMethod(() -> {
-				pinch.factorX *= scrollPane.getZoomFactorX();
-				pinch.factorY *= scrollPane.getZoomFactorY();
+				var zoomFactorX = scrollPane.getZoomFactorX();
+				var zoomFactorY = scrollPane.getZoomFactorY();
+				if (!maintainAspectRatio.get()) {
+					var factor = (zoomFactorX != 1.0 ? zoomFactorX : zoomFactorY);
+					zoomFactorX = (pinch.horizontal ? factor : 1.0);
+					zoomFactorY = (pinch.horizontal ? 1.0 : factor);
+				}
+				pinch.factorX *= zoomFactorX;
+				pinch.factorY *= zoomFactorY;
 				if (!pinch.scheduled) {
 					pinch.scheduled = true;
 					Platform.runLater(() -> {
