@@ -941,6 +941,14 @@ public class MainWindowController {
 		return settingsAccordion;
 	}
 
+	public TitledPane getLayoutSettingsTitledPane() {
+		return layoutSettingsTitledPane;
+	}
+
+	public MenuButton getSettingsMenuButton() {
+		return settingsMenuButton;
+	}
+
 	public ComboBox<splitstree6.compute.phylofusion.PhyloFusionAlgorithm.ReticulationPreference> getReticulationPlacementCBox() {
 		return reticulationPlacementCBox;
 	}

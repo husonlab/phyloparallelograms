@@ -526,6 +526,38 @@ public class MainWindowPresenter {
 			ScaleDrawing.apply(group, 1, scaleBy);
 		});
 
+		// on a touch screen, a pinch scales the drawing as the zoom buttons do, so that the labels keep their size:
+		// with the fingers side by side it scales horizontally, with one above the other vertically, and a diagonal
+		// pinch scales both (the scroll pane determines the direction); radial and circular diagrams keep their
+		// aspect ratio. The zoom events of a gesture come in quick succession and are applied together
+		if (!ProgramProperties.isDesktop()) {
+			var scrollPane = controller.getScrollPane();
+			scrollPane.lockAspectRatioProperty().bind(maintainAspectRatio);
+			var pinch = new Object() {
+				double factorX = 1.0;
+				double factorY = 1.0;
+				boolean scheduled = false;
+			};
+			scrollPane.setUpdateScaleMethod(() -> {
+				pinch.factorX *= scrollPane.getZoomFactorX();
+				pinch.factorY *= scrollPane.getZoomFactorY();
+				if (!pinch.scheduled) {
+					pinch.scheduled = true;
+					Platform.runLater(() -> {
+						var factorX = pinch.factorX;
+						var factorY = pinch.factorY;
+						pinch.factorX = 1.0;
+						pinch.factorY = 1.0;
+						pinch.scheduled = false;
+						if (document.hasNetworks() && !serviceRunning.get()) {
+							scaleFactorX.set(Math.max(0.05, Math.min(50, factorX * scaleFactorX.get())));
+							scaleFactorY.set(Math.max(0.05, Math.min(50, factorY * scaleFactorY.get())));
+						}
+					});
+				}
+			});
+		}
+
 		networkView.optionFlipVerticallyProperty().addListener(e -> {
 					networkView.applyVerticalFlip();
 					runUpdateTreesDrawing();

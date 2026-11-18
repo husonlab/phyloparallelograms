@@ -26,6 +26,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TouchEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -134,6 +135,20 @@ public class SetupRubberBandSelection {
 			state.press = null;
 			rect.setVisible(false);
 		};
+
+		// a second finger starts a pinch: that is not a long press, and a rectangle that is already open is abandoned
+		Runnable cancel = () -> {
+			stopTimer.run();
+			state.selecting = false;
+			state.suppressScrolling = false;
+			state.press = null;
+			rect.setVisible(false);
+		};
+		pane.addEventFilter(TouchEvent.TOUCH_PRESSED, e -> {
+			if (e.getTouchCount() > 1)
+				cancel.run();
+		});
+		pane.addEventFilter(ZoomEvent.ZOOM_STARTED, e -> cancel.run());
 
 		pane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
 			if (!e.isPrimaryButtonDown())
